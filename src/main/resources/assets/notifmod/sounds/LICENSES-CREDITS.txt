@@ -1,16 +1,16 @@
                --- Sounds ---
 Name        Author          License     Link
 --------------------------------------------
-damage		sthran          CC0 1.0     https://freesound.org/people/sthran/sounds/572645/
-stop		ceberation      CC BY 3.0	https://freesound.org/people/ceberation/sounds/235508/
-mend		SomeGuy22	    CC0 1.0     https://freesound.org/people/SomeGuy22/sounds/431329/
-message		TheAtomicBrain  CC0 1.0	    https://freesound.org/people/TheAtomicBrain/sounds/351879/
-mention		stwime	        CC0 1.0     https://freesound.org/people/stwime/sounds/545336/
-join		finn.appleton	CC0 1.0     https://freesound.org/people/finn.appleton/sounds/560880/
-leave		finn.appleton	CC0 1.0     https://freesound.org/people/finn.appleton/sounds/560880/
-game	    GabrielAraujo   CC0 1.0     https://freesound.org/people/GabrielAraujo/sounds/242501/
-world	    Rob_Marion      CC0 1.0     https://freesound.org/people/Rob_Marion/sounds/542035/
-reminder	TheBuilder15	CC0 1.0     https://freesound.org/people/TheBuilder15/sounds/415762/
+damage      sthran          CC0 1.0     https://freesound.org/people/sthran/sounds/572645/
+stop        ceberation      CC BY 3.0   https://freesound.org/people/ceberation/sounds/235508/
+mend        SomeGuy22       CC0 1.0     https://freesound.org/people/SomeGuy22/sounds/431329/
+message     TheAtomicBrain  CC0 1.0     https://freesound.org/people/TheAtomicBrain/sounds/351879/
+mention     stwime          CC0 1.0     https://freesound.org/people/stwime/sounds/545336/
+join        finn.appleton   CC0 1.0     https://freesound.org/people/finn.appleton/sounds/560880/
+leave       finn.appleton   CC0 1.0     https://freesound.org/people/finn.appleton/sounds/560880/
+game        GabrielAraujo   CC0 1.0     https://freesound.org/people/GabrielAraujo/sounds/242501/
+world       Rob_Marion      CC0 1.0     https://freesound.org/people/Rob_Marion/sounds/542035/
+reminder    TheBuilder15    CC0 1.0     https://freesound.org/people/TheBuilder15/sounds/415762/
 
 
 --- Licenses ---
