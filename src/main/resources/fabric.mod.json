@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "id": "notifmod",
+  "version": "${version}",
+  "name": "NotifMod",
+  "description": "Client-side Fabric mod that gives you notifications when certain things happen!",
+  "authors": [
+    "Alex811"
+  ],
+  "contact": {
+    "homepage": "https://gflash.eu",
+    "sources": "https://github.com/811Alex/NotifMod",
+    "issues": "https://github.com/811Alex/NotifMod/issues",
+    "discord": "https://discord.gg/E5Kx6fzGSd"
+  },
+  "license": "MIT",
+  "icon": "assets/notifmod/logo.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "eu.gflash.notifmod.client.NotifModClient"
+    ],
+    "main": [
+      "eu.gflash.notifmod.NotifMod"
+    ],
+    "modmenu": [
+      "eu.gflash.notifmod.integrations.ModMenuIntegration"
+    ]
+  },
+  "mixins": [
+    "NotifMod.mixins.json"
+  ],
+  "depends": {
+    "minecraft": "1.17.1",
+    "fabricloader": ">=0.11.6",
+    "fabric": "*",
+    "cloth-config2": "*"
+  },
+  "recommends": {
+    "modmenu": "*"
+  },
+  "custom": {
+    "modmenu": {
+      "links": {
+        "modmenu.discord": "https://discord.gg/E5Kx6fzGSd"
+      }
+    }
+  }
+}

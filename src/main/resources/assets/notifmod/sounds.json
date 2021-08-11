@@ -1,0 +1,12 @@
+{
+  "durability.damage": {"sounds": ["notifmod:damage"]},
+  "durability.stop": {"sounds": ["notifmod:stop"]},
+  "durability.mend": {"sounds": ["notifmod:mend"]},
+  "chat.message": {"sounds": ["notifmod:message"]},
+  "chat.mention": {"sounds": ["notifmod:mention"]},
+  "player.join": {"sounds": ["notifmod:join"]},
+  "player.leave": {"sounds": ["notifmod:leave"]},
+  "done_loading.game": {"sounds": ["notifmod:game"]},
+  "done_loading.world": {"sounds": ["notifmod:world"]},
+  "reminder.done": {"sounds": ["notifmod:reminder"]}
+}
