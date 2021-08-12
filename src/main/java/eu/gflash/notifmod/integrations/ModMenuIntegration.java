@@ -1,7 +1,7 @@
 package eu.gflash.notifmod.integrations;
 
-import com.terraformersmc.modmenu.api.ConfigScreenFactory;
-import com.terraformersmc.modmenu.api.ModMenuApi;
+import io.github.prospector.modmenu.api.ConfigScreenFactory;
+import io.github.prospector.modmenu.api.ModMenuApi;
 import eu.gflash.notifmod.config.ModConfig;
 import me.shedaniel.autoconfig.AutoConfig;
 

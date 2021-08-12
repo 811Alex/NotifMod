@@ -12,8 +12,6 @@ import me.shedaniel.autoconfig.util.Utils;
 import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.sound.PositionedSoundInstance;
-import net.minecraft.client.sound.SoundInstance;
-import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -36,7 +34,7 @@ public class SoundSequence {
     private static final Pattern NUM_PATTERN = Pattern.compile("^\\d+(\\.\\d+)?$");
     private static final Pattern SOUND_PATTERN = Pattern.compile("^(([^:()]+:)?[^:()]+)(\\((.+)\\))?$");
     private static final Pattern DELIMITER_PATTERN = Pattern.compile(";");
-    private static final Pattern SPACE_PATTERN = Pattern.compile("\s+");
+    private static final Pattern SPACE_PATTERN = Pattern.compile("\\s+");
     private final String sequenceStr;
     private final List<Sound> sequence = new ArrayList<>();
     private String error = "";
@@ -57,12 +55,13 @@ public class SoundSequence {
                 float pitch = parseNum(soundMatcher.group(4), "invalidPitch", 1);
                 int delay = i + 1 < entrySplit.length - 1 ? (int) parseNum(entrySplit[i + 1], "invalidDelay", 0) : 0;  // next delay (assuming it's not the last element), or 0
                 String id = soundMatcher.group(1);
-                if(Identifier.isValid(id))
-                    Registry.SOUND_EVENT.getOrEmpty(new Identifier(id)).ifPresentOrElse(
-                            soundEvent -> this.sequence.add(new Sound(soundEvent, pitch, delay)),
-                            () -> setError("doesNotExist", id)
-                    );
-                else
+                if(Identifier.isValid(id)) {
+                    Optional<SoundEvent> soundEvent = Registry.SOUND_EVENT.getOrEmpty(new Identifier(id));
+                    if(soundEvent.isPresent())
+                        this.sequence.add(new Sound(soundEvent.get(), pitch, delay));
+                    else
+                        setError("doesNotExist", id);
+                }else
                     setError("invalidIdentifier", id);
             }else
                 setError("invalidFormat", entrySplit[i]);

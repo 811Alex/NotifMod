@@ -52,10 +52,10 @@ public class Message {
      */
     public static void auto(Type type, Supplier<Text> longMsg, Supplier<Text> shortMsg){
         switch(type){
-            case CHAT -> chat(longMsg.get());
-            case ACTIONBAR -> actionBar(longMsg.get());
-            case TITLE -> title(shortMsg.get());
-            case SUBTITLE -> subTitle(longMsg.get());
+            case CHAT: chat(longMsg.get()); break;
+            case ACTIONBAR: actionBar(longMsg.get()); break;
+            case TITLE: title(shortMsg.get()); break;
+            case SUBTITLE: subTitle(longMsg.get()); break;
         }
     }
 
@@ -82,8 +82,7 @@ public class Message {
      */
     public static void title(Text msg){
         getHud().setDefaultTitleFade();
-        getHud().setTitle(msg);
-        getHud().setSubtitle(TextUtil.EMPTY);
+        getHud().setTitles(msg, TextUtil.EMPTY, 0, 0, 0);
     }
 
     /**
@@ -93,7 +92,7 @@ public class Message {
      */
     public static void subTitle(Text msg){
         title(TextUtil.EMPTY);
-        getHud().setSubtitle(msg);
+        getHud().setTitles(null, msg, 0, 0, 0);
     }
 
     /**

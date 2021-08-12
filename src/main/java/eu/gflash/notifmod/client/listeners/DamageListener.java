@@ -158,7 +158,7 @@ public class DamageListener {
             return new HashCodeBuilder(19, 61)
                     .append(noDmg.getCount())
                     .append(noDmg.getItem().toString())
-                    .append(noDmg.getNbt())
+                    .append(noDmg.getTag())
                     .toHashCode();
         }
     }

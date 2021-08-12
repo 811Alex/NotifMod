@@ -33,7 +33,7 @@ public class TextUtil {
      * @return the formatted text
      */
     public static Text getWithFormat(Text text, Formatting format){
-        return buildText(text.copy().getWithStyle(Style.EMPTY.withFormatting(format)).toArray(Text[]::new));
+        return text.copy().fillStyle(Style.EMPTY.withFormatting(format));
     }
 
     /**

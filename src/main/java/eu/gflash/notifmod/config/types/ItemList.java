@@ -31,7 +31,7 @@ import java.util.regex.Pattern;
 @JsonAdapter(ItemList.Adapter.class)
 public class ItemList {
     private static final Pattern DELIMITER_PATTERN = Pattern.compile(";");
-    private static final Pattern SPACE_PATTERN = Pattern.compile("\s+");
+    private static final Pattern SPACE_PATTERN = Pattern.compile("\\s+");
     private final String itemListStr;
     private final List<String> itemList;
     private String error = "";

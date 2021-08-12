@@ -22,7 +22,7 @@ public class FollowingSound extends MovingSoundInstance {
 
     @Override
     public void tick() {
-        if(!this.player.isRemoved()){
+        if(!this.player.removed){
             this.x = this.player.getX();
             this.y = this.player.getY();
             this.z = this.player.getZ();

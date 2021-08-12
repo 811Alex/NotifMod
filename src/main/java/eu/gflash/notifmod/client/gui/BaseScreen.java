@@ -1,12 +1,16 @@
 package eu.gflash.notifmod.client.gui;
 
+import com.google.common.collect.Lists;
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.render.GameRenderer;
+import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
+import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -21,6 +25,7 @@ public class BaseScreen extends Screen {
     protected int panelY;                   // GUI y coordinate
     protected int panelBorderWidth = 3;     // background texture's border thickness, used for wXr() etc
     protected int widgetSpacing = 2;        // space to leave between widgets when using wX(int) etc
+    protected final List<AbstractButtonWidget> notButtons = Lists.newArrayList();   // children to render that are not in the buttons list
     private final AtomicInteger widgetX = new AtomicInteger(0);
     private final AtomicInteger widgetY = new AtomicInteger(0);
     private float titleX;
@@ -43,12 +48,19 @@ public class BaseScreen extends Screen {
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) { // Adds basic background & title drawing.
         renderBackground(matrices);
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, background);
+        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        Optional.ofNullable(this.client).ifPresent(c -> c.getTextureManager().bindTexture(background));
         drawTexture(matrices, panelX, panelY, 0, 0, panelWidth, panelHeight);
         this.textRenderer.draw(matrices, title, titleX, titleY, 4210752);
+        this.notButtons.forEach(c -> c.render(matrices, mouseX, mouseY, delta));
         super.render(matrices, mouseX, mouseY, delta);
+    }
+
+    @Override
+    protected <T extends Element> T addChild(T child) {
+        if(child instanceof AbstractButtonWidget && !this.buttons.contains(child))
+            notButtons.add((AbstractButtonWidget) child);
+        return super.addChild(child);
     }
 
     /**

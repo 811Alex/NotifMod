@@ -39,8 +39,8 @@ public class ClientPlayNetworkHandlerMixin {
         PlayerEntity player = this.client.player;
         if(player == null || id.equals(player.getUuid())) return;   // the entry is not for this client's player
         switch(packet.getAction()){
-            case ADD_PLAYER -> PlayerListListener.onJoin();
-            case REMOVE_PLAYER -> PlayerListListener.onLeave();
+            case ADD_PLAYER: PlayerListListener.onJoin(); break;
+            case REMOVE_PLAYER: PlayerListListener.onLeave(); break;
         }
     }
 
