@@ -36,7 +36,7 @@ public class SoundSequence {
     private static final Pattern NUM_PATTERN = Pattern.compile("^\\d+(\\.\\d+)?$");
     private static final Pattern SOUND_PATTERN = Pattern.compile("^(([^:()]+:)?[^:()]+)(\\((.+)\\))?$");
     private static final Pattern DELIMITER_PATTERN = Pattern.compile(";");
-    private static final Pattern SPACE_PATTERN = Pattern.compile("\s+");
+    private static final Pattern SPACE_PATTERN = Pattern.compile("\\s+");
     private final String sequenceStr;
     private final List<Sound> sequence = new ArrayList<>();
     private String error = "";
