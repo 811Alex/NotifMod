@@ -47,12 +47,16 @@
   "text.autoconfig.notifmod.option.durability.repairSettings.volume": "Sound volume",
 
   "text.autoconfig.notifmod.option.chat": "Chat Notifications",
-  "text.autoconfig.notifmod.option.chat.message.@PrefixText": "Note: in the background, message & mention notifications\nwork the same way, they just use different RegEx filters\nand mentions take priority, if both match.",
+  "text.autoconfig.notifmod.option.chat.message.@PrefixText": "Note #1: in the background, message & mention notifications\n  work the same way, they just use different RegEx filters\n  and mentions take priority, if both match.\nNote #2: there are 3 different types of messages: chat,\n  system, game info. Each has a separate RegEx filter. Chat\n  messages coming from the server console, are \"system\".\nNote #3: empty RegEx patterns won't match anything.",
 
   "text.autoconfig.notifmod.option.chat.message": "Message Notifications",
   "text.autoconfig.notifmod.option.chat.message.enabled": "Enabled",
-  "text.autoconfig.notifmod.option.chat.message.regexFilter": "RegEx filter",
+  "text.autoconfig.notifmod.option.chat.message.regexFilter": "RegEx filter (chat)",
   "text.autoconfig.notifmod.option.chat.message.regexFilter.@Tooltip": "You'll only get notifications for messages\nmatching this regular expression.\nNote: \\p will be replaced with your username,\nbefore the regular expression gets interpreted.",
+  "text.autoconfig.notifmod.option.chat.message.regexFilterSys": "RegEx filter (system)",
+  "text.autoconfig.notifmod.option.chat.message.regexFilterSys.@Tooltip": "You'll only get notifications for messages\nmatching this regular expression.\nNote: \\p will be replaced with your username,\nbefore the regular expression gets interpreted.",
+  "text.autoconfig.notifmod.option.chat.message.regexFilterGame": "RegEx filter (game info)",
+  "text.autoconfig.notifmod.option.chat.message.regexFilterGame.@Tooltip": "You'll only get notifications for messages\nmatching this regular expression.\nNote: \\p will be replaced with your username,\nbefore the regular expression gets interpreted.",
   "text.autoconfig.notifmod.option.chat.message.soundSequence": "Sound sequence",
   "text.autoconfig.notifmod.option.chat.message.soundSequence.@Tooltip": "Format: sound(pitch); delay; sound(pitch)...\nPitch is a decimal between 0 and 2 (inclusive), with 1 being normal.\nFor normal pitch, you can omit it and the parentheses.\nDelays between sounds are in milliseconds and are NOT optional.\nSeparate entries with semicolons, spaces will be ignored.",
   "text.autoconfig.notifmod.option.chat.message.volume": "Sound volume",

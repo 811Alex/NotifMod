@@ -66,9 +66,9 @@ public class ModConfig implements ConfigData {
     public static class ChatCategory {
         @PrefixText
         @CollapsibleObject
-        public Chat message = new Chat(".+", "notifmod:chat.message");
+        public Chat message = new Chat(".+", "\\[Server\\] .+", "", "notifmod:chat.message");
         @CollapsibleObject
-        public Chat mention = new Chat(".*\\p", "notifmod:chat.mention");
+        public Chat mention = new Chat(".*\\p", "\\[Server\\] .*\\p", "", "notifmod:chat.mention");
     }
 
     public static class PlayerJoinLeaveCategory {
@@ -186,12 +186,18 @@ public class ModConfig implements ConfigData {
         @Tooltip
         public RegExPattern regexFilter;
         @Tooltip
+        public RegExPattern regexFilterSys;
+        @Tooltip
+        public RegExPattern regexFilterGame;
+        @Tooltip
         public SoundSequence soundSequence;
         @BoundedDiscrete(min = 0, max = 100)
         public int volume = 100;
 
-        public Chat(String defRegExFilter, String... defSoundSeq){
+        public Chat(String defRegExFilter, String defRegExFilterSys, String defRegExFilterGame, String... defSoundSeq){
             regexFilter = new RegExPattern(defRegExFilter);
+            regexFilterSys = new RegExPattern(defRegExFilterSys);
+            regexFilterGame = new RegExPattern(defRegExFilterGame);
             soundSequence = new SoundSequence(defSoundSeq);
         }
     }

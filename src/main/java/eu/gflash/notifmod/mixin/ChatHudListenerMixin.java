@@ -19,7 +19,6 @@ import java.util.UUID;
 public class ChatHudListenerMixin {
     @Inject(method = "onChatMessage(Lnet/minecraft/network/MessageType;Lnet/minecraft/text/Text;Ljava/util/UUID;)V", at = @At("RETURN"))
     public void onChatMessage(MessageType messageType, Text message, UUID sender, CallbackInfo ci){
-        if(messageType != MessageType.CHAT) return;
-        ChatListener.onMessage(sender, message.getString());
+        ChatListener.onMessage(messageType, sender, message.getString());
     }
 }
