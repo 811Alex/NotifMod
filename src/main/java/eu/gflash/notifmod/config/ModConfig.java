@@ -1,5 +1,6 @@
 package eu.gflash.notifmod.config;
 
+import com.google.gson.Gson;
 import eu.gflash.notifmod.util.Message;
 import eu.gflash.notifmod.config.types.ItemList;
 import eu.gflash.notifmod.config.types.Key;
@@ -7,6 +8,7 @@ import eu.gflash.notifmod.config.types.RegExPattern;
 import eu.gflash.notifmod.config.types.SoundSequence;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.ConfigData;
+import me.shedaniel.autoconfig.ConfigHolder;
 import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.autoconfig.annotation.Config.Gui.Background;
 import me.shedaniel.autoconfig.annotation.ConfigEntry.BoundedDiscrete;
@@ -16,7 +18,16 @@ import me.shedaniel.autoconfig.annotation.ConfigEntry.Gui.Tooltip;
 import me.shedaniel.autoconfig.annotation.ConfigEntry.Gui.PrefixText;
 import me.shedaniel.autoconfig.gui.registry.GuiRegistry;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
+import me.shedaniel.autoconfig.util.Utils;
 import org.lwjgl.glfw.GLFW;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.lang.reflect.Modifier;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.Map;
 
 import static eu.gflash.notifmod.util.ItemUtil.getArmor;
 import static eu.gflash.notifmod.util.ItemUtil.getTools;
@@ -31,6 +42,19 @@ import static me.shedaniel.autoconfig.annotation.ConfigEntry.Gui.EnumHandler.Enu
 @Config(name = "notifmod")
 @Background("minecraft:textures/block/note_block.png")
 public class ModConfig implements ConfigData {
+    @SuppressWarnings("rawtypes")
+    private static Map originalJson;    // only used to update config file on startup
+
+    static {
+        Path configPath = getConfigPath();
+        if(Files.exists(configPath))
+            try (BufferedReader reader = Files.newBufferedReader(configPath)) {
+                originalJson = new Gson().fromJson(reader, Map.class);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+    }
+
     /**
      * Registers config and its providers/transformers.
      */
@@ -42,10 +66,63 @@ public class ModConfig implements ConfigData {
         registry.registerTypeProvider(new RegExPattern.Provider(), RegExPattern.class);
         registry.registerTypeProvider(new SoundSequence.Provider(), SoundSequence.class);
         registry.registerTypeProvider(new ItemList.Provider(), ItemList.class);
+
+        updateConfig();
+    }
+
+    public static ConfigHolder<ModConfig> getHolder(){
+        return AutoConfig.getConfigHolder(ModConfig.class);
     }
 
     public static ModConfig getInstance(){
-        return AutoConfig.getConfigHolder(ModConfig.class).getConfig();
+        return getHolder().getConfig();
+    }
+
+    private static Path getConfigPath(){
+        return Utils.getConfigFolder().resolve(ModConfig.class.getAnnotation(Config.class).name() + ".json");
+    }
+
+    /**
+     * Finds missing keys in the current JSON and sets their values to the defaults.
+     * Recurses through categories. This will overwrite the JSON file, with the updated one, when done.
+     * Call after config registration. {@link ModConfig#originalJson} will be cleared when done.
+     */
+    private static void updateConfig(){
+        if(originalJson == null) return;    // no config existed, or updated already
+        updateConfig(getInstance(), new ModConfig(), originalJson);
+        getHolder().save();
+        originalJson = null;    // done, free memory
+    }
+
+    /**
+     * Finds missing keys in the current {@code json} and sets their values to the {@code defaults}, in {@code root}.
+     * Recurses through categories. You probably want to call {@link ModConfig#updateConfig()} instead.
+     * @param root the actual config instance root or current category
+     * @param defaults a config instance root or category that has the relevant defaults
+     * @param json the current config JSON loaded into a {@link Map}
+     * @param <C> {@link ModConfig} or a category (inner class)
+     */
+    private static <C> void updateConfig(C root, C defaults, Map<?, ?> json){
+        Arrays.stream(root.getClass().getDeclaredFields())
+                .filter(field -> !Modifier.isStatic(field.getModifiers()))
+                .filter(field -> !Modifier.isFinal(field.getModifiers()))
+                .forEach(field -> {   // loop root's (non-static, non-final) fields
+                    try {
+                        Object curr = field.get(root);
+                        Object def = field.get(defaults);
+                        Object jsonCurr = json.get(field.getName());
+                        if(jsonCurr == null)
+                            field.set(root, def);   // not in json, reset to default
+                        else if(field.isAnnotationPresent(CollapsibleObject.class)){
+                            if(jsonCurr instanceof Map)
+                                updateConfig(curr, def, (Map<?, ?>) jsonCurr);  // recurse for categories
+                            else
+                                field.set(root, def);   // not a category in json, reset to default
+                        }
+                    } catch (IllegalAccessException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
     }
 
     ////// CONFIG //////
