@@ -16,6 +16,7 @@ import me.shedaniel.autoconfig.annotation.ConfigEntry.Gui.CollapsibleObject;
 import me.shedaniel.autoconfig.annotation.ConfigEntry.Gui.EnumHandler;
 import me.shedaniel.autoconfig.annotation.ConfigEntry.Gui.Tooltip;
 import me.shedaniel.autoconfig.annotation.ConfigEntry.Gui.PrefixText;
+import me.shedaniel.autoconfig.annotation.ConfigEntry.Gui.Excluded;
 import me.shedaniel.autoconfig.gui.registry.GuiRegistry;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import me.shedaniel.autoconfig.util.Utils;
@@ -43,6 +44,7 @@ import static me.shedaniel.autoconfig.annotation.ConfigEntry.Gui.EnumHandler.Enu
 @Background("minecraft:textures/block/note_block.png")
 public class ModConfig implements ConfigData {
     @SuppressWarnings("rawtypes")
+    @Excluded
     private static Map originalJson;    // only used to update config file on startup
 
     static {
@@ -106,6 +108,7 @@ public class ModConfig implements ConfigData {
         Arrays.stream(root.getClass().getDeclaredFields())
                 .filter(field -> !Modifier.isStatic(field.getModifiers()))
                 .filter(field -> !Modifier.isFinal(field.getModifiers()))
+                .filter(field -> !field.isAnnotationPresent(Excluded.class))
                 .forEach(field -> {   // loop root's (non-static, non-final) fields
                     try {
                         Object curr = field.get(root);
