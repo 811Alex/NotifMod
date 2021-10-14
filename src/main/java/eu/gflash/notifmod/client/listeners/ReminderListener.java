@@ -6,6 +6,7 @@ import eu.gflash.notifmod.config.types.Key;
 import eu.gflash.notifmod.config.ModConfig;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.Screen;
 
 /**
  * Handles reminder key binding presses and starts reminder threads.
@@ -17,11 +18,15 @@ public class ReminderListener {
     public static void register(){
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             ModConfig.Reminder settings = ModConfig.getInstance().reminder;
-            if(gotPressed(settings.keyBind) && MinecraftClient.getInstance().currentScreen == null){
-                if(settings.skipGUI)
-                    ReminderTimer.startNew(settings.defSeconds, null);
-                else
-                    ReminderScreen.open();
+            if(gotPressed(settings.keyBind)){
+                Screen currScreen = MinecraftClient.getInstance().currentScreen;
+                if(currScreen == null){
+                    if(settings.skipGUI)
+                        ReminderTimer.startNew(settings.defSeconds, null);
+                    else
+                        ReminderScreen.open();
+                }else if(currScreen instanceof ReminderScreen)
+                    currScreen.onClose();
             }
         });
     }
