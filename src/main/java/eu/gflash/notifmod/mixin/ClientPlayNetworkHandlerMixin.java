@@ -3,6 +3,7 @@ package eu.gflash.notifmod.mixin;
 import eu.gflash.notifmod.client.listeners.WorldLoadListener;
 import eu.gflash.notifmod.client.listeners.DamageListener;
 import eu.gflash.notifmod.client.listeners.PlayerListListener;
+import eu.gflash.notifmod.client.listeners.WorldTimeListener;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.entity.player.PlayerEntity;
@@ -10,6 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.network.packet.s2c.play.AdvancementUpdateS2CPacket;
 import net.minecraft.network.packet.s2c.play.PlayerListS2CPacket;
 import net.minecraft.network.packet.s2c.play.ScreenHandlerSlotUpdateS2CPacket;
+import net.minecraft.network.packet.s2c.play.WorldTimeUpdateS2CPacket;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -26,6 +28,7 @@ import java.util.UUID;
  */
 @Mixin(ClientPlayNetworkHandler.class)
 public class ClientPlayNetworkHandlerMixin {
+    private static final int TICKS_PER_DAY = 24000;
     private static boolean loaded = false;
 
     @Shadow @Final private MinecraftClient client;
@@ -56,6 +59,7 @@ public class ClientPlayNetworkHandlerMixin {
     public void clearWorld(CallbackInfo ci){
         loaded = false;
         WorldLoadListener.reset();
+        WorldTimeListener.reset();
     }
 
     @Inject(method = "onScreenHandlerSlotUpdate(Lnet/minecraft/network/packet/s2c/play/ScreenHandlerSlotUpdateS2CPacket;)V", at = @At("HEAD"))
@@ -75,5 +79,10 @@ public class ClientPlayNetworkHandlerMixin {
             else
                 DamageListener.onRepair(packet.getItemStack());
         }
+    }
+
+    @Inject(method = "onWorldTimeUpdate(Lnet/minecraft/network/packet/s2c/play/WorldTimeUpdateS2CPacket;)V", at = @At("RETURN"))
+    public void onWorldTimeUpdate(WorldTimeUpdateS2CPacket packet, CallbackInfo ci){
+        WorldTimeListener.onTimeUpdate((int) (Math.abs(packet.getTimeOfDay()) % TICKS_PER_DAY), this.client.world);    // abs() because if gamerule doDaylightCycle is false, TimeOfDay will be negative
     }
 }

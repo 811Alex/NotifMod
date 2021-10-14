@@ -137,6 +137,8 @@ public class ModConfig implements ConfigData {
     @CollapsibleObject
     public PlayerJoinLeaveCategory playerJoinLeave = new PlayerJoinLeaveCategory();
     @CollapsibleObject
+    public SleepReminder sleepReminder = new SleepReminder();
+    @CollapsibleObject
     public DoneLoadingCategory doneLoading = new DoneLoadingCategory();
     @CollapsibleObject
     public Reminder reminder = new Reminder();
@@ -292,6 +294,19 @@ public class ModConfig implements ConfigData {
         public SimpleSound(String... defSoundSeq){
             soundSequence = new SoundSequence(defSoundSeq);
         }
+    }
+
+    public static class SleepReminder {
+        @PrefixText
+        public boolean enabled = false;
+        public boolean includeThunder = false;
+        @EnumHandler(option = BUTTON)
+        public Message.Type msgType = Message.Type.CHAT;
+        public boolean soundEnabled = false;
+        @Tooltip
+        public SoundSequence soundSequence = new SoundSequence("notifmod:sleep.now");
+        @BoundedDiscrete(min = 0, max = 100)
+        public int volume = 100;
     }
 
     public static class DoneLoadingGame {

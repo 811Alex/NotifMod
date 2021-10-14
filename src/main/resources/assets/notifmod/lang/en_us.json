@@ -83,6 +83,16 @@
   "text.autoconfig.notifmod.option.playerJoinLeave.leave.soundSequence.@Tooltip": "Format: sound(pitch); delay; sound(pitch)...\nPitch is a decimal between 0 and 2 (inclusive), with 1 being normal.\nFor normal pitch, you can omit it and the parentheses.\nDelays between sounds are in milliseconds and are NOT optional.\nSeparate entries with semicolons, spaces will be ignored.",
   "text.autoconfig.notifmod.option.playerJoinLeave.leave.volume": "Sound volume",
 
+  "text.autoconfig.notifmod.option.sleepReminder": "Sleep reminder",
+  "text.autoconfig.notifmod.option.sleepReminder.enabled.@PrefixText": "This will notify you, the moment you're able to sleep.",
+  "text.autoconfig.notifmod.option.sleepReminder.enabled": "Enabled",
+  "text.autoconfig.notifmod.option.sleepReminder.includeThunder": "Include thunderstorms",
+  "text.autoconfig.notifmod.option.sleepReminder.msgType": "Message type",
+  "text.autoconfig.notifmod.option.sleepReminder.soundEnabled": "Sound enabled",
+  "text.autoconfig.notifmod.option.sleepReminder.soundSequence": "Sound sequence",
+  "text.autoconfig.notifmod.option.sleepReminder.soundSequence.@Tooltip": "Format: sound(pitch); delay; sound(pitch)...\nPitch is a decimal between 0 and 2 (inclusive), with 1 being normal.\nFor normal pitch, you can omit it and the parentheses.\nDelays between sounds are in milliseconds and are NOT optional.\nSeparate entries with semicolons, spaces will be ignored.",
+  "text.autoconfig.notifmod.option.sleepReminder.volume": "Sound volume",
+
   "text.autoconfig.notifmod.option.doneLoading": "Done Loading Notifications",
 
   "text.autoconfig.notifmod.option.doneLoading.game": "Game Loading Notifications",
@@ -144,6 +154,8 @@
   "msg.notifmod.durability.repair.short": "%s is %s",
   "msg.notifmod.durability.repair.long.full": "fully repaired",
   "msg.notifmod.durability.repair.short.full": "repaired",
+
+  "msg.notifmod.sleep": "You can sleep now!",
 
   "msg.notifmod.reminder.start.long.unnamed": "Timer started: %s",
   "msg.notifmod.reminder.start.long.named": "Timer started: %s | %s",
