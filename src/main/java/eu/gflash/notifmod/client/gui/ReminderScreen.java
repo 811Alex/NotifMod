@@ -1,9 +1,9 @@
 package eu.gflash.notifmod.client.gui;
 
 import eu.gflash.notifmod.client.gui.widgets.CustomIntSliderWidget;
-import eu.gflash.notifmod.client.listeners.ReminderListener;
 import eu.gflash.notifmod.util.NumUtil;
 import eu.gflash.notifmod.config.ModConfig;
+import eu.gflash.notifmod.util.ReminderTimer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
@@ -54,7 +54,7 @@ public class ReminderScreen extends BaseScreen {
         addDrawableChild(sliderSeconds = new CustomIntSliderWidget(wX(), wY(20), 240, 20, "seconds", 0, 60, 0));
         addDrawableChild(new ButtonWidget(wX(70), wY(), 70, 20, TEXT_PRESET_1, button -> setTime(settings.pre1Seconds)));
         addDrawableChild(new ButtonWidget(wX(96), wY(), 96, 20, TEXT_START, button -> {
-            ReminderListener.start(getTime(), titleField.getText());
+            ReminderTimer.startNew(getTime(), titleField.getText());
             onClose();
         }));
         addDrawableChild(new ButtonWidget(wX(70), wY(), 70, 20, TEXT_PRESET_2, button -> setTime(settings.pre2Seconds)));

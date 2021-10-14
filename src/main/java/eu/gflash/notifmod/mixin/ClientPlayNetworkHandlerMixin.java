@@ -4,6 +4,7 @@ import eu.gflash.notifmod.client.listeners.WorldLoadListener;
 import eu.gflash.notifmod.client.listeners.DamageListener;
 import eu.gflash.notifmod.client.listeners.PlayerListListener;
 import eu.gflash.notifmod.client.listeners.WorldTimeListener;
+import eu.gflash.notifmod.util.ReminderTimer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.entity.player.PlayerEntity;
@@ -60,6 +61,7 @@ public class ClientPlayNetworkHandlerMixin {
         loaded = false;
         WorldLoadListener.reset();
         WorldTimeListener.reset();
+        ReminderTimer.killAll();
     }
 
     @Inject(method = "onScreenHandlerSlotUpdate(Lnet/minecraft/network/packet/s2c/play/ScreenHandlerSlotUpdateS2CPacket;)V", at = @At("HEAD"))
