@@ -8,6 +8,7 @@ The mod is highly configurable and currently supports the following events:
 - Equipment fully repaired (mending)
 - Chat message
 - Chat username mention
+- Able to sleep
 - Player joined server
 - Player left server
 - Game's done loading
