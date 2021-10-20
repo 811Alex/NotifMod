@@ -14,24 +14,25 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author Alex811
  */
 public class BaseScreen extends Screen {
-    protected final Identifier background;  // background texture
-    protected final int panelWidth;         // GUI width
-    protected final int panelHeight;        // GUI height
-    protected int panelX;                   // GUI x coordinate
-    protected int panelY;                   // GUI y coordinate
-    protected int panelBorderWidth = 3;     // background texture's border thickness, used for wXr() etc
-    protected int widgetSpacing = 2;        // space to leave between widgets when using wX(int) etc
+    protected final static int PANEL_BORDER_WIDTH = 3;     // background texture's border thickness, used for wXr() etc
+    protected final static int WIDGET_SPACING = 2;        // space to leave between widgets when using wX(int) etc
+    protected final static int PANEL_PADDING = PANEL_BORDER_WIDTH + WIDGET_SPACING;
     private final AtomicInteger widgetX = new AtomicInteger(0);
     private final AtomicInteger widgetY = new AtomicInteger(0);
     private float titleX;
     private float titleY;
+    protected final Identifier background;      // background texture
+    protected int panelWidth;                   // GUI width
+    protected int panelHeight;                  // GUI height
+    protected int panelX;                       // GUI x coordinate
+    protected int panelY;                       // GUI y coordinate
 
     /**
      * The screen's constructor.
-     * @param title the title to set
-     * @param panelWidth the GUI's width
-     * @param panelHeight the GUI's height
-     * @param background the background texture
+     * @param title the title to set (or null)
+     * @param panelWidth the GUI's width (or negative for full screen width)
+     * @param panelHeight the GUI's height (or negative for full screen height)
+     * @param background the background texture (or null)
      */
     protected BaseScreen(Text title, int panelWidth, int panelHeight, Identifier background) {
         super(title);
@@ -41,14 +42,26 @@ public class BaseScreen extends Screen {
     }
 
     @Override
+    public void renderBackground(MatrixStack matrices) {
+        super.renderBackground(matrices);
+        if(background != null && panelWidth > 0 && panelHeight > 0){
+            RenderSystem.setShader(GameRenderer::getPositionTexShader);
+            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+            RenderSystem.setShaderTexture(0, background);
+            drawTexture(matrices, panelX, panelY, 0, 0, panelWidth, panelHeight);
+        }
+    }
+
+    public void renderForeground(MatrixStack matrices, int mouseX, int mouseY, float delta){
+        super.render(matrices, mouseX, mouseY, delta);
+    }
+
+    @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) { // Adds basic background & title drawing.
         renderBackground(matrices);
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, background);
-        drawTexture(matrices, panelX, panelY, 0, 0, panelWidth, panelHeight);
-        this.textRenderer.draw(matrices, title, titleX, titleY, 4210752);
-        super.render(matrices, mouseX, mouseY, delta);
+        renderForeground(matrices, mouseX, mouseY, delta);
+        if(title != null)
+            this.textRenderer.draw(matrices, title, titleX, titleY, 4210752);
     }
 
     /**
@@ -56,7 +69,7 @@ public class BaseScreen extends Screen {
      * @return current widget x coordinate
      */
     protected int wXr(){
-        return widgetX.getAndSet(panelX + panelBorderWidth + widgetSpacing);
+        return widgetX.getAndSet(panelX + PANEL_PADDING);
     }
 
     /**
@@ -64,7 +77,7 @@ public class BaseScreen extends Screen {
      * @return current widget y coordinate
      */
     protected int wYr(){
-        return widgetY.getAndSet(panelY + panelBorderWidth + widgetSpacing);
+        return widgetY.getAndSet(panelY + PANEL_PADDING);
     }
 
     /**
@@ -89,7 +102,7 @@ public class BaseScreen extends Screen {
      * @return current widget x coordinate
      */
     protected int wX(int delta){
-        return widgetX.getAndAdd(delta + widgetSpacing);
+        return widgetX.getAndAdd(delta + WIDGET_SPACING);
     }
 
     /**
@@ -98,7 +111,7 @@ public class BaseScreen extends Screen {
      * @return current widget y coordinate
      */
     protected int wY(int delta){
-        return widgetY.getAndAdd(delta + widgetSpacing);
+        return widgetY.getAndAdd(delta + WIDGET_SPACING);
     }
 
     /**
@@ -108,11 +121,13 @@ public class BaseScreen extends Screen {
     @Override
     protected void init() {
         super.init();
-        this.panelX = (width - panelWidth) / 2;
-        this.panelY = (height - panelHeight) / 2;
+        if(this.panelWidth < 0) this.panelWidth = this.width;
+        if(this.panelHeight < 0) this.panelHeight = this.height;
+        this.panelX = width - panelWidth >> 1;
+        this.panelY = height - panelHeight >> 1;
         wXr();
         wYr();
-        titleX = panelX + (panelWidth - textRenderer.getWidth(title)) / 2F;
+        titleX = panelX + (panelWidth - (title != null ? textRenderer.getWidth(title) : 0)) / 2F;
         titleY = wY(8);
     }
 }
