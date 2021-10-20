@@ -4,12 +4,14 @@ import eu.gflash.notifmod.client.gui.widgets.CustomIntSliderWidget;
 import eu.gflash.notifmod.util.NumUtil;
 import eu.gflash.notifmod.config.ModConfig;
 import eu.gflash.notifmod.util.ReminderTimer;
+import eu.gflash.notifmod.util.TextUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import org.apache.commons.lang3.tuple.Triple;
 
@@ -23,7 +25,8 @@ public class ReminderScreen extends BaseScreen {
     private static final Text TEXT_TITLEFIELD = new TranslatableText("gui.screen.reminder.titleField");
     private static final Text TEXT_PRESET_1 = new TranslatableText("gui.screen.reminder.preset1");
     private static final Text TEXT_PRESET_2 = new TranslatableText("gui.screen.reminder.preset2");
-    private static final Text TEXT_START = new TranslatableText("gui.screen.reminder.start");
+    private static final Text TEXT_START = TextUtil.getWithFormat(new TranslatableText("gui.screen.reminder.start"), Formatting.GREEN);
+    private static final Text TEXT_LIST = new TranslatableText("gui.screen.reminder.list");
     private CustomIntSliderWidget sliderHours;
     private CustomIntSliderWidget sliderMinutes;
     private CustomIntSliderWidget sliderSeconds;
@@ -32,13 +35,13 @@ public class ReminderScreen extends BaseScreen {
     private int titleFieldTitleY;
 
     protected ReminderScreen() {
-        super(TEXT_TITLE, 250, 128, BACKGROUND);
+        super(TEXT_TITLE, 250, 146, BACKGROUND);
     }
 
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         super.render(matrices, mouseX, mouseY, delta);
-        this.textRenderer.draw(matrices, TEXT_TITLEFIELD, titleFieldTitleX, titleFieldTitleY, 4210752);
+        this.textRenderer.draw(matrices, TEXT_TITLEFIELD, titleFieldTitleX, titleFieldTitleY, 0x404040);
     }
 
     @Override
@@ -48,7 +51,7 @@ public class ReminderScreen extends BaseScreen {
         int titleFieldTitleW = textRenderer.getWidth(TEXT_TITLEFIELD);
         titleFieldTitleX = wX(titleFieldTitleW);
         titleFieldTitleY = wY() + 4;
-        addDrawableChild(titleField = new TextFieldWidget(this.textRenderer, wXr(), wY(16), 240 - titleFieldTitleW - widgetSpacing, 16, Text.of("test")));
+        addDrawableChild(titleField = new TextFieldWidget(this.textRenderer, wXr(), wY(16), 240 - titleFieldTitleW - WIDGET_SPACING, 16, TextUtil.EMPTY));
         addDrawableChild(sliderHours = new CustomIntSliderWidget(wX(), wY(20), 240, 20, "hours", 0, 24, 0));
         addDrawableChild(sliderMinutes = new CustomIntSliderWidget(wX(), wY(20), 240, 20, "minutes", 0, 60, 0));
         addDrawableChild(sliderSeconds = new CustomIntSliderWidget(wX(), wY(20), 240, 20, "seconds", 0, 60, 0));
@@ -57,8 +60,12 @@ public class ReminderScreen extends BaseScreen {
             ReminderTimer.startNew(getTime(), titleField.getText());
             onClose();
         }));
-        addDrawableChild(new ButtonWidget(wX(70), wY(), 70, 20, TEXT_PRESET_2, button -> setTime(settings.pre2Seconds)));
+        addDrawableChild(new ButtonWidget(wXr(), wY(20), 70, 20, TEXT_PRESET_2, button -> setTime(settings.pre2Seconds)));
+        addDrawableChild(new ButtonWidget(wX(), wY(), 240, 20, TEXT_LIST, b -> ReminderListScreen.open()){{
+            this.active = !ReminderTimer.getActive().isEmpty();
+        }});
         setTime(settings.defSeconds);
+        titleField.setMaxLength(34);
     }
 
     /**

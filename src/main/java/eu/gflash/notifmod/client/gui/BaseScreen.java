@@ -61,7 +61,7 @@ public class BaseScreen extends Screen {
         renderBackground(matrices);
         renderForeground(matrices, mouseX, mouseY, delta);
         if(title != null)
-            this.textRenderer.draw(matrices, title, titleX, titleY, 4210752);
+            this.textRenderer.draw(matrices, title, titleX, titleY, 0x404040);
     }
 
     /**

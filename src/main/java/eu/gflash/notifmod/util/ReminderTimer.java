@@ -5,7 +5,14 @@ import eu.gflash.notifmod.config.ModConfig;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.UUID;
 
 /**
  * Handles reminder timers.
@@ -85,6 +92,10 @@ public class ReminderTimer {
         return active.values();
     }
 
+    public String getName() {
+        return name;
+    }
+
     /**
      * Returns remaining seconds of a running timer.
      * If finished, it'll be negative.
@@ -93,6 +104,14 @@ public class ReminderTimer {
      */
     public int getRemaining() {
         return start >= 0 ? (int) (start + seconds - getCurrSecs()) : -1;
+    }
+
+    public boolean isActive(){
+        return active.containsKey(id);
+    }
+
+    public boolean hasName(){
+        return !name.isEmpty();
     }
 
     /**
