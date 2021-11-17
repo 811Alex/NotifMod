@@ -150,7 +150,7 @@ public class ModConfig implements ConfigData {
         @CollapsibleObject
         public Chat message = new Chat(".+", "\\[Server\\] .+", "", "notifmod:chat.message");
         @CollapsibleObject
-        public Chat mention = new Chat(".*\\p", "\\[Server\\] .*\\p", "", "notifmod:chat.mention");
+        public Chat mention = new Chat(".*\\p.*", "\\[Server\\] .*\\p.*", "", "notifmod:chat.mention");
     }
 
     public static class PlayerJoinLeaveCategory {
