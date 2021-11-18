@@ -31,7 +31,7 @@ public class Message {
 
         @Override
         public String toString() {
-            return "text.autoconfig.notifmod.enum.messageType." + this.name().toLowerCase();
+            return "text.autoconfig.notifmod.enum.message.type." + this.name().toLowerCase();
         }
     }
 

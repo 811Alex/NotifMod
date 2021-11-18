@@ -1,10 +1,10 @@
 {
   "text.autoconfig.notifmod.title": "NotifMod Config",
 
-  "text.autoconfig.notifmod.enum.messageType.chat": "Chat",
-  "text.autoconfig.notifmod.enum.messageType.actionbar": "Actionbar",
-  "text.autoconfig.notifmod.enum.messageType.title": "Title",
-  "text.autoconfig.notifmod.enum.messageType.subtitle": "Subtitle",
+  "text.autoconfig.notifmod.enum.message.type.chat": "Chat",
+  "text.autoconfig.notifmod.enum.message.type.actionbar": "Actionbar",
+  "text.autoconfig.notifmod.enum.message.type.title": "Title",
+  "text.autoconfig.notifmod.enum.message.type.subtitle": "Subtitle",
 
   "text.autoconfig.notifmod.option.durability": "Equipment Durability Notifications",
   "text.autoconfig.notifmod.option.durability.enabled": "Enabled",
