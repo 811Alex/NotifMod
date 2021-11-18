@@ -63,7 +63,7 @@
 
   "text.autoconfig.notifmod.option.chat.mention": "Mention Notifications",
   "text.autoconfig.notifmod.option.chat.mention.enabled": "Enabled",
-  "text.autoconfig.notifmod.option.chat.mention.regexFilter": "RegEx filter",
+  "text.autoconfig.notifmod.option.chat.mention.regexFilter": "RegEx filter (chat)",
   "text.autoconfig.notifmod.option.chat.mention.regexFilter.@Tooltip": "You'll only get notifications for messages\nmatching this regular expression.\nNote: \\p will be replaced with your username,\nbefore the regular expression gets interpreted.",
   "text.autoconfig.notifmod.option.chat.mention.regexFilterSys": "RegEx filter (system)",
   "text.autoconfig.notifmod.option.chat.mention.regexFilterSys.@Tooltip": "You'll only get notifications for messages\nmatching this regular expression.\nNote: \\p will be replaced with your username,\nbefore the regular expression gets interpreted.",
