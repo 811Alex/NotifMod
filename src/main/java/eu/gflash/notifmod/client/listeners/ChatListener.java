@@ -50,10 +50,11 @@ public class ChatListener {
     }
 
     private static RegExPattern getRelevantPattern(MessageType messageType, ModConfig.Chat settings){
+        int caseSens = settings.caseSens.ordinal();
         return switch(messageType){
-            case CHAT -> settings.regexFilter;
-            case SYSTEM -> settings.regexFilterSys;
-            case GAME_INFO -> settings.regexFilterGame;
+            case CHAT -> settings.regexFilter.setCaseSensitivity(caseSens % 2 == 1);
+            case SYSTEM -> settings.regexFilterSys.setCaseSensitivity((caseSens / 2) % 2 == 1);
+            case GAME_INFO -> settings.regexFilterGame.setCaseSensitivity(caseSens / 4 == 1);
         };
     }
 }

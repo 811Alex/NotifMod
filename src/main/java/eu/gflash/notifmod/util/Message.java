@@ -35,6 +35,15 @@ public class Message {
         }
     }
 
+    public enum ChannelCombo {
+        NONE, CHAT, SYSTEM, CHAT_SYSTEM, GAMEINFO, CHAT_GAMEINFO, SYSTEM_GAMEINFO, ALL;
+
+        @Override
+        public String toString() {
+            return "text.autoconfig.notifmod.enum.message.channelCombo." + this.name().toLowerCase();
+        }
+    }
+
     /**
      * Same as {@link this#auto(Type, Supplier, Supplier)} but sets both message {@link Supplier}s to be the same.
      * @param type message type

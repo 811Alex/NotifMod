@@ -272,6 +272,9 @@ public class ModConfig implements ConfigData {
         @Tooltip
         public RegExPattern regexFilterGame;
         @Tooltip
+        @EnumHandler(option = BUTTON)
+        public Message.ChannelCombo caseSens = Message.ChannelCombo.NONE;
+        @Tooltip
         public SoundSequence soundSequence;
         @BoundedDiscrete(min = 0, max = 100)
         public int volume = 100;

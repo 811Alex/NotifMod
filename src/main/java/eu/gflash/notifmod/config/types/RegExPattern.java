@@ -30,10 +30,21 @@ public class RegExPattern {
     private Pattern pattern;
     private String error = "";
     private String lastName;
+    private boolean caseSensitive = false;
 
     public RegExPattern(String pattern){
         this.original = pattern;
         compile();
+    }
+
+    /**
+     * Sets case sensitivity. Takes effect after {@link #compile()} gets called again.
+     * @param caseSensitive true to make it case-sensitive
+     * @return this object, for convenience
+     */
+    public RegExPattern setCaseSensitivity(boolean caseSensitive){
+        this.caseSensitive = caseSensitive;
+        return this;
     }
 
     /**
@@ -42,11 +53,13 @@ public class RegExPattern {
     public void compile(){
         ClientPlayerEntity player = MinecraftClient.getInstance().player;
         String currName = player == null ? null : player.getDisplayName().getString();
-        if(Objects.equals(lastName, currName) && pattern != null) return;   // no need to recompile
+        if(Objects.equals(lastName, currName) && pattern != null)   // compiled with current name
+            if((pattern.flags() == 0) == caseSensitive)             // compiled with current case-sensitivity
+                return;                                             // no need to recompile
         lastName = currName;
         String preppedPattern = original.replace("\\p", currName == null ? "." : currName);
         try{
-            pattern = Pattern.compile(preppedPattern);
+            pattern = Pattern.compile(preppedPattern, caseSensitive ? 0 : (Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE));
         }catch(PatternSyntaxException ex){
             pattern = Pattern.compile(".*");
             this.error = ex.getDescription();
