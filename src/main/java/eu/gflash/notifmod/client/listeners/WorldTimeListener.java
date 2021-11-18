@@ -30,13 +30,17 @@ public class WorldTimeListener {
     }
 
     private static void tryResetNotified(int timeOfDay, World world, ModConfig.SleepReminder settings){
-        if(timeOfDay >= getSleepTime(world)) return;
-        if(settings.includeThunder){
-            if(!world.isThundering()) notified = false;
-        }else notified = false;
+        if(world.getDimension().hasFixedTime()) notified = false;
+        else{
+            if(timeOfDay >= getSleepTime(world)) return;
+            if(settings.includeThunder){
+                if(!world.isThundering()) notified = false;
+            }else notified = false;
+        }
     }
 
     private static void tryNotify(int timeOfDay, World world, ModConfig.SleepReminder settings){
+        if(world.getDimension().hasFixedTime()) return;
         if(timeOfDay >= getSleepTime(world) || (settings.includeThunder && world.isThundering())){
             Message.auto(settings.msgType,
                     () -> TextUtil.buildText(Message.CHAT_PRE_INFO, getMsg()),
