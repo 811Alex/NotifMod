@@ -1,9 +1,9 @@
 plugins {
-    id 'fabric-loom' version '0.9-SNAPSHOT'
+    id 'fabric-loom' version '0.10-SNAPSHOT'
     id 'maven-publish'
 }
 
-def javaVer = JavaVersion.VERSION_16
+def javaVer = JavaVersion.VERSION_17
 targetCompatibility = sourceCompatibility = javaVer
 
 archivesBaseName = project.archives_base_name
@@ -50,12 +50,7 @@ jar {
 publishing {
     publications {
         mavenJava(MavenPublication) {
-            artifact(remapJar) {
-                builtBy remapJar
-            }
-            artifact(sourcesJar) {
-                builtBy remapSourcesJar
-            }
+            from components.java
         }
     }
 }

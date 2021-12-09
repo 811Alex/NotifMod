@@ -101,7 +101,7 @@ public class ReminderListScreen extends BaseScreen {
          * Reminder list widget entry. Contains timer title, time left & abort button.
          * @see ReminderListWidget
          */
-        public class ReminderEntry extends ElementListWidget.Entry<ReminderEntry>{
+        public class ReminderEntry extends Entry<ReminderEntry>{
             private final ReminderTimer timer;
             private final ButtonWidget stopButton;
             private Text title = TEXT_ENTRY_UNTITLED;
