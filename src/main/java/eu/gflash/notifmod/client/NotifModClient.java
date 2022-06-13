@@ -3,6 +3,7 @@ package eu.gflash.notifmod.client;
 import eu.gflash.notifmod.client.listeners.ReminderListener;
 import eu.gflash.notifmod.client.sound.CustomSounds;
 import eu.gflash.notifmod.config.ModConfig;
+import eu.gflash.notifmod.util.Message;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -21,5 +22,6 @@ public class NotifModClient implements ClientModInitializer {
         CustomSounds.register();
         ModConfig.register();
         ReminderListener.register();
+        Message.LOGGER.info("NotifMod loaded!");
     }
 }
