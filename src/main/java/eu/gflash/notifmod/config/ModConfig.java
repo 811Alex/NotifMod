@@ -148,9 +148,9 @@ public class ModConfig implements ConfigData {
     public static class ChatCategory {
         @PrefixText
         @CollapsibleObject
-        public Chat message = new Chat(".+", "\\[Server\\] .+", "", "notifmod:chat.message");
+        public Chat message = new Chat(".+", "", "", "notifmod:chat.message");
         @CollapsibleObject
-        public Chat mention = new Chat(".*\\p.*", "\\[Server\\] .*\\p.*", "", "notifmod:chat.mention");
+        public Chat mention = new Chat(".*\\p.*", "", "", "notifmod:chat.mention");
         @Tooltip
         public boolean LogMsgInfo = false;
     }
