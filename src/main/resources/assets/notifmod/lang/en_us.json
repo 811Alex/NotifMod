@@ -56,7 +56,7 @@
   "text.autoconfig.notifmod.option.durability.repairSettings.volume": "Sound volume",
 
   "text.autoconfig.notifmod.option.chat": "Chat Notifications",
-  "text.autoconfig.notifmod.option.chat.message.@PrefixText": "Note #1: in the background, message & mention notifications\n  work the same way, they just use different RegEx filters\n  and mentions take priority, if both match.\nNote #2: there are 3 different types of messages: chat,\n  system, game info. Each has a separate RegEx filter. Chat\n  messages coming from the server console, are \"system\".\nNote #3: empty RegEx patterns won't match anything.",
+  "text.autoconfig.notifmod.option.chat.message.@PrefixText": "Note #1: in the background, message & mention notifications\n  work the same way, they just use different RegEx filters\n  and mentions take priority, if both match.\nNote #2: there are 3 different types of messages: chat,\n  system, game info. Each has a separate RegEx filter.\nNote #3: empty RegEx patterns won't match anything.",
 
   "text.autoconfig.notifmod.option.chat.message": "Message Notifications",
   "text.autoconfig.notifmod.option.chat.message.enabled": "Enabled",
