@@ -151,6 +151,8 @@ public class ModConfig implements ConfigData {
         public Chat message = new Chat(".+", "\\[Server\\] .+", "", "notifmod:chat.message");
         @CollapsibleObject
         public Chat mention = new Chat(".*\\p.*", "\\[Server\\] .*\\p.*", "", "notifmod:chat.mention");
+        @Tooltip
+        public boolean LogMsgInfo = false;
     }
 
     public static class PlayerJoinLeaveCategory {

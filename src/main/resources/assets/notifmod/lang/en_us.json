@@ -86,6 +86,9 @@
   "text.autoconfig.notifmod.option.chat.mention.soundSequence.@Tooltip": "Format: sound(pitch); delay; sound(pitch)...\nPitch is a decimal between 0 and 2 (inclusive), with 1 being normal.\nFor normal pitch, you can omit it and the parentheses.\nDelays between sounds are in milliseconds and are NOT optional.\nSeparate entries with semicolons, spaces will be ignored.",
   "text.autoconfig.notifmod.option.chat.mention.volume": "Sound volume",
 
+  "text.autoconfig.notifmod.option.chat.LogMsgInfo": "Log message info",
+  "text.autoconfig.notifmod.option.chat.LogMsgInfo.@Tooltip": "Turn this on, to get info for all incoming\nmessages, in your console.\nThis is useful for identifying what\nchannel (message type) something uses.",
+
   "text.autoconfig.notifmod.option.playerJoinLeave": "Player Join/Leave Notifications",
 
   "text.autoconfig.notifmod.option.playerJoinLeave.join": "Join Notifications",

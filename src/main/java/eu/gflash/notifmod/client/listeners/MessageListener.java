@@ -3,12 +3,12 @@ package eu.gflash.notifmod.client.listeners;
 import com.google.common.base.Strings;
 import eu.gflash.notifmod.config.ModConfig;
 import eu.gflash.notifmod.config.types.RegExPattern;
+import eu.gflash.notifmod.util.Message;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.network.message.MessageSender;
 import net.minecraft.network.message.MessageType;
 
-import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -33,6 +33,8 @@ public class MessageListener {
      */
     private static void onIncomingMessage(MessageType messageType, String message){
         if(Strings.isNullOrEmpty(message)) return;  // ignore empty, this will also make it so empty patterns never match incoming messages
+        if(ModConfig.getInstance().chat.LogMsgInfo)
+            Message.LOGGER.info("Incoming message (" + Message.Channel.fromMessageType(messageType) + "): " + message);
         if(!tryNotify(ModConfig.getInstance().chat.mention, messageType, message))
             tryNotify(ModConfig.getInstance().chat.message, messageType, message);
     }
@@ -53,11 +55,10 @@ public class MessageListener {
 
     private static RegExPattern getRelevantPattern(MessageType messageType, ModConfig.Chat settings){
         int caseSens = settings.caseSens.ordinal();
-        Optional<MessageType.NarrationRule> narration = messageType.narration();
-        if(narration.isEmpty()) return settings.regexFilterGame.setCaseSensitivity(caseSens / 4 == 1);  // is GAME_INFO
-        return switch(narration.get().kind()){
+        return switch(Message.Channel.fromMessageType(messageType)){
             case CHAT -> settings.regexFilter.setCaseSensitivity(caseSens % 2 == 1);
             case SYSTEM -> settings.regexFilterSys.setCaseSensitivity((caseSens / 2) % 2 == 1);
+            case GAME_INFO -> settings.regexFilterGame.setCaseSensitivity(caseSens / 4 == 1);
         };
     }
 }

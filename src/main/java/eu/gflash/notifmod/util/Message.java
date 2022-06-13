@@ -3,11 +3,13 @@ package eu.gflash.notifmod.util;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.network.message.MessageType;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.Optional;
 import java.util.function.Supplier;
 
 /**
@@ -44,6 +46,24 @@ public class Message {
         @Override
         public String toString() {
             return "text.autoconfig.notifmod.enum.message.channelCombo." + this.name().toLowerCase();
+        }
+    }
+
+    public enum Channel {
+        CHAT, SYSTEM, GAME_INFO;
+
+        public static Channel fromMessageType(MessageType messageType){
+            Optional<MessageType.NarrationRule> narration = messageType.narration();
+            if(narration.isEmpty()) return GAME_INFO;  // is GAME_INFO
+            return switch(narration.get().kind()){
+                case CHAT -> CHAT;
+                case SYSTEM -> SYSTEM;
+            };
+        }
+
+        @Override
+        public String toString() {
+            return super.toString().toLowerCase().replace('_', ' ');
         }
     }
 
