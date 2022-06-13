@@ -12,7 +12,7 @@ import me.shedaniel.clothconfig2.api.ModifierKeyCode;
 import me.shedaniel.clothconfig2.gui.entries.KeyCodeEntry;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.InputUtil;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -79,7 +79,7 @@ public class Key {
     public static class Provider extends ProviderBase<ModifierKeyCode> { // GUI provider
         @Override
         public AbstractConfigListEntry<ModifierKeyCode> getEntry(String i13n, Field field, Object config, Object defaults, GuiRegistryAccess registry) {
-            KeyCodeEntry entry = ENTRY_BUILDER.startKeyCodeField(new TranslatableText(i13n), Utils.getUnsafely(field, config, Key.getDefault()).get())
+            KeyCodeEntry entry = ENTRY_BUILDER.startKeyCodeField(Text.translatable(i13n), Utils.getUnsafely(field, config, Key.getDefault()).get())
                     .setDefaultValue(() -> ((Key) Utils.getUnsafely(field, defaults)).get())
                     .setSaveConsumer(newValue -> Utils.setUnsafely(field, config, new Key(newValue)))
                     .build();

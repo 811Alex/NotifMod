@@ -13,7 +13,6 @@ import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
@@ -81,7 +80,7 @@ public class ItemList {
      * @return {@link Optional} containing the error, or empty if none
      */
     public Optional<Text> getError() {
-        return error.isEmpty() ? Optional.empty() : Optional.of((Text) new TranslatableText("error.config.notifmod.itemList." + error, errorId));
+        return error.isEmpty() ? Optional.empty() : Optional.of(Text.translatable("error.config.notifmod.itemList." + error, errorId));
     }
 
     /**
@@ -121,7 +120,7 @@ public class ItemList {
     public static class Provider extends ProviderBase<String> { // GUI provider
         @Override
         public AbstractConfigListEntry<String> getEntry(String i13n, Field field, Object config, Object defaults, GuiRegistryAccess registry) {
-            return ENTRY_BUILDER.startStrField(new TranslatableText(i13n), Utils.getUnsafely(field, config, ItemList.getDefault()).toString())
+            return ENTRY_BUILDER.startStrField(Text.translatable(i13n), Utils.getUnsafely(field, config, ItemList.getDefault()).toString())
                     .setDefaultValue(() -> Utils.getUnsafely(field, defaults).toString())
                     .setSaveConsumer(newValue -> Utils.setUnsafely(field, config, new ItemList(newValue)))
                     .setErrorSupplier(ItemList::validate)

@@ -2,7 +2,7 @@ package eu.gflash.notifmod.util;
 
 import com.google.common.base.Strings;
 import eu.gflash.notifmod.config.ModConfig;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
 import java.util.Collection;
@@ -53,10 +53,10 @@ public class ReminderTimer {
                         Message.CHAT_PRE_INFO,
                         TextUtil.getWithFormat(
                                 Strings.isNullOrEmpty(name) ?
-                                        new TranslatableText("msg.notifmod.reminder.start.long.unnamed", TextUtil.getWithFormat(NumUtil.secToHMSString(seconds), Formatting.YELLOW)) :
-                                        new TranslatableText("msg.notifmod.reminder.start.long.named", TextUtil.getWithFormat(NumUtil.secToHMSString(seconds), Formatting.YELLOW), TextUtil.getWithFormat(name, Formatting.YELLOW)),
+                                        Text.translatable("msg.notifmod.reminder.start.long.unnamed", TextUtil.getWithFormat(NumUtil.secToHMSString(seconds), Formatting.YELLOW)) :
+                                        Text.translatable("msg.notifmod.reminder.start.long.named", TextUtil.getWithFormat(NumUtil.secToHMSString(seconds), Formatting.YELLOW), TextUtil.getWithFormat(name, Formatting.YELLOW)),
                                 Formatting.AQUA)),
-                () -> TextUtil.getWithFormat(new TranslatableText("msg.notifmod.reminder.start.short"), Formatting.AQUA)
+                () -> TextUtil.getWithFormat(Text.translatable("msg.notifmod.reminder.start.short"), Formatting.AQUA)
         );
     }
 
@@ -135,10 +135,10 @@ public class ReminderTimer {
                             Message.CHAT_PRE_INFO,
                             TextUtil.getWithFormat(
                                     Strings.isNullOrEmpty(name) ?
-                                            new TranslatableText("msg.notifmod.reminder.done.unnamed") :
-                                            new TranslatableText("msg.notifmod.reminder.done.named", TextUtil.getWithFormat(name, Formatting.YELLOW)),
+                                            Text.translatable("msg.notifmod.reminder.done.unnamed") :
+                                            Text.translatable("msg.notifmod.reminder.done.named", TextUtil.getWithFormat(name, Formatting.YELLOW)),
                                     Formatting.GREEN)),
-                    () -> Strings.isNullOrEmpty(name) ? TextUtil.getWithFormat(new TranslatableText("msg.notifmod.reminder.done.unnamed"), Formatting.GREEN) : TextUtil.getWithFormat(name, Formatting.GREEN)
+                    () -> Strings.isNullOrEmpty(name) ? TextUtil.getWithFormat(Text.translatable("msg.notifmod.reminder.done.unnamed"), Formatting.GREEN) : TextUtil.getWithFormat(name, Formatting.GREEN)
             );
             if (settings.soundEnabled)
                 settings.soundSequence.play(settings.volume);

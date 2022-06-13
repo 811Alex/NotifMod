@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '0.10-SNAPSHOT'
+    id 'fabric-loom' version '0.12-SNAPSHOT'
     id 'maven-publish'
 }
 
@@ -44,7 +44,9 @@ java {
 }
 
 jar {
-    from 'LICENSE'
+    from("LICENSE") {
+        rename {"${it}_${project.archivesBaseName}"}
+    }
 }
 
 publishing {

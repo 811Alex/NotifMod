@@ -26,7 +26,7 @@ public class ReminderListener {
                     else
                         ReminderScreen.open();
                 }else if(currScreen instanceof ReminderScreen)
-                    currScreen.onClose();
+                    currScreen.close();
             }
         });
     }

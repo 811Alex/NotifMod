@@ -3,7 +3,7 @@ package eu.gflash.notifmod.client.gui.widgets;
 import eu.gflash.notifmod.util.NumUtil;
 import eu.gflash.notifmod.util.TextUtil;
 import net.minecraft.client.gui.widget.SliderWidget;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 
 /**
  * Integer slider widget that can take a custom range.
@@ -35,7 +35,7 @@ public class CustomIntSliderWidget extends SliderWidget {
 
     @Override
     protected void updateMessage() {
-        this.setMessage(new TranslatableText(this.langKey, getValue()));
+        this.setMessage(Text.translatable(this.langKey, getValue()));
     }
 
     @Override

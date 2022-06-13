@@ -5,23 +5,25 @@ import eu.gflash.notifmod.config.ModConfig;
 import eu.gflash.notifmod.config.types.RegExPattern;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.network.MessageType;
+import net.minecraft.network.message.MessageSender;
+import net.minecraft.network.message.MessageType;
 
+import java.util.Optional;
 import java.util.UUID;
 
 /**
  * Handles incoming messages.
  * @author Alex811
  */
-public class ChatListener {
+public class MessageListener {
     /**
      * Called for all chat messages.
      * @param sender {@link UUID} of message sender
      * @param message chat message
      */
-    public static void onMessage(MessageType messageType, UUID sender, String message){
+    public static void onMessage(MessageType messageType, MessageSender sender, String message){
         ClientPlayerEntity player = MinecraftClient.getInstance().player;
-        if(player != null && !sender.equals(player.getUuid()))  // not this client's player
+        if(player != null && (sender == null || !sender.uuid().equals(player.getUuid())))  // player exists & is game msg or chat msg from another client
             onIncomingMessage(messageType, message);
     }
 
@@ -51,10 +53,11 @@ public class ChatListener {
 
     private static RegExPattern getRelevantPattern(MessageType messageType, ModConfig.Chat settings){
         int caseSens = settings.caseSens.ordinal();
-        return switch(messageType){
+        Optional<MessageType.NarrationRule> narration = messageType.narration();
+        if(narration.isEmpty()) return settings.regexFilterGame.setCaseSensitivity(caseSens / 4 == 1);  // is GAME_INFO
+        return switch(narration.get().kind()){
             case CHAT -> settings.regexFilter.setCaseSensitivity(caseSens % 2 == 1);
             case SYSTEM -> settings.regexFilterSys.setCaseSensitivity((caseSens / 2) % 2 == 1);
-            case GAME_INFO -> settings.regexFilterGame.setCaseSensitivity(caseSens / 4 == 1);
         };
     }
 }

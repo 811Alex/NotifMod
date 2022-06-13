@@ -7,7 +7,7 @@
   ],
   "client": [
     "BuiltChunkMixin",
-    "ChatHudListenerMixin",
+    "InGameHudListenerMixin",
     "ClientPlayNetworkHandlerMixin",
     "TitleScreenMixin"
   ],

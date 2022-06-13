@@ -12,7 +12,6 @@ import net.minecraft.client.gui.widget.ElementListWidget;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 
 import java.util.Arrays;
@@ -28,9 +27,9 @@ import java.util.List;
 public class ReminderListScreen extends BaseScreen {
     private static final Identifier BACKGROUND = new Identifier("notifmod:textures/gui_reminder_list.png");
     private static final Identifier MASK = new Identifier("notifmod:textures/gui_reminder_list_mask.png");
-    private static final Text TEXT_TITLE = new TranslatableText("gui.screen.reminderList.title");
-    private static final Text TEXT_ENTRY_UNTITLED = new TranslatableText("gui.screen.reminderList.entry.untitled");
-    private static final Text TEXT_ENTRY_STOP = new TranslatableText("gui.screen.reminderList.entry.stop");
+    private static final Text TEXT_TITLE = Text.translatable("gui.screen.reminderList.title");
+    private static final Text TEXT_ENTRY_UNTITLED = Text.translatable("gui.screen.reminderList.entry.untitled");
+    private static final Text TEXT_ENTRY_STOP = Text.translatable("gui.screen.reminderList.entry.stop");
     private static final int PANEL_WIDTH = 250;
     private static final int PANEL_HEIGHT = 146;
 

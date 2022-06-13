@@ -5,7 +5,6 @@ import eu.gflash.notifmod.util.TextUtil;
 import eu.gflash.notifmod.config.ModConfig;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -25,10 +24,10 @@ public class DamageListener {
             notify(settings.damageSettings.stop,
                     () -> TextUtil.buildText(
                         Message.CHAT_PRE_WARN,
-                        new TranslatableText(
+                        Text.translatable(
                                 "msg.notifmod.durability.damage.brokenUnbreakable.long",
                                 TextUtil.getWithFormat(itemStack.getName(), Formatting.AQUA))),
-                    () -> new TranslatableText(
+                    () -> Text.translatable(
                             "msg.notifmod.durability.damage.brokenUnbreakable.short",
                             TextUtil.getWithFormat(itemStack.getName(), Formatting.AQUA))
             );
@@ -47,11 +46,11 @@ public class DamageListener {
             notify(settings.damageSettings.damage,
                     () -> TextUtil.buildText(
                             Message.CHAT_PRE_WARN,
-                            new TranslatableText(
+                            Text.translatable(
                                     "msg.notifmod.durability.damage.percentage.long",
                                     TextUtil.getWithFormat(itemStack.getName(), Formatting.AQUA),
                                     TextUtil.getWithFormat(durabilityPercentage, Formatting.RED))),
-                    () -> new TranslatableText(
+                    () -> Text.translatable(
                             "msg.notifmod.durability.damage.percentage.short",
                             TextUtil.getWithFormat(itemStack.getName(), Formatting.AQUA),
                             TextUtil.getWithFormat(durabilityPercentage, Formatting.RED))
@@ -66,14 +65,14 @@ public class DamageListener {
                 notify(settings.repairSettings,
                         () -> TextUtil.buildText(
                                 Message.CHAT_PRE_INFO,
-                                new TranslatableText(
+                                Text.translatable(
                                         "msg.notifmod.durability.repair.long",
                                         TextUtil.getWithFormat(itemStack.getName(), Formatting.AQUA),
-                                        TextUtil.getWithFormat(new TranslatableText("msg.notifmod.durability.repair.long.full"), Formatting.GREEN))),
-                        () -> new TranslatableText(
+                                        TextUtil.getWithFormat(Text.translatable("msg.notifmod.durability.repair.long.full"), Formatting.GREEN))),
+                        () -> Text.translatable(
                                 "msg.notifmod.durability.repair.short",
                                 TextUtil.getWithFormat(itemStack.getName(), Formatting.AQUA),
-                                TextUtil.getWithFormat(new TranslatableText("msg.notifmod.durability.repair.short.full"), Formatting.GREEN))
+                                TextUtil.getWithFormat(Text.translatable("msg.notifmod.durability.repair.short.full"), Formatting.GREEN))
                 );
         }
     }
@@ -124,17 +123,7 @@ public class DamageListener {
      * Wrapper for {@link ItemStack} that allows comparisons required for them to work properly as {@link HashMap} keys.
      * Note: damage differences will be ignored, so different {@link ItemStack} objects, that only differ in damage, would count as equal.
      */
-    private static class ItemStackWrapper{
-        private final ItemStack itemStack;
-
-        public ItemStackWrapper(ItemStack itemStack){
-            this.itemStack = itemStack;
-        }
-
-        public ItemStack get() {
-            return itemStack;
-        }
-
+    private record ItemStackWrapper(ItemStack itemStack){
         /**
          * Get copy without any damage.
          * @return undamaged copy

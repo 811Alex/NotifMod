@@ -4,7 +4,6 @@ import eu.gflash.notifmod.config.ModConfig;
 import eu.gflash.notifmod.util.Message;
 import eu.gflash.notifmod.util.TextUtil;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.world.World;
 
@@ -53,7 +52,7 @@ public class WorldTimeListener {
     }
 
     private static Text getMsg(){
-        return TextUtil.getWithFormat(new TranslatableText("msg.notifmod.sleep"), Formatting.AQUA);
+        return TextUtil.getWithFormat(Text.translatable("msg.notifmod.sleep"), Formatting.AQUA);
     }
 
     private static int getSleepTime(World world){

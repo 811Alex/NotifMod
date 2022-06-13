@@ -4,7 +4,6 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import eu.gflash.notifmod.client.sound.FollowingSound;
 import eu.gflash.notifmod.config.ProviderBase;
 import joptsimple.internal.Strings;
 import me.shedaniel.autoconfig.gui.registry.api.GuiRegistryAccess;
@@ -12,11 +11,9 @@ import me.shedaniel.autoconfig.util.Utils;
 import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.sound.PositionedSoundInstance;
-import net.minecraft.client.sound.SoundInstance;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
@@ -103,7 +100,7 @@ public class SoundSequence {
      * @return {@link Optional} containing the error, or empty if none
      */
     public Optional<Text> getError() {
-        return error.isEmpty() ? Optional.empty() : Optional.of((Text) new TranslatableText("error.config.notifmod.soundSequence." + error, errorId));
+        return error.isEmpty() ? Optional.empty() : Optional.of(Text.translatable("error.config.notifmod.soundSequence." + error, errorId));
     }
 
     /**
@@ -131,7 +128,7 @@ public class SoundSequence {
         new Thread(() -> sequence.forEach(sound -> {
             sound.play(volume);
             try {
-                Thread.sleep(sound.getDelay());
+                Thread.sleep(sound.delay());
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -143,38 +140,30 @@ public class SoundSequence {
         return sequenceStr;
     }
 
-    private static class Sound {
-        private final SoundEvent soundEvent;
-        private final float pitch;
-        private final int delay;
-
-        public Sound(SoundEvent soundEvent, float pitch, int delay){
-            this.soundEvent = soundEvent;
-            this.pitch = pitch;
-            this.delay = delay;
-        }
+    private record Sound(SoundEvent soundEvent, float pitch, int delay) {
 
         /**
          * Plays {@link this#soundEvent}, using the defined {@link this#pitch} and the {@code volume} parameter.
+         *
          * @param volume volume, range 0 - 1
          */
-        public void play(float volume){
-            MinecraftClient mc = MinecraftClient.getInstance();
-            mc.getSoundManager().play(
-                    mc.player != null && mc.world != null ?
-                            new FollowingSound(mc.player, soundEvent, pitch, volume) :
-                            PositionedSoundInstance.master(soundEvent, pitch, volume)
-            );
-        }
+            public void play(float volume) {
+                MinecraftClient mc = MinecraftClient.getInstance();
+                if (mc.player != null && mc.world != null)
+                    mc.world.playSoundFromEntity(mc.player, mc.player, soundEvent, SoundCategory.MASTER, volume, pitch);
+                else mc.getSoundManager().play(PositionedSoundInstance.master(soundEvent, pitch, volume));
+            }
 
-        /**
-         * The delay to be used after this sound is played.
-         * @return the following delay
-         */
-        public int getDelay() {
-            return delay;
+            /**
+             * The delay to be used after this sound is played.
+             *
+             * @return the following delay
+             */
+            @Override
+            public int delay() {
+                return delay;
+            }
         }
-    }
 
     public static class Adapter extends TypeAdapter<SoundSequence> { // JSON adapter
         @Override
@@ -191,7 +180,7 @@ public class SoundSequence {
     public static class Provider extends ProviderBase<String> { // GUI provider
         @Override
         public AbstractConfigListEntry<String> getEntry(String i13n, Field field, Object config, Object defaults, GuiRegistryAccess registry) {
-            return ENTRY_BUILDER.startStrField(new TranslatableText(i13n), Utils.getUnsafely(field, config, SoundSequence.getDefault()).toString())
+            return ENTRY_BUILDER.startStrField(Text.translatable(i13n), Utils.getUnsafely(field, config, SoundSequence.getDefault()).toString())
                     .setDefaultValue(() -> Utils.getUnsafely(field, defaults).toString())
                     .setSaveConsumer(newValue -> Utils.setUnsafely(field, config, new SoundSequence(newValue)))
                     .setErrorSupplier(SoundSequence::validate)

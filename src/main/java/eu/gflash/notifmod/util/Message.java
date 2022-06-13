@@ -21,7 +21,7 @@ public class Message {
     static {
         CHAT_NAME = TextUtil.buildText(
                 TextUtil.getWithFormat("[", Formatting.GRAY),
-                TextUtil.getWithFormat(new TranslatableText("msg.notifmod.chat.name"), Formatting.LIGHT_PURPLE),
+                TextUtil.getWithFormat(Text.translatable("msg.notifmod.chat.name"), Formatting.LIGHT_PURPLE),
                 TextUtil.getWithFormat("] ", Formatting.GRAY)
         );
     }
@@ -113,7 +113,7 @@ public class Message {
      */
     private static Text getPrefix(String langKey, Formatting color){
         return TextUtil.buildText(
-                TextUtil.getWithFormat(new TranslatableText(langKey), color),
+                TextUtil.getWithFormat(Text.translatable(langKey), color),
                 TextUtil.getWithFormat(": ", Formatting.GRAY)
         );
     }

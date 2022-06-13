@@ -11,8 +11,6 @@ import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
-
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.Objects;
@@ -75,7 +73,7 @@ public class RegExPattern {
      * @return {@link Optional} containing the error, or empty if none
      */
     public Optional<Text> getError() {
-        return error.isEmpty() ? Optional.empty() : Optional.of((Text) new TranslatableText("error.config.notifmod.RegExPattern", error));
+        return error.isEmpty() ? Optional.empty() : Optional.of(Text.translatable("error.config.notifmod.RegExPattern", error));
     }
 
     /**
@@ -116,7 +114,7 @@ public class RegExPattern {
     public static class Provider extends ProviderBase<String> { // GUI provider
         @Override
         public AbstractConfigListEntry<String> getEntry(String i13n, Field field, Object config, Object defaults, GuiRegistryAccess registry) {
-            return ENTRY_BUILDER.startStrField(new TranslatableText(i13n), Utils.getUnsafely(field, config, RegExPattern.getDefault()).toString())
+            return ENTRY_BUILDER.startStrField(Text.translatable(i13n), Utils.getUnsafely(field, config, RegExPattern.getDefault()).toString())
                     .setDefaultValue(() -> Utils.getUnsafely(field, defaults).toString())
                     .setSaveConsumer(newValue -> Utils.setUnsafely(field, config, new RegExPattern(newValue)))
                     .setErrorSupplier(RegExPattern::validate)

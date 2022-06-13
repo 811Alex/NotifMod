@@ -10,7 +10,6 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import org.apache.commons.lang3.tuple.Triple;
@@ -21,12 +20,12 @@ import org.apache.commons.lang3.tuple.Triple;
  */
 public class ReminderScreen extends BaseScreen {
     private static final Identifier BACKGROUND = new Identifier("notifmod:textures/gui_reminder.png");
-    private static final Text TEXT_TITLE = new TranslatableText("gui.screen.reminder.title");
-    private static final Text TEXT_TITLEFIELD = new TranslatableText("gui.screen.reminder.titleField");
-    private static final Text TEXT_PRESET_1 = new TranslatableText("gui.screen.reminder.preset1");
-    private static final Text TEXT_PRESET_2 = new TranslatableText("gui.screen.reminder.preset2");
-    private static final Text TEXT_START = TextUtil.getWithFormat(new TranslatableText("gui.screen.reminder.start"), Formatting.GREEN);
-    private static final Text TEXT_LIST = new TranslatableText("gui.screen.reminder.list");
+    private static final Text TEXT_TITLE = Text.translatable("gui.screen.reminder.title");
+    private static final Text TEXT_TITLEFIELD = Text.translatable("gui.screen.reminder.titleField");
+    private static final Text TEXT_PRESET_1 = Text.translatable("gui.screen.reminder.preset1");
+    private static final Text TEXT_PRESET_2 = Text.translatable("gui.screen.reminder.preset2");
+    private static final Text TEXT_START = TextUtil.getWithFormat(Text.translatable("gui.screen.reminder.start"), Formatting.GREEN);
+    private static final Text TEXT_LIST = Text.translatable("gui.screen.reminder.list");
     private CustomIntSliderWidget sliderHours;
     private CustomIntSliderWidget sliderMinutes;
     private CustomIntSliderWidget sliderSeconds;
@@ -58,7 +57,7 @@ public class ReminderScreen extends BaseScreen {
         addDrawableChild(new ButtonWidget(wX(70), wY(), 70, 20, TEXT_PRESET_1, button -> setTime(settings.pre1Seconds)));
         addDrawableChild(new ButtonWidget(wX(96), wY(), 96, 20, TEXT_START, button -> {
             ReminderTimer.startNew(getTime(), titleField.getText());
-            onClose();
+            close();
         }));
         addDrawableChild(new ButtonWidget(wXr(), wY(20), 70, 20, TEXT_PRESET_2, button -> setTime(settings.pre2Seconds)));
         addDrawableChild(new ButtonWidget(wX(), wY(), 240, 20, TEXT_LIST, b -> ReminderListScreen.open()){{

@@ -1,6 +1,5 @@
 package eu.gflash.notifmod.util;
 
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
@@ -33,7 +32,7 @@ public class TextUtil {
      * @return the formatted text
      */
     public static Text getWithFormat(Text text, Formatting format){
-        return buildText(text.copy().getWithStyle(Style.EMPTY.withFormatting(format)).toArray(Text[]::new));
+        return buildText(text.copyContentOnly().getWithStyle(Style.EMPTY.withFormatting(format)).toArray(Text[]::new));
     }
 
     /**
@@ -42,7 +41,7 @@ public class TextUtil {
      * @return {@link Text} that includes all input {@link Text}s
      */
     public static Text buildText(Text... texts){
-        MutableText result = LiteralText.EMPTY.copy();
+        MutableText result = Text.empty();
         Stream.of(texts).forEach(result::append);
         return result;
     }
