@@ -128,6 +128,10 @@ public class Message {
         getHud().setSubtitle(msg);
     }
 
+    public static void log(String msg){
+        LOGGER.info("[" + LOGGER.getName() + "] " + msg);
+    }
+
     /**
      * Builds chat prefix {@link Text}s.
      * @param langKey the prefix LangKey

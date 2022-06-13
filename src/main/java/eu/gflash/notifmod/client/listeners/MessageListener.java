@@ -34,7 +34,7 @@ public class MessageListener {
     private static void onIncomingMessage(MessageType messageType, String message){
         if(Strings.isNullOrEmpty(message)) return;  // ignore empty, this will also make it so empty patterns never match incoming messages
         if(ModConfig.getInstance().chat.LogMsgInfo)
-            Message.LOGGER.info("Incoming message (" + Message.Channel.fromMessageType(messageType) + "): " + message);
+            Message.log("Incoming message (" + Message.Channel.fromMessageType(messageType) + "): " + message);
         if(!tryNotify(ModConfig.getInstance().chat.mention, messageType, message))
             tryNotify(ModConfig.getInstance().chat.message, messageType, message);
     }

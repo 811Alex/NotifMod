@@ -22,6 +22,6 @@ public class NotifModClient implements ClientModInitializer {
         CustomSounds.register();
         ModConfig.register();
         ReminderListener.register();
-        Message.LOGGER.info("NotifMod loaded!");
+        Message.log("NotifMod loaded!");
     }
 }
