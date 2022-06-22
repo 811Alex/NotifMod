@@ -6,8 +6,6 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.network.message.MessageType;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -21,7 +19,6 @@ public class Message {
     private static final Text CHAT_NAME;
     public static final Text CHAT_PRE_WARN = getPrefix("msg.notifmod.pre.warn", Formatting.RED);
     public static final Text CHAT_PRE_INFO = getPrefix("msg.notifmod.pre.info", Formatting.GREEN);
-    public static final Logger LOGGER = LogManager.getFormatterLogger("NotifMod");
 
     static {
         CHAT_NAME = TextUtil.buildText(
@@ -126,10 +123,6 @@ public class Message {
     public static void subTitle(Text msg){
         title(TextUtil.EMPTY);
         getHud().setSubtitle(msg);
-    }
-
-    public static void log(String msg){
-        LOGGER.info("[" + LOGGER.getName() + "] " + msg);
     }
 
     /**

@@ -3,6 +3,7 @@ package eu.gflash.notifmod.client.listeners;
 import com.google.common.base.Strings;
 import eu.gflash.notifmod.config.ModConfig;
 import eu.gflash.notifmod.config.types.RegExPattern;
+import eu.gflash.notifmod.util.Log;
 import eu.gflash.notifmod.util.Message;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -34,7 +35,7 @@ public class MessageListener {
     private static void onIncomingMessage(MessageType messageType, String message){
         if(Strings.isNullOrEmpty(message)) return;  // ignore empty, this will also make it so empty patterns never match incoming messages
         if(ModConfig.getInstance().chat.LogMsgInfo)
-            Message.log("Incoming message (" + Message.Channel.fromMessageType(messageType) + "): " + message);
+            Log.info("Incoming message (" + Message.Channel.fromMessageType(messageType) + "): " + message);
         if(!tryNotify(ModConfig.getInstance().chat.mention, messageType, message))
             tryNotify(ModConfig.getInstance().chat.message, messageType, message);
     }
