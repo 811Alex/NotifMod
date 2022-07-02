@@ -48,7 +48,7 @@ public class Key {
     }
 
     public boolean isDown(){
-        return InputUtil.isKeyPressed(MinecraftClient.getInstance().getWindow().getHandle(), getCode());
+        return key != InputUtil.UNKNOWN_KEY && InputUtil.isKeyPressed(MinecraftClient.getInstance().getWindow().getHandle(), getCode());
     }
 
     @Override

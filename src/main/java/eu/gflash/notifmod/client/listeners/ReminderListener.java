@@ -18,16 +18,12 @@ public class ReminderListener {
     public static void register(){
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             ModConfig.Reminder settings = ModConfig.getInstance().reminder;
-            if(gotPressed(settings.keyBind)){
-                Screen currScreen = MinecraftClient.getInstance().currentScreen;
-                if(currScreen == null){
-                    if(settings.skipGUI)
-                        ReminderTimer.startNew(settings.defSeconds, null);
-                    else
-                        ReminderScreen.open();
-                }else if(currScreen instanceof ReminderScreen)
-                    currScreen.close();
-            }
+            if(!gotPressed(settings.keyBind)) return;
+            Screen currScreen = MinecraftClient.getInstance().currentScreen;
+            if(currScreen == null){
+                if(settings.skipGUI) ReminderTimer.startNew(settings.defSeconds, null);
+                else ReminderScreen.open();
+            }else if(currScreen instanceof ReminderScreen) currScreen.close();
         });
     }
 
