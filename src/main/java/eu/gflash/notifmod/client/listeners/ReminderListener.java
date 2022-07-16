@@ -13,17 +13,19 @@ import net.minecraft.client.gui.screen.Screen;
  * @author Alex811
  */
 public class ReminderListener {
-    private static boolean lastState = false;   // previous key binding state
+    private static final boolean[] lastState = {false, false};    // previous key binding state
 
     public static void register(){
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             ModConfig.Reminder settings = ModConfig.getInstance().reminder;
-            if(!gotPressed(settings.keyBind)) return;
+            boolean GUIKeyPressed = gotPressed(settings.keyBind, 0);
+            boolean NoGUIKeyPressed = gotPressed(settings.keyBindNoGUI, 1); // Note: must always run gotPressed() for all bindings
+            if(!(GUIKeyPressed || NoGUIKeyPressed)) return;
             Screen currScreen = MinecraftClient.getInstance().currentScreen;
             if(currScreen == null){
-                if(settings.skipGUI) ReminderTimer.startNew(settings.defSeconds, null);
-                else ReminderScreen.open();
-            }else if(currScreen instanceof ReminderScreen) currScreen.close();
+                if(GUIKeyPressed) ReminderScreen.open();
+                else ReminderTimer.startNew(settings.defSeconds, null);
+            }else if(GUIKeyPressed && currScreen instanceof ReminderScreen) currScreen.close();
         });
     }
 
@@ -32,11 +34,12 @@ public class ReminderListener {
      * Afterwards, this will not return true again until the key gets released and pressed again.
      * The last state it checks against, is the one observed during the previous call.
      * @param key the {@link Key} to check
+     * @param keyIndex the index to use for {@link #lastState}
      * @return true if it was just pressed
      */
-    private static boolean gotPressed(Key key){
-        boolean pressed = !lastState && key.isDown();
-        lastState = key.isDown();
+    private static boolean gotPressed(Key key, int keyIndex){
+        boolean pressed = !lastState[keyIndex] && key.isDown();
+        lastState[keyIndex] = key.isDown();
         return pressed;
     }
 }

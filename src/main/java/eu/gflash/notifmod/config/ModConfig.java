@@ -346,13 +346,13 @@ public class ModConfig implements ConfigData {
         @Tooltip
         public Key keyBind = new Key(GLFW.GLFW_KEY_KP_ADD);
         @Tooltip
+        public Key keyBindNoGUI = new Key(GLFW.GLFW_KEY_UNKNOWN);
+        @Tooltip
         public int defSeconds = 300;
         @Tooltip
         public int pre1Seconds = 120;
         @Tooltip
         public int pre2Seconds = 1200;
-        @Tooltip
-        public boolean skipGUI = false;
         @Tooltip
         @EnumHandler(option = BUTTON)
         public Message.Type msgTypeStart = Message.Type.ACTIONBAR;
