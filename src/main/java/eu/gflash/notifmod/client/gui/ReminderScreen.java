@@ -1,13 +1,13 @@
 package eu.gflash.notifmod.client.gui;
 
 import eu.gflash.notifmod.client.gui.widgets.CustomIntSliderWidget;
+import eu.gflash.notifmod.client.gui.widgets.CustomTextFieldWidget;
 import eu.gflash.notifmod.util.NumUtil;
 import eu.gflash.notifmod.config.ModConfig;
 import eu.gflash.notifmod.util.ReminderTimer;
 import eu.gflash.notifmod.util.TextUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -31,7 +31,7 @@ public class ReminderScreen extends BaseScreen {
     private CustomIntSliderWidget sliderHours;
     private CustomIntSliderWidget sliderMinutes;
     private CustomIntSliderWidget sliderSeconds;
-    private TextFieldWidget titleField;
+    private CustomTextFieldWidget titleField;
     private int titleFieldTitleX;
     private int titleFieldTitleY;
     private boolean repeat = false;
@@ -53,7 +53,7 @@ public class ReminderScreen extends BaseScreen {
         int titleFieldTitleW = textRenderer.getWidth(TEXT_TITLEFIELD);
         titleFieldTitleX = wX(titleFieldTitleW);
         titleFieldTitleY = wY() + 4;
-        addDrawableChild(titleField = new TextFieldWidget(this.textRenderer, wXr(), wY(16), 240 - titleFieldTitleW - WIDGET_SPACING, 16, TextUtil.EMPTY));
+        addDrawableChild(titleField = new CustomTextFieldWidget(this.textRenderer, wXr(), wY(16), 240 - titleFieldTitleW - WIDGET_SPACING, 16, TextUtil.EMPTY));
         addDrawableChild(sliderHours = new CustomIntSliderWidget(wX(), wY(20), 240, 20, "hours", 0, 24, 0));
         addDrawableChild(sliderMinutes = new CustomIntSliderWidget(wX(), wY(20), 240, 20, "minutes", 0, 60, 0));
         addDrawableChild(sliderSeconds = new CustomIntSliderWidget(wX(), wY(20), 240, 20, "seconds", 0, 60, 0));
