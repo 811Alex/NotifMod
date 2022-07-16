@@ -62,11 +62,6 @@ public class ReminderTimer {
      * Starts timer thread, stores timer as {@link #active} & displays appropriate message.
      */
     public void start() {
-        active.put(id, this);
-        start = getCurrSecs();
-        long t = seconds * 1000L;
-        if(repeat) timer.scheduleAtFixedRate(new Task(), t, t);
-        else timer.schedule(new Task(), t);
         ModConfig.Reminder settings = ModConfig.getInstance().reminder;
         Message.auto(settings.msgTypeStart,
                 () -> TextUtil.buildText(
@@ -78,6 +73,13 @@ public class ReminderTimer {
                                 Formatting.AQUA)),
                 () -> TextUtil.getWithFormat(Text.translatable("msg.notifmod.reminder.start.short"), Formatting.AQUA)
         );
+        if(seconds > 0){
+            active.put(id, this);
+            start = getCurrSecs();
+            long t = seconds * 1000L;
+            if(repeat) timer.scheduleAtFixedRate(new Task(), t, t);
+            else timer.schedule(new Task(), t);
+        }else new Task().run();
     }
 
     /**
