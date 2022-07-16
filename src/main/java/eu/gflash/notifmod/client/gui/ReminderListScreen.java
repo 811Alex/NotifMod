@@ -180,7 +180,7 @@ public class ReminderListScreen extends BaseScreen {
                 textRenderer.drawWithShadow(matrices, title, x, textY, 0xFFFFFF);
                 stopButton.active = timer.isActive();
                 if(stopButton.active)
-                    textRenderer.drawWithShadow(matrices, NumUtil.secToHMSString(timer.getRemaining()), ReminderListWidget.this.timeX, textY, 0xC4FFFF);
+                    textRenderer.drawWithShadow(matrices, NumUtil.secToHMSString(timer.getRemaining()), ReminderListWidget.this.timeX, textY, timer.isRepeating() ? 0xFFC4FF : 0xC4FFFF);
                 else
                     textRenderer.drawWithShadow(matrices, "--:--:--", ReminderListWidget.this.timeX, textY, 0xFFFFC4);
                 stopButton.y = y;

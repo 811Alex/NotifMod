@@ -24,20 +24,38 @@ public class ReminderTimer {
     private final Timer timer;
     private final int seconds;
     private final String name;
+    private final boolean repeat;
     private long start = -1;
 
     /**
      * Timer constructor. Doesn't start the timer, you need to do that manually.
      * @param seconds seconds to wait before notifying that the time's up
      * @param name timer title
+     * @param repeat auto-repeat timer
      * @see #start()
+     * @see ReminderTimer#startNew(int, String, boolean)
      * @see ReminderTimer#startNew(int, String)
+     * @see #ReminderTimer(int, String)
      */
-    public ReminderTimer(int seconds, String name) {
+    public ReminderTimer(int seconds, String name, boolean repeat) {
         this.id = UUID.randomUUID();
         this.timer = new Timer(true);
         this.seconds = seconds;
         this.name = name;
+        this.repeat = repeat;
+    }
+
+    /**
+     * Non-repeating timer constructor. Doesn't start the timer, you need to do that manually.
+     * @param seconds seconds to wait before notifying that the time's up
+     * @param name timer title
+     * @see #start()
+     * @see ReminderTimer#startNew(int, String, boolean)
+     * @see ReminderTimer#startNew(int, String)
+     * @see #ReminderTimer(int, String, boolean)
+     */
+    public ReminderTimer(int seconds, String name){
+        this(seconds, name, false);
     }
 
     /**
@@ -46,7 +64,9 @@ public class ReminderTimer {
     public void start() {
         active.put(id, this);
         start = getCurrSecs();
-        timer.schedule(new Task(), seconds * 1000L);
+        long t = seconds * 1000L;
+        if(repeat) timer.scheduleAtFixedRate(new Task(), t, t);
+        else timer.schedule(new Task(), t);
         ModConfig.Reminder settings = ModConfig.getInstance().reminder;
         Message.auto(settings.msgTypeStart,
                 () -> TextUtil.buildText(
@@ -64,9 +84,19 @@ public class ReminderTimer {
      * Makes new timer & runs {@link #start()} on it.
      * @param seconds seconds to wait before notifying that the time's up
      * @param name timer title
+     * @param repeat auto-repeat timer
+     */
+    public static void startNew(int seconds, String name, boolean repeat) {
+        new ReminderTimer(seconds, name, repeat).start();
+    }
+
+    /**
+     * Makes new non-repeating timer & runs {@link #start()} on it.
+     * @param seconds seconds to wait before notifying that the time's up
+     * @param name timer title
      */
     public static void startNew(int seconds, String name) {
-        new ReminderTimer(seconds, name).start();
+        startNew(seconds, name, false);
     }
 
     /**
@@ -98,16 +128,20 @@ public class ReminderTimer {
 
     /**
      * Returns remaining seconds of a running timer.
-     * If finished, it'll be negative.
+     * When the time runs out, it'll loop, to check if the timer is active, see {@link #isActive()}.
      * If it never started, it'll be -1.
      * @return remaining seconds or -1 if it never ran
      */
     public int getRemaining() {
-        return start >= 0 ? (int) (start + seconds - getCurrSecs()) : -1;
+        return start < 0 ? -1 : (int) (seconds - (getCurrSecs() - start - 1) % seconds - 1);
     }
 
     public boolean isActive(){
         return active.containsKey(id);
+    }
+
+    public boolean isRepeating() {
+        return repeat;
     }
 
     public boolean hasName(){
@@ -142,7 +176,7 @@ public class ReminderTimer {
             );
             if (settings.soundEnabled)
                 settings.soundSequence.play(settings.volume);
-            active.remove(id);
+            if(!repeat) active.remove(id);
         }
     }
 }

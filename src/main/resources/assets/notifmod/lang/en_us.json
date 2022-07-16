@@ -189,6 +189,8 @@
   "gui.screen.reminder.preset2": "Preset 2",
   "gui.screen.reminder.start": "START",
   "gui.screen.reminder.list": "Show active reminders",
+  "gui.screen.reminder.repeat.yes": "Repeating",
+  "gui.screen.reminder.repeat.no": "Normal",
 
   "gui.screen.reminderList.title": "Reminder List",
   "gui.screen.reminderList.entry.untitled": "<untitled>",
