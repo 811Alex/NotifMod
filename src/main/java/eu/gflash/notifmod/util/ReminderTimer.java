@@ -147,7 +147,7 @@ public class ReminderTimer {
     }
 
     public boolean hasName(){
-        return !name.isEmpty();
+        return !Strings.isNullOrEmpty(name);
     }
 
     /**
