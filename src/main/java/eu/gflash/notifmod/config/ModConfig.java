@@ -304,7 +304,7 @@ public class ModConfig implements ConfigData {
     public static class SleepReminder {
         @PrefixText
         public boolean enabled = false;
-        public boolean includeThunder = false;
+        public boolean includeThunder = true;
         @EnumHandler(option = BUTTON)
         public Message.Type msgType = Message.Type.CHAT;
         public boolean soundEnabled = false;
