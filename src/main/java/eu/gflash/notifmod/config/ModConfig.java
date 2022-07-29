@@ -305,6 +305,8 @@ public class ModConfig implements ConfigData {
         @PrefixText
         public boolean enabled = false;
         public boolean includeThunder = true;
+        @CollapsibleObject
+        public SleepReminderConditions conditions = new SleepReminderConditions();
         @EnumHandler(option = BUTTON)
         public Message.Type msgType = Message.Type.CHAT;
         public boolean soundEnabled = false;
@@ -312,6 +314,16 @@ public class ModConfig implements ConfigData {
         public SoundSequence soundSequence = new SoundSequence("notifmod:sleep.now");
         @BoundedDiscrete(min = 0, max = 100)
         public int volume = 100;
+    }
+
+    public static class SleepReminderConditions {
+        @Tooltip
+        public boolean pauseInTimelessDims = true;
+        @Tooltip
+        public boolean pauseUnderground = true;
+        public int minAltitude = 50;
+        @BoundedDiscrete(min = 1, max = 15)
+        public int minSkyLight = 1;
     }
 
     public static class DoneLoadingGame {

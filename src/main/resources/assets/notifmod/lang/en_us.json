@@ -107,6 +107,15 @@
   "text.autoconfig.notifmod.option.sleepReminder.enabled.@PrefixText": "This will notify you, the moment you're able to sleep.",
   "text.autoconfig.notifmod.option.sleepReminder.enabled": "Enabled",
   "text.autoconfig.notifmod.option.sleepReminder.includeThunder": "Include thunderstorms",
+
+  "text.autoconfig.notifmod.option.sleepReminder.conditions": "Reminder pause conditions",
+  "text.autoconfig.notifmod.option.sleepReminder.conditions.pauseInTimelessDims": "Pause in timeless dimensions",
+  "text.autoconfig.notifmod.option.sleepReminder.conditions.pauseInTimelessDims.@Tooltip": "Pause reminder when in dimensions without\na day/night cycle, like the Nether.",
+  "text.autoconfig.notifmod.option.sleepReminder.conditions.pauseUnderground": "Pause when underground",
+  "text.autoconfig.notifmod.option.sleepReminder.conditions.pauseUnderground.@Tooltip": "Pause reminder when deep underground (and in a dimension with a\nday/night cycle). When enabled, it pauses when you're both below\nthe minimum altitude and the minimum sky light level at the same time.",
+  "text.autoconfig.notifmod.option.sleepReminder.conditions.minAltitude": "Min. altitude",
+  "text.autoconfig.notifmod.option.sleepReminder.conditions.minSkyLight": "Min. sky light level",
+
   "text.autoconfig.notifmod.option.sleepReminder.msgType": "Message type",
   "text.autoconfig.notifmod.option.sleepReminder.soundEnabled": "Sound enabled",
   "text.autoconfig.notifmod.option.sleepReminder.soundSequence": "Sound sequence",

@@ -85,6 +85,7 @@ public class ClientPlayNetworkHandlerMixin {
 
     @Inject(method = "onWorldTimeUpdate(Lnet/minecraft/network/packet/s2c/play/WorldTimeUpdateS2CPacket;)V", at = @At("RETURN"))
     public void onWorldTimeUpdate(WorldTimeUpdateS2CPacket packet, CallbackInfo ci){
-        WorldTimeListener.onTimeUpdate((int) (Math.abs(packet.getTimeOfDay()) % TICKS_PER_DAY), this.client.world);    // abs() because if gamerule doDaylightCycle is false, TimeOfDay will be negative
+        MinecraftClient mc = this.client;
+        WorldTimeListener.onTimeUpdate((int) (Math.abs(packet.getTimeOfDay()) % TICKS_PER_DAY), mc.world, mc.player);    // abs() because if gamerule doDaylightCycle is false, TimeOfDay will be negative
     }
 }
