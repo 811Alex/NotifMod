@@ -17,21 +17,23 @@ public class WorldTimeListener {
     private static final int CLEAR_SLEEP_TIME = 12542;
     private static final int RAINY_SLEEP_TIME = 12010;
     private static boolean notified = false;
+    private static long lastNotifTime = 0L;
 
     public static void reset(){
         notified = false;
+        lastNotifTime = 0L;
     }
 
     public static void onTimeUpdate(int timeOfDay, World world, PlayerEntity player, boolean isLoading){
         if(isLoading) return;
         ModConfig.SleepReminder settings = ModConfig.getInstance().sleepReminder;
-        if(!settings.enabled) return;
+        if(!settings.enabled || (System.currentTimeMillis() - lastNotifTime) < (settings.conditions.cooldown * 1000L)) return;
         if(notified) tryResetNotified(timeOfDay, world, player, settings);
         else tryNotify(timeOfDay, world, player, settings);
     }
 
     private static void tryResetNotified(int timeOfDay, World world, PlayerEntity player, ModConfig.SleepReminder settings){
-        if(noNotify(timeOfDay, world, player, settings)) reset();
+        if(noNotify(timeOfDay, world, player, settings)) notified = false;
     }
 
     private static void tryNotify(int timeOfDay, World world, PlayerEntity player, ModConfig.SleepReminder settings){
@@ -39,6 +41,7 @@ public class WorldTimeListener {
         settings.msgWithPre(() -> SLEEP_MSG);
         settings.playSound();
         notified = true;
+        lastNotifTime = System.currentTimeMillis();
     }
 
     private static boolean noNotify(int timeOfDay, World world, PlayerEntity player, ModConfig.SleepReminder settings){

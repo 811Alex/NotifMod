@@ -354,6 +354,8 @@ public class ModConfig implements ConfigData {
             public int minAltitude = 50;
             @BoundedDiscrete(min = 1, max = 15)
             public int minSkyLight = 1;
+            @Tooltip
+            public int cooldown = 120;
         }
     }
 
