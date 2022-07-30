@@ -6,6 +6,7 @@ import eu.gflash.notifmod.client.listeners.PlayerListListener;
 import eu.gflash.notifmod.client.listeners.WorldTimeListener;
 import eu.gflash.notifmod.util.ReminderTimer;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.DownloadingTerrainScreen;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -86,6 +87,6 @@ public class ClientPlayNetworkHandlerMixin {
     @Inject(method = "onWorldTimeUpdate(Lnet/minecraft/network/packet/s2c/play/WorldTimeUpdateS2CPacket;)V", at = @At("RETURN"))
     public void onWorldTimeUpdate(WorldTimeUpdateS2CPacket packet, CallbackInfo ci){
         MinecraftClient mc = this.client;
-        WorldTimeListener.onTimeUpdate((int) (Math.abs(packet.getTimeOfDay()) % TICKS_PER_DAY), mc.world, mc.player);    // abs() because if gamerule doDaylightCycle is false, TimeOfDay will be negative
+        WorldTimeListener.onTimeUpdate((int) (Math.abs(packet.getTimeOfDay()) % TICKS_PER_DAY), mc.world, mc.player, mc.currentScreen instanceof DownloadingTerrainScreen);    // abs() because if gamerule doDaylightCycle is false, TimeOfDay will be negative
     }
 }

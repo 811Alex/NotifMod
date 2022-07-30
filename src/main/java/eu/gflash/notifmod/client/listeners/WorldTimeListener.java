@@ -22,7 +22,8 @@ public class WorldTimeListener {
         notified = false;
     }
 
-    public static void onTimeUpdate(int timeOfDay, World world, PlayerEntity player){
+    public static void onTimeUpdate(int timeOfDay, World world, PlayerEntity player, boolean isLoading){
+        if(isLoading) return;
         ModConfig.SleepReminder settings = ModConfig.getInstance().sleepReminder;
         if(!settings.enabled) return;
         if(notified) tryResetNotified(timeOfDay, world, player, settings);
@@ -44,7 +45,7 @@ public class WorldTimeListener {
         ModConfig.SleepReminder.Conditions cSettings = settings.conditions;
         if(world.getDimension().hasFixedTime() && cSettings.pauseInTimelessDims) return true;
         if(timeOfDay < getSleepTime(world) && !(settings.includeThunder && world.isThundering())) return true;
-        if (!cSettings.pauseUnderground) return false;
+        if(!cSettings.pauseUnderground) return false;
         BlockPos pos = player.getBlockPos();
         return pos.getY() < cSettings.minAltitude && getSkyLL(world, pos) < cSettings.minSkyLight;
     }
