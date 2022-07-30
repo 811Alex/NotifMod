@@ -96,10 +96,9 @@ public class DamageListener {
      * @param longMsg regular message {@link Supplier}
      * @param shortMsg message {@link Supplier} to use when there's less available space
      */
-    private static void notify(ModConfig.DurabilitySubcategory settings, Supplier<Text> longMsg, Supplier<Text> shortMsg){
-        Message.auto(settings.getMsgType(), longMsg, shortMsg);
-        if(settings.isSoundEnabled())
-            settings.getSoundSequence().play(settings.getVolume());
+    private static void notify(ModConfig.SimpleAudibleTextNotif settings, Supplier<Text> longMsg, Supplier<Text> shortMsg){
+        settings.msg(longMsg, shortMsg);
+        settings.playSound();
     }
 
     /**
@@ -109,7 +108,7 @@ public class DamageListener {
      * @return true if below the selected threshold
      */
     private static boolean isPastDmgThreshold(int maxDamage, int durabilityPercentage){
-        ModConfig.DurabilityDamage settings = ModConfig.getInstance().durability.damageSettings;
+        ModConfig.Durability.Damage settings = ModConfig.getInstance().durability.damageSettings;
         if(maxDamage > settings.weakThreshold)
             return durabilityPercentage <= settings.damageThreshold;
         return durabilityPercentage <= settings.weakDamageThreshold;

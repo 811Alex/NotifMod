@@ -62,15 +62,12 @@ public class ReminderTimer {
      * Starts timer thread, stores timer as {@link #active} & displays appropriate message.
      */
     public void start() {
-        ModConfig.Reminder settings = ModConfig.getInstance().reminder;
-        Message.auto(settings.msgTypeStart,
-                () -> TextUtil.buildText(
-                        Message.CHAT_PRE_INFO,
-                        TextUtil.getWithFormat(
-                                Strings.isNullOrEmpty(name) ?
-                                        Text.translatable("msg.notifmod.reminder.start.long.unnamed", TextUtil.getWithFormat(NumUtil.secToHMSString(seconds), Formatting.YELLOW)) :
-                                        Text.translatable("msg.notifmod.reminder.start.long.named", TextUtil.getWithFormat(NumUtil.secToHMSString(seconds), Formatting.YELLOW), TextUtil.getWithFormat(name, Formatting.YELLOW)),
-                                Formatting.AQUA)),
+        ModConfig.getInstance().reminder.msgTypeStart.msgWithPre(
+                () -> TextUtil.getWithFormat(
+                        Strings.isNullOrEmpty(name) ?
+                                Text.translatable("msg.notifmod.reminder.start.long.unnamed", TextUtil.getWithFormat(NumUtil.secToHMSString(seconds), Formatting.YELLOW)) :
+                                Text.translatable("msg.notifmod.reminder.start.long.named", TextUtil.getWithFormat(NumUtil.secToHMSString(seconds), Formatting.YELLOW), TextUtil.getWithFormat(name, Formatting.YELLOW)),
+                        Formatting.AQUA),
                 () -> TextUtil.getWithFormat(Text.translatable("msg.notifmod.reminder.start.short"), Formatting.AQUA)
         );
         if(seconds > 0){
@@ -166,18 +163,15 @@ public class ReminderTimer {
         @Override
         public void run() {
             ModConfig.Reminder settings = ModConfig.getInstance().reminder;
-            Message.auto(settings.msgTypeDone,
-                    () -> TextUtil.buildText(
-                            Message.CHAT_PRE_INFO,
-                            TextUtil.getWithFormat(
-                                    Strings.isNullOrEmpty(name) ?
-                                            Text.translatable("msg.notifmod.reminder.done.unnamed") :
-                                            Text.translatable("msg.notifmod.reminder.done.named", TextUtil.getWithFormat(name, Formatting.YELLOW)),
-                                    Formatting.GREEN)),
+            settings.msgTypeDone.msgWithPre(
+                    () -> TextUtil.getWithFormat(
+                            Strings.isNullOrEmpty(name) ?
+                                    Text.translatable("msg.notifmod.reminder.done.unnamed") :
+                                    Text.translatable("msg.notifmod.reminder.done.named", TextUtil.getWithFormat(name, Formatting.YELLOW)),
+                            Formatting.GREEN),
                     () -> Strings.isNullOrEmpty(name) ? TextUtil.getWithFormat(Text.translatable("msg.notifmod.reminder.done.unnamed"), Formatting.GREEN) : TextUtil.getWithFormat(name, Formatting.GREEN)
             );
-            if (settings.soundEnabled)
-                settings.soundSequence.play(settings.volume);
+            settings.playSound();
             if(!repeat) active.remove(id);
         }
     }

@@ -13,8 +13,7 @@ public class GameLoadListener {
      * @param afterFade true if called right before the fade in animation, false if the animation just finished
      */
     public static void onTitleScreen(boolean afterFade){
-        ModConfig.DoneLoadingGame settings = ModConfig.getInstance().doneLoading.game;
-        if(settings.enabled && settings.afterFade == afterFade)
-            settings.soundSequence.play(settings.volume);
+        ModConfig.DoneLoading.Game settings = ModConfig.getInstance().doneLoading.game;
+        if(settings.afterFade == afterFade) settings.playSound();
     }
 }

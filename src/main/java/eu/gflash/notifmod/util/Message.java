@@ -35,6 +35,12 @@ public class Message {
         public String toString() {
             return "text.autoconfig.notifmod.enum.message.type." + this.name().toLowerCase();
         }
+
+        // Message.auto()/autoWithPre() shortcuts
+        public void msg(Supplier<Text> msg) {Message.auto(this, msg);}
+        public void msg(Supplier<Text> longMsg, Supplier<Text> shortMsg) {Message.auto(this, longMsg, shortMsg);}
+        public void msgWithPre(Supplier<Text> msg) {Message.autoWithPre(this, msg);}
+        public void msgWithPre(Supplier<Text> longMsg, Supplier<Text> shortMsg) {Message.autoWithPre(this, longMsg, shortMsg);}
     }
 
     public enum ChannelCombo {
@@ -89,6 +95,15 @@ public class Message {
     }
 
     /**
+     * Same as {@link #auto(Type, Supplier)}, but adds {@link #CHAT_PRE_INFO} to {@code msg}, when the long form is used.
+     * @param type where to display the message
+     * @param msg the {@link Supplier} of the {@link Text} to show.
+     */
+    public static void autoWithPre(Type type, Supplier<Text> msg){
+        autoWithPre(type, msg, msg);
+    }
+
+    /**
      * Same as {@link #auto(Type, Supplier, Supplier)}, but adds {@link #CHAT_PRE_INFO} to {@code longMsg}.
      * @param type where to display the message
      * @param longMsg the {@link Supplier} of the regular {@link Text} to show
@@ -96,15 +111,6 @@ public class Message {
      */
     public static void autoWithPre(Type type, Supplier<Text> longMsg, Supplier<Text> shortMsg){
         auto(type, () -> TextUtil.buildText(Message.CHAT_PRE_INFO, longMsg.get()), shortMsg);
-    }
-
-    /**
-     * Same as {@link #auto(Type, Supplier)}, but adds {@link #CHAT_PRE_INFO} to {@code msg}, when the long form is used.
-     * @param type where to display the message
-     * @param msg the {@link Supplier} of the {@link Text} to show.
-     */
-    public static void autoWithPre(Type type, Supplier<Text> msg){
-        autoWithPre(type, msg, msg);
     }
 
     /**

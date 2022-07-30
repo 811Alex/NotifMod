@@ -14,9 +14,9 @@ public class WorldLoadListener {
      * Gets called after a successful connection to a server.
      */
     public static void onLoad(){
-        ModConfig.DoneLoadingWorld settings = ModConfig.getInstance().doneLoading.world;
         if(settings.enabled && settings.chunks <= 0)
             notify(settings);
+        ModConfig.DoneLoading.World settings = ModConfig.getInstance().doneLoading.world;
     }
 
     /**
@@ -24,7 +24,7 @@ public class WorldLoadListener {
      */
     public static void onChunkBuild(){
         if(notified) return;
-        ModConfig.DoneLoadingWorld settings = ModConfig.getInstance().doneLoading.world;
+        ModConfig.DoneLoading.World settings = ModConfig.getInstance().doneLoading.world;
         if(settings.enabled && ++chunkCounter >= settings.chunks)
             notify(settings);
     }
@@ -41,8 +41,8 @@ public class WorldLoadListener {
      * Plays sound notification and locks further notifications until we disconnect.
      * @param settings sound notification settings
      */
-    private static void notify(ModConfig.DoneLoadingWorld settings){
+    private static void notify(ModConfig.DoneLoading.World settings){
         notified = true;
-        settings.soundSequence.play(settings.volume);
+        settings.playSound();
     }
 }

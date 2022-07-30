@@ -1,7 +1,6 @@
 package eu.gflash.notifmod.client.listeners;
 
 import eu.gflash.notifmod.config.ModConfig;
-import eu.gflash.notifmod.util.Message;
 import eu.gflash.notifmod.util.TextUtil;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
@@ -14,6 +13,7 @@ import net.minecraft.world.World;
  * @author Alex811
  */
 public class WorldTimeListener {
+    private static final Text SLEEP_MSG = TextUtil.getWithFormat(Text.translatable("msg.notifmod.sleep"), Formatting.AQUA);
     private static final int CLEAR_SLEEP_TIME = 12542;
     private static final int RAINY_SLEEP_TIME = 12010;
     private static boolean notified = false;
@@ -35,22 +35,18 @@ public class WorldTimeListener {
 
     private static void tryNotify(int timeOfDay, World world, PlayerEntity player, ModConfig.SleepReminder settings){
         if(noNotify(timeOfDay, world, player, settings)) return;
-        Message.autoWithPre(settings.msgType, WorldTimeListener::getMsg);
-        if(settings.soundEnabled) settings.soundSequence.play(settings.volume);
+        settings.msgWithPre(() -> SLEEP_MSG);
+        settings.playSound();
         notified = true;
     }
 
     private static boolean noNotify(int timeOfDay, World world, PlayerEntity player, ModConfig.SleepReminder settings){
-        ModConfig.SleepReminderConditions cSettings = settings.conditions;
+        ModConfig.SleepReminder.Conditions cSettings = settings.conditions;
         if(world.getDimension().hasFixedTime() && cSettings.pauseInTimelessDims) return true;
         if(timeOfDay < getSleepTime(world) && !(settings.includeThunder && world.isThundering())) return true;
         if (!cSettings.pauseUnderground) return false;
         BlockPos pos = player.getBlockPos();
         return pos.getY() < cSettings.minAltitude && getSkyLL(world, pos) < cSettings.minSkyLight;
-    }
-
-    private static Text getMsg(){
-        return TextUtil.getWithFormat(Text.translatable("msg.notifmod.sleep"), Formatting.AQUA);
     }
 
     private static int getSleepTime(World world){

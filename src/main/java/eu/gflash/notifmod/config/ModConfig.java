@@ -20,6 +20,8 @@ import me.shedaniel.autoconfig.annotation.ConfigEntry.Gui.Excluded;
 import me.shedaniel.autoconfig.gui.registry.GuiRegistry;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import me.shedaniel.autoconfig.util.Utils;
+import net.minecraft.network.message.MessageType;
+import net.minecraft.text.Text;
 import org.lwjgl.glfw.GLFW;
 
 import java.io.BufferedReader;
@@ -29,6 +31,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.function.Supplier;
 
 import static eu.gflash.notifmod.util.ItemUtil.getArmor;
 import static eu.gflash.notifmod.util.ItemUtil.getTools;
@@ -133,43 +136,17 @@ public class ModConfig implements ConfigData {
     @CollapsibleObject
     public Durability durability = new Durability();
     @CollapsibleObject
-    public ChatCategory chat = new ChatCategory();
+    public Chat chat = new Chat();
     @CollapsibleObject
-    public PlayerJoinLeaveCategory playerJoinLeave = new PlayerJoinLeaveCategory();
+    public PlayerJoinLeave playerJoinLeave = new PlayerJoinLeave();
     @CollapsibleObject
     public SleepReminder sleepReminder = new SleepReminder();
     @CollapsibleObject
-    public DoneLoadingCategory doneLoading = new DoneLoadingCategory();
+    public DoneLoading doneLoading = new DoneLoading();
     @CollapsibleObject
     public Reminder reminder = new Reminder();
 
-    /// GROUPING CATEGORIES ///
-
-    public static class ChatCategory {
-        @PrefixText
-        @CollapsibleObject
-        public Chat message = new Chat(".+", "", "", "notifmod:chat.message");
-        @CollapsibleObject
-        public Chat mention = new Chat(".*\\p.*", "", "", "notifmod:chat.mention");
-        @Tooltip
-        public boolean LogMsgInfo = false;
-    }
-
-    public static class PlayerJoinLeaveCategory {
-        @CollapsibleObject
-        public SimpleSound join = new SimpleSound("notifmod:player.join(1.3)");
-        @CollapsibleObject
-        public SimpleSound leave = new SimpleSound("notifmod:player.leave(1.3)");
-    }
-
-    public static class DoneLoadingCategory {
-        @CollapsibleObject
-        public DoneLoadingGame game = new DoneLoadingGame("notifmod:done_loading.game");
-        @CollapsibleObject
-        public DoneLoadingWorld world = new DoneLoadingWorld("notifmod:done_loading.world");
-    }
-
-    /// SETTINGS CLASSES ///
+    /// SETTINGS CLASSES/CATEGORIES ///
 
     public static class Durability {
         public boolean enabled = true;
@@ -193,120 +170,157 @@ public class ModConfig implements ConfigData {
         @Tooltip
         public ItemList unbreakableItems = new ItemList("minecraft:elytra");
         @CollapsibleObject
-        public DurabilityDamage damageSettings = new DurabilityDamage();
+        public Damage damageSettings = new Damage();
         @CollapsibleObject
-        public DurabilityRepair repairSettings = new DurabilityRepair();
-    }
+        public Repair repairSettings = new Repair();
 
-    public static class DurabilityDamage {
-        @Tooltip
-        @BoundedDiscrete(min = 0, max = 100)
-        public int damageThreshold = 5;
-        @Tooltip
-        @BoundedDiscrete(min = 0, max = 100)
-        public int weakDamageThreshold = 10;
-        @Tooltip
-        public int weakThreshold = 120;
-        @CollapsibleObject
-        public DurabilityDamageSub damage = new DurabilityDamageSub("notifmod:durability.damage");
-        @CollapsibleObject
-        public DurabilityDamageSub stop = new DurabilityDamageSub("notifmod:durability.stop; 200; notifmod:durability.stop");
-    }
+        public static class Damage {
+            @Tooltip
+            @BoundedDiscrete(min = 0, max = 100)
+            public int damageThreshold = 5;
+            @Tooltip
+            @BoundedDiscrete(min = 0, max = 100)
+            public int weakDamageThreshold = 10;
+            @Tooltip
+            public int weakThreshold = 120;
+            @CollapsibleObject
+            public Sub damage = new Sub("notifmod:durability.damage");
+            @CollapsibleObject
+            public Sub stop = new Sub("notifmod:durability.stop; 200; notifmod:durability.stop");
 
-    public static class DurabilityDamageSub implements DurabilitySubcategory {
-        @EnumHandler(option = BUTTON)
-        public Message.Type msgType = Message.Type.CHAT;
-        public boolean soundEnabled = false;
-        @Tooltip
-        public SoundSequence soundSequence;
-        @BoundedDiscrete(min = 0, max = 100)
-        public int volume = 100;
+            public static class Sub implements SimpleAudibleTextNotif {
+                @EnumHandler(option = BUTTON)
+                public Message.Type msgType = Message.Type.CHAT;
+                public boolean soundEnabled = false;
+                @Tooltip
+                public SoundSequence soundSequence;
+                @BoundedDiscrete(min = 0, max = 100)
+                public int volume = 100;
 
-        public DurabilityDamageSub(String... defSoundSeq){
-            soundSequence = new SoundSequence(defSoundSeq);
+                public Sub(String... defSoundSeq){
+                    soundSequence = new SoundSequence(defSoundSeq);
+                }
+
+                @Override
+                public Message.Type getMsgType() {return msgType;}
+                @Override
+                public boolean isSoundEnabled() {return soundEnabled;}
+                @Override
+                public SoundSequence getSoundSequence() {return soundSequence;}
+                @Override
+                public int getVolume() {return volume;}
+            }
         }
 
-        @Override
-        public Message.Type getMsgType() {return msgType;}
-        @Override
-        public boolean isSoundEnabled() {return soundEnabled;}
-        @Override
-        public SoundSequence getSoundSequence() {return soundSequence;}
-        @Override
-        public int getVolume() {return volume;}
-    }
+        public static class Repair implements SimpleAudibleTextNotif {
+            @Tooltip
+            @BoundedDiscrete(min = 0, max = 100)
+            public int unlockThreshold = 75;
+            @EnumHandler(option = BUTTON)
+            public Message.Type msgType = Message.Type.CHAT;
+            public boolean soundEnabled = false;
+            @Tooltip
+            public SoundSequence soundSequence = new SoundSequence("notifmod:durability.mend(1.1)");
+            @BoundedDiscrete(min = 0, max = 100)
+            public int volume = 100;
 
-    public static class DurabilityRepair implements DurabilitySubcategory {
-        @Tooltip
-        @BoundedDiscrete(min = 0, max = 100)
-        public int unlockThreshold = 75;
-        @EnumHandler(option = BUTTON)
-        public Message.Type msgType = Message.Type.CHAT;
-        public boolean soundEnabled = false;
-        @Tooltip
-        public SoundSequence soundSequence = new SoundSequence("notifmod:durability.mend(1.1)");
-        @BoundedDiscrete(min = 0, max = 100)
-        public int volume = 100;
-
-        @Override
-        public Message.Type getMsgType() {return msgType;}
-        @Override
-        public boolean isSoundEnabled() {return soundEnabled;}
-        @Override
-        public SoundSequence getSoundSequence() {return soundSequence;}
-        @Override
-        public int getVolume() {return volume;}
-    }
-
-    public interface DurabilitySubcategory {
-        Message.Type getMsgType();
-        boolean isSoundEnabled();
-        SoundSequence getSoundSequence();
-        int getVolume();
+            @Override
+            public Message.Type getMsgType() {return msgType;}
+            @Override
+            public boolean isSoundEnabled() {return soundEnabled;}
+            @Override
+            public SoundSequence getSoundSequence() {return soundSequence;}
+            @Override
+            public int getVolume() {return volume;}
+        }
     }
 
     public static class Chat {
-        public boolean enabled = true;
+        @PrefixText
+        @CollapsibleObject
+        public Sub message = new Sub(".+", "", "", "notifmod:chat.message");
+        @CollapsibleObject
+        public Sub mention = new Sub(".*\\p.*", "", "", "notifmod:chat.mention");
         @Tooltip
-        public RegExPattern regexFilter;
-        @Tooltip
-        public RegExPattern regexFilterSys;
-        @Tooltip
-        public RegExPattern regexFilterGame;
-        @Tooltip
-        @EnumHandler(option = BUTTON)
-        public Message.ChannelCombo caseSens = Message.ChannelCombo.NONE;
-        @Tooltip
-        public SoundSequence soundSequence;
-        @BoundedDiscrete(min = 0, max = 100)
-        public int volume = 100;
+        public boolean LogMsgInfo = false;
 
-        public Chat(String defRegExFilter, String defRegExFilterSys, String defRegExFilterGame, String... defSoundSeq){
-            regexFilter = new RegExPattern(defRegExFilter);
-            regexFilterSys = new RegExPattern(defRegExFilterSys);
-            regexFilterGame = new RegExPattern(defRegExFilterGame);
-            soundSequence = new SoundSequence(defSoundSeq);
+        public static class Sub implements AudibleNotif {
+            public boolean enabled = true;
+            @Tooltip
+            public RegExPattern regexFilter;
+            @Tooltip
+            public RegExPattern regexFilterSys;
+            @Tooltip
+            public RegExPattern regexFilterGame;
+            @Tooltip
+            @EnumHandler(option = BUTTON)
+            public Message.ChannelCombo caseSens = Message.ChannelCombo.NONE;
+            @Tooltip
+            public SoundSequence soundSequence;
+            @BoundedDiscrete(min = 0, max = 100)
+            public int volume = 100;
+
+            public Sub(String defRegExFilter, String defRegExFilterSys, String defRegExFilterGame, String... defSoundSeq){
+                regexFilter = new RegExPattern(defRegExFilter);
+                regexFilterSys = new RegExPattern(defRegExFilterSys);
+                regexFilterGame = new RegExPattern(defRegExFilterGame);
+                soundSequence = new SoundSequence(defSoundSeq);
+            }
+
+            public RegExPattern getRelevantPattern(MessageType messageType){
+                int cso = caseSens.ordinal();
+                return switch(Message.Channel.fromMessageType(messageType)){
+                    case CHAT -> regexFilter.setCaseSensitivity(cso % 2 == 1);
+                    case SYSTEM -> regexFilterSys.setCaseSensitivity((cso / 2) % 2 == 1);
+                    case GAME_INFO -> regexFilterGame.setCaseSensitivity(cso / 4 == 1);
+                };
+            }
+
+            public boolean relevantPatternMatches(MessageType messageType, String message){
+                return getRelevantPattern(messageType).matches(message);
+            }
+
+            @Override
+            public boolean isSoundEnabled() {return enabled;}
+            @Override
+            public SoundSequence getSoundSequence() {return soundSequence;}
+            @Override
+            public int getVolume() {return volume;}
         }
     }
 
-    public static class SimpleSound {
-        public boolean enabled = true;
-        @Tooltip
-        public SoundSequence soundSequence;
-        @BoundedDiscrete(min = 0, max = 100)
-        public int volume = 100;
+    public static class PlayerJoinLeave {
+        @CollapsibleObject
+        public Sound join = new Sound("notifmod:player.join(1.3)");
+        @CollapsibleObject
+        public Sound leave = new Sound("notifmod:player.leave(1.3)");
 
-        public SimpleSound(String... defSoundSeq){
-            soundSequence = new SoundSequence(defSoundSeq);
+        public static class Sound implements AudibleNotif {
+            public boolean enabled = true;
+            @Tooltip
+            public SoundSequence soundSequence;
+            @BoundedDiscrete(min = 0, max = 100)
+            public int volume = 100;
+
+            public Sound(String... defSoundSeq){
+                soundSequence = new SoundSequence(defSoundSeq);
+            }
+
+            @Override
+            public boolean isSoundEnabled() {return enabled;}
+            @Override
+            public SoundSequence getSoundSequence() {return soundSequence;}
+            @Override
+            public int getVolume() {return volume;}
         }
     }
 
-    public static class SleepReminder {
+    public static class SleepReminder implements SimpleAudibleTextNotif {
         @PrefixText
         public boolean enabled = false;
         public boolean includeThunder = true;
         @CollapsibleObject
-        public SleepReminderConditions conditions = new SleepReminderConditions();
+        public Conditions conditions = new Conditions();
         @EnumHandler(option = BUTTON)
         public Message.Type msgType = Message.Type.CHAT;
         public boolean soundEnabled = false;
@@ -314,47 +328,77 @@ public class ModConfig implements ConfigData {
         public SoundSequence soundSequence = new SoundSequence("notifmod:sleep.now");
         @BoundedDiscrete(min = 0, max = 100)
         public int volume = 100;
-    }
 
-    public static class SleepReminderConditions {
-        @Tooltip
-        public boolean pauseInTimelessDims = true;
-        @Tooltip
-        public boolean pauseUnderground = true;
-        public int minAltitude = 50;
-        @BoundedDiscrete(min = 1, max = 15)
-        public int minSkyLight = 1;
-    }
+        @Override
+        public Message.Type getMsgType() {return msgType;}
+        @Override
+        public boolean isSoundEnabled() {return soundEnabled;}
+        @Override
+        public SoundSequence getSoundSequence() {return soundSequence;}
+        @Override
+        public int getVolume() {return volume;}
 
-    public static class DoneLoadingGame {
-        public boolean enabled = false;
-        @Tooltip
-        public boolean afterFade = true;
-        @Tooltip
-        public SoundSequence soundSequence;
-        @BoundedDiscrete(min = 0, max = 100)
-        public int volume = 100;
-
-        public DoneLoadingGame(String... defSoundSeq){
-            soundSequence = new SoundSequence(defSoundSeq);
+        public static class Conditions {
+            @Tooltip
+            public boolean pauseInTimelessDims = true;
+            @Tooltip
+            public boolean pauseUnderground = true;
+            public int minAltitude = 50;
+            @BoundedDiscrete(min = 1, max = 15)
+            public int minSkyLight = 1;
         }
     }
 
-    public static class DoneLoadingWorld {
-        public boolean enabled = false;
-        @Tooltip
-        public int chunks = 9;
-        @Tooltip
-        public SoundSequence soundSequence;
-        @BoundedDiscrete(min = 0, max = 100)
-        public int volume = 100;
+    public static class DoneLoading {
+        @CollapsibleObject
+        public Game game = new Game("notifmod:done_loading.game");
+        @CollapsibleObject
+        public World world = new World("notifmod:done_loading.world");
 
-        public DoneLoadingWorld(String... defSoundSeq){
-            soundSequence = new SoundSequence(defSoundSeq);
+        public static class Game implements AudibleNotif {
+            public boolean enabled = false;
+            @Tooltip
+            public boolean afterFade = true;
+            @Tooltip
+            public SoundSequence soundSequence;
+            @BoundedDiscrete(min = 0, max = 100)
+            public int volume = 100;
+
+            public Game(String... defSoundSeq){
+                soundSequence = new SoundSequence(defSoundSeq);
+            }
+
+            @Override
+            public boolean isSoundEnabled() {return enabled;}
+            @Override
+            public SoundSequence getSoundSequence() {return soundSequence;}
+            @Override
+            public int getVolume() {return volume;}
+        }
+
+        public static class World implements AudibleNotif {
+            public boolean enabled = false;
+            @Tooltip
+            public int chunks = 9;
+            @Tooltip
+            public SoundSequence soundSequence;
+            @BoundedDiscrete(min = 0, max = 100)
+            public int volume = 100;
+
+            public World(String... defSoundSeq){
+                soundSequence = new SoundSequence(defSoundSeq);
+            }
+
+            @Override
+            public boolean isSoundEnabled() {return enabled;}
+            @Override
+            public SoundSequence getSoundSequence() {return soundSequence;}
+            @Override
+            public int getVolume() {return volume;}
         }
     }
 
-    public static class Reminder{
+    public static class Reminder implements AudibleNotif {
         @Tooltip
         public Key keyBind = new Key(GLFW.GLFW_KEY_KP_ADD);
         @Tooltip
@@ -376,5 +420,39 @@ public class ModConfig implements ConfigData {
         public SoundSequence soundSequence = new SoundSequence("notifmod:reminder.done");
         @BoundedDiscrete(min = 0, max = 100)
         public int volume = 100;
+
+        @Override
+        public boolean isSoundEnabled() {return soundEnabled;}
+        @Override
+        public SoundSequence getSoundSequence() {return soundSequence;}
+        @Override
+        public int getVolume() {return volume;}
+    }
+
+    /// INTERFACES ///
+
+    public interface SimpleAudibleTextNotif extends AudibleNotif, SimpleTextNotif {}
+
+    public interface SimpleTextNotif {
+        Message.Type getMsgType();
+
+        // Message.Type.msg()/msgWithPre() shortcuts
+        default void msg(Supplier<Text> msg) {getMsgType().msg(msg);}
+        default void msg(Supplier<Text> longMsg, Supplier<Text> shortMsg) {getMsgType().msg(longMsg, shortMsg);}
+        default void msgWithPre(Supplier<Text> msg) {getMsgType().msgWithPre(msg);}
+        default void msgWithPre(Supplier<Text> longMsg, Supplier<Text> shortMsg) {getMsgType().msgWithPre(longMsg, shortMsg);}
+    }
+
+    public interface AudibleNotif {
+        boolean isSoundEnabled();
+        SoundSequence getSoundSequence();
+        int getVolume();
+
+        /**
+         * Plays the selected {@link SoundSequence}, with the selected volume, if the sound notification is enabled.
+         */
+        default void playSound(){
+            if(isSoundEnabled()) getSoundSequence().play(getVolume());
+        }
     }
 }

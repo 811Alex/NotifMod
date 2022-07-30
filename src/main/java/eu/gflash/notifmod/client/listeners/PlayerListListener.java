@@ -8,19 +8,10 @@ import eu.gflash.notifmod.config.ModConfig;
  */
 public class PlayerListListener {
     public static void onJoin(){
-        tryNotify(ModConfig.getInstance().playerJoinLeave.join);
+        ModConfig.getInstance().playerJoinLeave.join.playSound();
     }
 
     public static void onLeave(){
-        tryNotify(ModConfig.getInstance().playerJoinLeave.leave);
-    }
-
-    /**
-     * Play sound notification if the settings allow it.
-     * @param settings settings to use
-     */
-    private static void tryNotify(ModConfig.SimpleSound settings){
-        if(settings.enabled)
-            settings.soundSequence.play(settings.volume);
+        ModConfig.getInstance().playerJoinLeave.leave.playSound();
     }
 }
