@@ -14,9 +14,10 @@ public class WorldLoadListener {
      * Gets called after a successful connection to a server.
      */
     public static void onLoad(){
-        if(settings.enabled && settings.chunks <= 0)
-            notify(settings);
         ModConfig.DoneLoading.World settings = ModConfig.getInstance().doneLoading.world;
+        if(settings.enabled){
+            if(settings.chunks <= 0) notify(settings);
+        }else notified = true;  // world load notifications are disabled, exit onChunkBuild() faster
     }
 
     /**
