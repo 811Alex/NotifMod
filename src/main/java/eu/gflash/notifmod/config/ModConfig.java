@@ -267,17 +267,25 @@ public class ModConfig implements ConfigData {
                 soundSequence = new SoundSequence(defSoundSeq);
             }
 
-            public RegExPattern getRelevantPattern(MessageType messageType){
+            public boolean isCaseSens(Message.Channel channel){
                 int cso = caseSens.ordinal();
-                return switch(Message.Channel.fromMessageType(messageType)){
-                    case CHAT -> regexFilter.setCaseSensitivity(cso % 2 == 1);
-                    case SYSTEM -> regexFilterSys.setCaseSensitivity((cso / 2) % 2 == 1);
-                    case GAME_INFO -> regexFilterGame.setCaseSensitivity(cso / 4 == 1);
+                return switch(channel){
+                    case CHAT -> cso % 2 == 1;
+                    case SYSTEM -> (cso / 2) % 2 == 1;
+                    case GAME_INFO -> cso / 4 == 1;
                 };
             }
 
-            public boolean relevantPatternMatches(MessageType messageType, String message){
-                return getRelevantPattern(messageType).matches(message);
+            public RegExPattern getRelevantPattern(Message.Channel channel){
+                return (switch(channel){
+                    case CHAT -> regexFilter;
+                    case SYSTEM -> regexFilterSys;
+                    case GAME_INFO -> regexFilterGame;
+                }).setCaseSensitivity(isCaseSens(channel));
+            }
+
+            public boolean relevantPatternMatches(Message.Channel channel, String message){
+                return getRelevantPattern(channel).matches(message);
             }
 
             @Override
