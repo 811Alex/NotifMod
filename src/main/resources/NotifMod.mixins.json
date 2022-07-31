@@ -7,8 +7,9 @@
   ],
   "client": [
     "BuiltChunkMixin",
-    "InGameHudListenerMixin",
     "ClientPlayNetworkHandlerMixin",
+    "InGameHudListenerMixin",
+    "InputUtilTypeAccessor",
     "TitleScreenMixin"
   ],
   "injectors": {

@@ -5,6 +5,7 @@ import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import eu.gflash.notifmod.config.ProviderBase;
+import eu.gflash.notifmod.mixin.InputUtilTypeAccessor;
 import me.shedaniel.autoconfig.gui.registry.api.GuiRegistryAccess;
 import me.shedaniel.autoconfig.util.Utils;
 import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
@@ -28,11 +29,17 @@ public class Key {
     private final InputUtil.Key key;
 
     public Key(int keyCode){
-        this(InputUtil.Type.KEYSYM.createFromCode(keyCode));
+        this(safeFromCode(keyCode));
     }
 
     public Key(InputUtil.Key key){
         this.key = key;
+    }
+
+    private static InputUtil.Key safeFromCode(int keyCode){
+        InputUtil.Type kb = InputUtil.Type.KEYSYM;
+        return ((InputUtilTypeAccessor) (Object) kb).getMap().containsKey(keyCode) ?
+                kb.createFromCode(keyCode) : InputUtil.UNKNOWN_KEY;
     }
 
     public static Key getDefault(){
