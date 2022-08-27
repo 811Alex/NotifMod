@@ -4,7 +4,7 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import eu.gflash.notifmod.config.ProviderBase;
+import eu.gflash.notifmod.config.ConfigTypeBase;
 import joptsimple.internal.Strings;
 import me.shedaniel.autoconfig.gui.registry.api.GuiRegistryAccess;
 import me.shedaniel.autoconfig.util.Utils;
@@ -26,17 +26,17 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
+ * Sound sequence config entry type.
  * @author Alex811
  */
 @JsonAdapter(SoundSequence.Adapter.class)
-public class SoundSequence {
+public class SoundSequence extends ConfigTypeBase {
     private static final Pattern NUM_PATTERN = Pattern.compile("^\\d+(\\.\\d+)?$");
     private static final Pattern SOUND_PATTERN = Pattern.compile("^(([^:()]+:)?[^:()]+)(\\((.+)\\))?$");
     private static final Pattern DELIMITER_PATTERN = Pattern.compile(";");
     private static final Pattern SPACE_PATTERN = Pattern.compile("\\s+");
     private final String sequenceStr;
     private final List<Sound> sequence = new ArrayList<>();
-    private String error = "";
     private String errorId = "";
 
     public SoundSequence(String... sequence){
@@ -95,12 +95,9 @@ public class SoundSequence {
         errorId = id;
     }
 
-    /**
-     * Get error during construction.
-     * @return {@link Optional} containing the error, or empty if none
-     */
-    public Optional<Text> getError() {
-        return error.isEmpty() ? Optional.empty() : Optional.of(Text.translatable("error.config.notifmod.soundSequence." + error, errorId));
+    @Override
+    protected Text getUnsafeError() {
+        return Text.translatable("error.config.notifmod.soundSequence." + error, errorId);
     }
 
     /**
@@ -144,7 +141,6 @@ public class SoundSequence {
 
         /**
          * Plays {@link this#soundEvent}, using the defined {@link this#pitch} and the {@code volume} parameter.
-         *
          * @param volume volume, range 0 - 1
          */
             public void play(float volume) {
@@ -156,7 +152,6 @@ public class SoundSequence {
 
             /**
              * The delay to be used after this sound is played.
-             *
              * @return the following delay
              */
             @Override

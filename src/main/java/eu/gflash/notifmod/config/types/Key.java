@@ -4,7 +4,7 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import eu.gflash.notifmod.config.ProviderBase;
+import eu.gflash.notifmod.config.ConfigTypeBase;
 import eu.gflash.notifmod.mixin.InputUtilTypeAccessor;
 import me.shedaniel.autoconfig.gui.registry.api.GuiRegistryAccess;
 import me.shedaniel.autoconfig.util.Utils;
@@ -25,7 +25,7 @@ import java.lang.reflect.Field;
  * @author Alex811
  */
 @JsonAdapter(Key.Adapter.class)
-public class Key {
+public class Key extends ConfigTypeBase {
     private final InputUtil.Key key;
 
     public Key(int keyCode){
@@ -56,6 +56,11 @@ public class Key {
 
     public boolean isDown(){
         return key != InputUtil.UNKNOWN_KEY && InputUtil.isKeyPressed(MinecraftClient.getInstance().getWindow().getHandle(), getCode());
+    }
+
+    @Override
+    protected Text getUnsafeError() {
+        return null;
     }
 
     @Override

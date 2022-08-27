@@ -5,7 +5,7 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import eu.gflash.notifmod.config.ProviderBase;
+import eu.gflash.notifmod.config.ConfigTypeBase;
 import joptsimple.internal.Strings;
 import me.shedaniel.autoconfig.gui.registry.api.GuiRegistryAccess;
 import me.shedaniel.autoconfig.util.Utils;
@@ -28,12 +28,11 @@ import java.util.regex.Pattern;
  * @author Alex811
  */
 @JsonAdapter(ItemList.Adapter.class)
-public class ItemList {
+public class ItemList extends ConfigTypeBase {
     private static final Pattern DELIMITER_PATTERN = Pattern.compile(";");
     private static final Pattern SPACE_PATTERN = Pattern.compile("\\s+");
     private final String itemListStr;
     private final List<String> itemList;
-    private String error = "";
     private String errorId = "";
 
     public ItemList(String... itemList){
@@ -75,12 +74,9 @@ public class ItemList {
         errorId = id;
     }
 
-    /**
-     * Get error during construction.
-     * @return {@link Optional} containing the error, or empty if none
-     */
-    public Optional<Text> getError() {
-        return error.isEmpty() ? Optional.empty() : Optional.of(Text.translatable("error.config.notifmod.itemList." + error, errorId));
+    @Override
+    protected Text getUnsafeError() {
+        return Text.translatable("error.config.notifmod.itemList." + error, errorId);
     }
 
     /**

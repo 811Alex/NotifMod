@@ -4,7 +4,7 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import eu.gflash.notifmod.config.ProviderBase;
+import eu.gflash.notifmod.config.ConfigTypeBase;
 import me.shedaniel.autoconfig.gui.registry.api.GuiRegistryAccess;
 import me.shedaniel.autoconfig.util.Utils;
 import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
@@ -23,10 +23,9 @@ import java.util.regex.PatternSyntaxException;
  * @author Alex811
  */
 @JsonAdapter(RegExPattern.Adapter.class)
-public class RegExPattern {
+public class RegExPattern extends ConfigTypeBase {
     private final String original;
     private Pattern pattern;
-    private String error = "";
     private String lastName;
     private boolean caseSensitive = false;
 
@@ -68,12 +67,9 @@ public class RegExPattern {
         return new RegExPattern(".*");
     }
 
-    /**
-     * Get error during construction.
-     * @return {@link Optional} containing the error, or empty if none
-     */
-    public Optional<Text> getError() {
-        return error.isEmpty() ? Optional.empty() : Optional.of(Text.translatable("error.config.notifmod.RegExPattern", error));
+    @Override
+    protected Text getUnsafeError() {
+        return Text.translatable("error.config.notifmod.RegExPattern", error);
     }
 
     /**
