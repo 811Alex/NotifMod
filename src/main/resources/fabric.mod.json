@@ -32,8 +32,8 @@
   ],
   "depends": {
     "java": ">=17",
-    "minecraft": ">=1.19",
-    "fabricloader": ">=0.14.7",
+    "minecraft": ">=1.19.1",
+    "fabricloader": ">=0.14.9",
     "fabric": "*",
     "cloth-config2": "*"
   },
@@ -43,7 +43,7 @@
   "custom": {
     "modmenu": {
       "links": {
-        "modmenu.discord": "https://discord.gg/E5Kx6fzGSd"
+        "modmenu.discord": "https://discord.gg/2drdphV292"
       }
     }
   }

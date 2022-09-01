@@ -1,15 +1,10 @@
 package eu.gflash.notifmod.client.listeners;
 
-import com.google.common.base.Strings;
 import eu.gflash.notifmod.config.ModConfig;
 import eu.gflash.notifmod.util.Log;
 import eu.gflash.notifmod.util.Message;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.network.message.MessageSender;
-import net.minecraft.network.message.MessageType;
-
-import java.util.UUID;
 
 /**
  * Handles incoming messages.
@@ -18,14 +13,12 @@ import java.util.UUID;
 public class MessageListener {
     /**
      * Called for all chat messages.
-     * @param messageType incoming message type
-     * @param sender {@link UUID} of message sender
-     * @param message chat message
+     * @param msg incoming message
      */
-    public static void onMessage(MessageType messageType, MessageSender sender, String message){
+    public static void onMessage(Message.Incoming msg){
         ClientPlayerEntity player = MinecraftClient.getInstance().player;
-        if(player != null && (sender == null || !sender.uuid().equals(player.getUuid())) && !Strings.isNullOrEmpty(message))  // player exists & is msg from another client & msg not empty (this will also make it so empty patterns never match incoming messages)
-            onIncomingMessage(Message.Channel.fromMessageType(messageType), message);
+        if(player != null && (!msg.hasSender() || !msg.senderIs(player)) && !msg.isEmpty())  // player exists & is msg from another client & msg not empty (this will also make it so empty patterns never match incoming messages)
+            onIncomingMessage(msg.channel(), msg.toString());
     }
 
     /**

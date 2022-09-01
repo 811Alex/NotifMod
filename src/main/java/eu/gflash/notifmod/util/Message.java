@@ -1,13 +1,17 @@
 package eu.gflash.notifmod.util;
 
+import com.google.common.base.Strings;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.client.network.PlayerListEntry;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.network.message.FilterMask;
 import net.minecraft.network.message.MessageType;
+import net.minecraft.network.message.SignedMessage;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
-import java.util.Optional;
 import java.util.function.Supplier;
 
 /**
@@ -43,7 +47,7 @@ public class Message {
         public void msgWithPre(Supplier<Text> longMsg, Supplier<Text> shortMsg) {Message.autoWithPre(this, longMsg, shortMsg);}
     }
 
-    public enum ChannelCombo {
+    public enum ChannelCombo {  // Channel config settings
         NONE, CHAT, SYSTEM, CHAT_SYSTEM, GAMEINFO, CHAT_GAMEINFO, SYSTEM_GAMEINFO, ALL;
 
         @Override
@@ -55,19 +59,50 @@ public class Message {
     public enum Channel {
         CHAT, SYSTEM, GAME_INFO;
 
-        public static Channel fromMessageType(MessageType messageType){
-            Optional<MessageType.NarrationRule> narration = messageType.narration();
-            if(narration.isEmpty()) return GAME_INFO;  // is GAME_INFO
-            return switch(narration.get().kind()){
-                case CHAT -> CHAT;
-                case SYSTEM -> SYSTEM;
-            };
-        }
-
         @Override
         public String toString() {
             return super.toString().toLowerCase().replace('_', ' ');
         }
+    }
+
+    /**
+     * Incoming message + meta wrapper.
+     * @param sender message sender, or null
+     * @param params message type parameters, or null
+     * @param message original message, or null
+     * @param msgString string representation of the message
+     */
+    public record Incoming(PlayerListEntry sender, MessageType.Parameters params, SignedMessage message, String msgString){
+        public Incoming(PlayerListEntry sender, MessageType.Parameters params, SignedMessage message) {this(sender, params, message, toStrMsg(sender, message));}
+        public Incoming(MessageType.Parameters params, SignedMessage message) {this(null, params, message);}
+        public Incoming(String message) {this(null, null, null, Strings.nullToEmpty(message));}
+        public Incoming(Text message) {this(message == null ? "" : message.getString());}
+
+        private static String toStrMsg(PlayerListEntry sender, SignedMessage message){
+            Text text;
+            if(message == null) return "";
+            else if(sender == null) text = message.getContent();
+            else{
+                FilterMask filterMask = message.filterMask();
+                if (filterMask == null) return "";
+                text = filterMask.isPassThrough() ? message.getContent() : filterMask.filter(message.getSignedContent());
+            }
+            return text == null ? "" : text.getString();
+        }
+
+        public Channel channel(){
+            if(message == null) return Channel.GAME_INFO;
+            return hasSender() ? Channel.CHAT : Channel.SYSTEM;
+        }
+
+        public boolean senderIs(PlayerEntity player){
+            return hasSender() && sender.getProfile().getId().equals(player.getUuid());
+        }
+
+        @Override
+        public String toString() {return msgString;}
+        public boolean isEmpty() {return msgString.isEmpty();}
+        public boolean hasSender() {return sender != null;}
     }
 
     /**

@@ -274,9 +274,9 @@ public class ModConfig implements ConfigData {
     public static class Chat {
         @PrefixText
         @CollapsibleObject
-        public Sub message = new Sub(".+", "", "", "notifmod:chat.message");
+        public Sub message = new Sub(".+", ".+", "", "notifmod:chat.message");
         @CollapsibleObject
-        public Sub mention = new Sub(".*\\p.*", "", "", "notifmod:chat.mention");
+        public Sub mention = new Sub(".*\\p.*", ".*\\p.*", "", "notifmod:chat.mention");
         @Tooltip
         public boolean LogMsgInfo = false;
 
