@@ -93,7 +93,7 @@ public class Key extends ConfigTypeBase {
         public AbstractConfigListEntry<ModifierKeyCode> getEntry(String i13n, Field field, Object config, Object defaults, GuiRegistryAccess registry) {
             KeyCodeEntry entry = ENTRY_BUILDER.startKeyCodeField(Text.translatable(i13n), Utils.getUnsafely(field, config, Key.getDefault()).get())
                     .setDefaultValue(() -> ((Key) Utils.getUnsafely(field, defaults)).get())
-                    .setSaveConsumer(newValue -> Utils.setUnsafely(field, config, new Key(newValue)))
+                    .setKeySaveConsumer(newValue -> Utils.setUnsafely(field, config, new Key(newValue)))
                     .build();
             entry.setAllowMouse(false);
             return entry;
