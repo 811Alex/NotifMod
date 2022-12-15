@@ -1,10 +1,10 @@
 package eu.gflash.notifmod.util;
 
 import com.google.common.base.Strings;
+import com.mojang.authlib.GameProfile;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.message.FilterMask;
 import net.minecraft.network.message.MessageType;
@@ -72,31 +72,32 @@ public class Message {
      * @param message original message, or null
      * @param msgString string representation of the message
      */
-    public record Incoming(PlayerListEntry sender, MessageType.Parameters params, SignedMessage message, String msgString){
-        public Incoming(PlayerListEntry sender, MessageType.Parameters params, SignedMessage message) {this(sender, params, message, toStrMsg(sender, message));}
+    public record Incoming(GameProfile sender, MessageType.Parameters params, SignedMessage message, String msgString){
+        public Incoming(GameProfile sender, MessageType.Parameters params, SignedMessage message) {this(sender, params, message, toStrMsg(sender, message));}
         public Incoming(MessageType.Parameters params, SignedMessage message) {this(null, params, message);}
+        public Incoming(MessageType.Parameters params, Text message) {this(null, params, null, message == null ? "" : message.getString());}
         public Incoming(String message) {this(null, null, null, Strings.nullToEmpty(message));}
-        public Incoming(Text message) {this(message == null ? "" : message.getString());}
+        public Incoming(Text message) {this(null, message);}
 
-        private static String toStrMsg(PlayerListEntry sender, SignedMessage message){
+        private static String toStrMsg(GameProfile sender, SignedMessage message){
             Text text;
             if(message == null) return "";
             else if(sender == null) text = message.getContent();
             else{
                 FilterMask filterMask = message.filterMask();
                 if (filterMask == null) return "";
-                text = filterMask.isPassThrough() ? message.getContent() : filterMask.filter(message.getSignedContent());
+                text = filterMask.isPassThrough() ? message.getContent() : message.filterMask().getFilteredText(message.getSignedContent());
             }
             return text == null ? "" : text.getString();
         }
 
         public Channel channel(){
-            if(message == null) return Channel.GAME_INFO;
+            if(params == null) return Channel.GAME_INFO;
             return hasSender() ? Channel.CHAT : Channel.SYSTEM;
         }
 
         public boolean senderIs(PlayerEntity player){
-            return hasSender() && sender.getProfile().getId().equals(player.getUuid());
+            return hasSender() && sender.getId().equals(player.getUuid());
         }
 
         @Override

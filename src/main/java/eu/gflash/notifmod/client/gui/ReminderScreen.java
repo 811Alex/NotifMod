@@ -1,5 +1,6 @@
 package eu.gflash.notifmod.client.gui;
 
+import eu.gflash.notifmod.client.gui.widgets.CustomButtonWidget;
 import eu.gflash.notifmod.client.gui.widgets.CustomIntSliderWidget;
 import eu.gflash.notifmod.client.gui.widgets.CustomTextFieldWidget;
 import eu.gflash.notifmod.util.NumUtil;
@@ -7,7 +8,6 @@ import eu.gflash.notifmod.config.ModConfig;
 import eu.gflash.notifmod.util.ReminderTimer;
 import eu.gflash.notifmod.util.TextUtil;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -57,17 +57,17 @@ public class ReminderScreen extends BaseScreen {
         addDrawableChild(sliderHours = new CustomIntSliderWidget(wX(), wY(20), 240, 20, "hours", 0, 24, 0));
         addDrawableChild(sliderMinutes = new CustomIntSliderWidget(wX(), wY(20), 240, 20, "minutes", 0, 60, 0));
         addDrawableChild(sliderSeconds = new CustomIntSliderWidget(wX(), wY(20), 240, 20, "seconds", 0, 60, 0));
-        addDrawableChild(new ButtonWidget(wX(70), wY(), 70, 20, TEXT_PRESET_1, b -> setTime(settings.pre1Seconds)));
-        addDrawableChild(new ButtonWidget(wX(96), wY(), 96, 20, TEXT_START, b -> {
+        addDrawableChild(new CustomButtonWidget(wX(70), wY(), 70, 20, TEXT_PRESET_1, b -> setTime(settings.pre1Seconds)));
+        addDrawableChild(new CustomButtonWidget(wX(96), wY(), 96, 20, TEXT_START, b -> {
             ReminderTimer.startNew(getTime(), titleField.getText(), this.repeat);
             close();
         }));
-        addDrawableChild(new ButtonWidget(wXr(), wY(20), 70, 20, TEXT_PRESET_2, b -> setTime(settings.pre2Seconds)));
-        addDrawableChild(new ButtonWidget(wX(70), wY(), 70, 20, TEXT_REPEAT_NO, b -> {
+        addDrawableChild(new CustomButtonWidget(wXr(), wY(20), 70, 20, TEXT_PRESET_2, b -> setTime(settings.pre2Seconds)));
+        addDrawableChild(new CustomButtonWidget(wX(70), wY(), 70, 20, TEXT_REPEAT_NO, b -> {
             this.repeat = !this.repeat;
             b.setMessage(this.repeat ? TEXT_REPEAT_YES : TEXT_REPEAT_NO);
         }));
-        addDrawableChild(new ButtonWidget(wX(), wY(), 168, 20, TEXT_LIST, b -> ReminderListScreen.open()){{
+        addDrawableChild(new CustomButtonWidget(wX(), wY(), 168, 20, TEXT_LIST, b -> ReminderListScreen.open()){{
             this.active = !ReminderTimer.getActive().isEmpty();
         }});
         setTime(settings.defSeconds);

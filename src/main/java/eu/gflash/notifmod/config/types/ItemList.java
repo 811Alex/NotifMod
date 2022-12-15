@@ -12,10 +12,9 @@ import me.shedaniel.autoconfig.util.Utils;
 import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.registry.Registries;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
-
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -47,7 +46,7 @@ public class ItemList extends ConfigTypeBase {
             ArrayList<String> itemIds = Lists.newArrayList(entrySplit);
             if(itemIds.stream().noneMatch(id -> {    // validity check
                 if(Identifier.isValid(id)){
-                    if(Registry.ITEM.containsId(new Identifier(id)))
+                    if(Registries.ITEM.containsId(new Identifier(id)))
                         return false;   // success
                     else setError("doesNotExist", id);
                 }else setError("invalidIdentifier", id);
@@ -89,7 +88,7 @@ public class ItemList extends ConfigTypeBase {
     }
 
     public boolean contains(Item item){
-        return itemList.contains(Registry.ITEM.getId(item).toString());
+        return itemList.contains(Registries.ITEM.getId(item).toString());
     }
 
     public boolean contains(ItemStack itemStack){

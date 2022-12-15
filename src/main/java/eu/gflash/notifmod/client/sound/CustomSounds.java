@@ -2,10 +2,10 @@ package eu.gflash.notifmod.client.sound;
 
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
-
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
@@ -34,6 +34,6 @@ public class CustomSounds {
 
     private static void register(String sound){
         Identifier id = new Identifier(MOD_ID, sound);
-        Registry.register(Registry.SOUND_EVENT, id, new SoundEvent(id));
+        Registry.register(Registries.SOUND_EVENT, id, SoundEvent.of(id));
     }
 }

@@ -8,10 +8,12 @@ import eu.gflash.notifmod.util.ReminderTimer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.DownloadingTerrainScreen;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
+import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.packet.s2c.play.AdvancementUpdateS2CPacket;
 import net.minecraft.network.packet.s2c.play.PlayerListS2CPacket;
+import net.minecraft.network.packet.s2c.play.PlayerRemoveS2CPacket;
 import net.minecraft.network.packet.s2c.play.ScreenHandlerSlotUpdateS2CPacket;
 import net.minecraft.network.packet.s2c.play.WorldTimeUpdateS2CPacket;
 import org.spongepowered.asm.mixin.Final;
@@ -21,7 +23,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.Iterator;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -34,19 +36,19 @@ public class ClientPlayNetworkHandlerMixin {
     private static boolean loaded = false;
 
     @Shadow @Final private MinecraftClient client;
+    @Shadow @Final private Map<UUID, PlayerListEntry> playerListEntries;
 
-    @Inject(method = "onPlayerList(Lnet/minecraft/network/packet/s2c/play/PlayerListS2CPacket;)V", at = @At("RETURN"))
-    public void onPlayerList(PlayerListS2CPacket packet, CallbackInfo ci){
-        if(!loaded) return; // to skip the first player list sync
-        Iterator<PlayerListS2CPacket.Entry> it = packet.getEntries().iterator();
-        if(!it.hasNext()) return;
-        UUID id = it.next().getProfile().getId();
-        PlayerEntity player = this.client.player;
-        if(player == null || id.equals(player.getUuid())) return;   // the entry is not for this client's player
-        switch(packet.getAction()){
-            case ADD_PLAYER -> PlayerListListener.onJoin();
-            case REMOVE_PLAYER -> PlayerListListener.onLeave();
-        }
+    @Inject(method = "handlePlayerListAction(Lnet/minecraft/network/packet/s2c/play/PlayerListS2CPacket$Action;Lnet/minecraft/network/packet/s2c/play/PlayerListS2CPacket$Entry;Lnet/minecraft/client/network/PlayerListEntry;)V", at = @At("HEAD"))
+    public void onPlayerListAction(PlayerListS2CPacket.Action action, PlayerListS2CPacket.Entry receivedEntry, PlayerListEntry currentEntry, CallbackInfo ci){
+        if(!loaded || action != PlayerListS2CPacket.Action.UPDATE_LISTED) return;   // to skip the first player list sync & other actions
+        if(receivedEntry.listed()) PlayerListListener.onJoin();
+        else PlayerListListener.onLeave();
+    }
+
+    @Inject(method = "onPlayerRemove(Lnet/minecraft/network/packet/s2c/play/PlayerRemoveS2CPacket;)V", at = @At("HEAD"))
+    public void onPlayerRemove(PlayerRemoveS2CPacket packet, CallbackInfo ci){
+        if(this.client.isOnThread() && packet.profileIds().stream().anyMatch(playerListEntries::containsKey))   // is main thread ('cause this gets executed multiple times) & current player list contains received ID
+            PlayerListListener.onLeave();
     }
 
     @Inject(method = "onAdvancements(Lnet/minecraft/network/packet/s2c/play/AdvancementUpdateS2CPacket;)V", at = @At("RETURN"))

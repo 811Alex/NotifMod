@@ -45,7 +45,7 @@ public class BaseScreen extends Screen {
     public void renderBackground(MatrixStack matrices) {
         super.renderBackground(matrices);
         if(background != null && panelWidth > 0 && panelHeight > 0){
-            RenderSystem.setShader(GameRenderer::getPositionTexShader);
+            RenderSystem.setShader(GameRenderer::getPositionTexProgram);
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
             RenderSystem.setShaderTexture(0, background);
             drawTexture(matrices, panelX, panelY, 0, 0, panelWidth, panelHeight);

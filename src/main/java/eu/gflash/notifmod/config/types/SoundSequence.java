@@ -11,12 +11,11 @@ import me.shedaniel.autoconfig.util.Utils;
 import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.sound.PositionedSoundInstance;
+import net.minecraft.registry.Registries;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
-
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -55,7 +54,7 @@ public class SoundSequence extends ConfigTypeBase {
                 int delay = i + 1 < entrySplit.length - 1 ? (int) parseNum(entrySplit[i + 1], "invalidDelay", 0) : 0;  // next delay (assuming it's not the last element), or 0
                 String id = soundMatcher.group(1);
                 if(Identifier.isValid(id))
-                    Registry.SOUND_EVENT.getOrEmpty(new Identifier(id)).ifPresentOrElse(
+                    Registries.SOUND_EVENT.getOrEmpty(new Identifier(id)).ifPresentOrElse(
                             soundEvent -> this.sequence.add(new Sound(soundEvent, pitch, delay)),
                             () -> setError("doesNotExist", id)
                     );

@@ -17,7 +17,7 @@ public class CustomTextFieldWidget extends TextFieldWidget {
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if(super.mouseClicked(mouseX, mouseY, button)) return true;
         if(!this.isVisible()) return false;
-        boolean bl = mouseX >= (double)this.x && mouseX < (double)(this.x + this.width) && mouseY >= (double)this.y && mouseY < (double)(this.y + this.height);
+        boolean bl = mouseX >= (double) this.getX() && mouseX < (double)(this.getX() + this.width) && mouseY >= (double) this.getY() && mouseY < (double)(this.getY() + this.height);
         if(!(this.isFocused() && bl && button == 1)) return false;
         this.setText("");
         return true;
