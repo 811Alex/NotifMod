@@ -12,6 +12,7 @@ import net.minecraft.network.message.SignedMessage;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
+import java.util.Optional;
 import java.util.function.Supplier;
 
 /**
@@ -70,25 +71,23 @@ public class Message {
      * @param sender message sender, or null
      * @param params message type parameters, or null
      * @param message original message, or null
-     * @param msgString string representation of the message
+     * @param msgTxt {@link Text} representation of the message, or original message if it was originally a {@link Text}.
      */
-    public record Incoming(GameProfile sender, MessageType.Parameters params, SignedMessage message, String msgString){
-        public Incoming(GameProfile sender, MessageType.Parameters params, SignedMessage message) {this(sender, params, message, toStrMsg(sender, message));}
-        public Incoming(MessageType.Parameters params, SignedMessage message) {this(null, params, message);}
-        public Incoming(MessageType.Parameters params, Text message) {this(null, params, null, message == null ? "" : message.getString());}
-        public Incoming(String message) {this(null, null, null, Strings.nullToEmpty(message));}
+    public record Incoming(GameProfile sender, MessageType.Parameters params, SignedMessage message, Text msgTxt){
+        public Incoming(GameProfile sender, MessageType.Parameters params, SignedMessage message) {this(sender, params, message, msgToTxt(sender, message));}
+        public Incoming(MessageType.Parameters params, Text message) {this(null, params, null, message);}
         public Incoming(Text message) {this(null, message);}
 
-        private static String toStrMsg(GameProfile sender, SignedMessage message){
-            Text text;
-            if(message == null) return "";
-            else if(sender == null) text = message.getContent();
-            else{
-                FilterMask filterMask = message.filterMask();
-                if (filterMask == null) return "";
-                text = filterMask.isPassThrough() ? message.getContent() : message.filterMask().getFilteredText(message.getSignedContent());
-            }
-            return text == null ? "" : text.getString();
+        private static Text msgToTxt(GameProfile sender, SignedMessage message){
+            if(message == null) return Text.empty();
+            if(sender == null) return message.getContent();
+            return Optional.ofNullable(message.filterMask())
+                    .map(fm -> fm.isPassThrough() ? message.getContent() : fm.getFilteredText(message.getSignedContent()))
+                    .orElseGet(Text::empty);
+        }
+
+        public Text getDecorated(){
+            return params == null ? msgTxt : params.applyChatDecoration(msgTxt);
         }
 
         public Channel channel(){
@@ -101,8 +100,8 @@ public class Message {
         }
 
         @Override
-        public String toString() {return msgString;}
-        public boolean isEmpty() {return msgString.isEmpty();}
+        public String toString() {return msgTxt.getString();}
+        public boolean isEmpty() {return toString().isEmpty();}
         public boolean hasSender() {return sender != null;}
     }
 
