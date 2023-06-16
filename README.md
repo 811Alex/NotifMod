@@ -29,4 +29,4 @@ in-game configuration screen, so it's recommended to include it.
 The mod comes with a few simple sounds you can use if you want. However, you can use any sound
 in the game, or even add your own, by replacing NotifMod's sounds using a simple resource pack!
 
-Credits and licenses for the custom sounds included in this mod can be found in [src/main/resources/assets/notifmod/sounds/LICENSES-CREDITS.txt](src/main/resources/assets/notifmod/sounds/LICENSES-CREDITS.txt)
+Credits and licenses for the custom sounds included in this mod can be found in [src/main/resources/assets/notifmod/sounds/LICENSES-CREDITS.txt](src/main/resources/assets/notifmod/licenses-credits/sounds.txt)
