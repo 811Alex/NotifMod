@@ -1,9 +1,7 @@
 package eu.gflash.notifmod.client.gui;
 
-import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.render.GameRenderer;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
@@ -19,8 +17,8 @@ public class BaseScreen extends Screen {
     protected final static int PANEL_PADDING = PANEL_BORDER_WIDTH + WIDGET_SPACING;
     private final AtomicInteger widgetX = new AtomicInteger(0);
     private final AtomicInteger widgetY = new AtomicInteger(0);
-    private float titleX;
-    private float titleY;
+    private int titleX;
+    private int titleY;
     protected final Identifier background;      // background texture
     protected int panelWidth;                   // GUI width
     protected int panelHeight;                  // GUI height
@@ -34,7 +32,7 @@ public class BaseScreen extends Screen {
      * @param panelHeight the GUI's height (or negative for full screen height)
      * @param background the background texture (or null)
      */
-    protected BaseScreen(Text title, int panelWidth, int panelHeight, Identifier background) {
+    protected BaseScreen(Text title, int panelWidth, int panelHeight, Identifier background){
         super(title);
         this.panelWidth = panelWidth;
         this.panelHeight = panelHeight;
@@ -42,26 +40,48 @@ public class BaseScreen extends Screen {
     }
 
     @Override
-    public void renderBackground(MatrixStack matrices) {
-        super.renderBackground(matrices);
+    public void renderBackground(DrawContext context){
+        super.renderBackground(context);
         if(background != null && panelWidth > 0 && panelHeight > 0){
-            RenderSystem.setShader(GameRenderer::getPositionTexProgram);
-            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-            RenderSystem.setShaderTexture(0, background);
-            drawTexture(matrices, panelX, panelY, 0, 0, panelWidth, panelHeight);
+            context.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+            context.drawTexture(background, panelX, panelY, 0, 0, panelWidth, panelHeight);
         }
     }
 
-    public void renderForeground(MatrixStack matrices, int mouseX, int mouseY, float delta){
-        super.render(matrices, mouseX, mouseY, delta);
+    public void renderForeground(DrawContext context, int mouseX, int mouseY, float delta){
+        super.render(context, mouseX, mouseY, delta);
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) { // Adds basic background & title drawing.
-        renderBackground(matrices);
-        renderForeground(matrices, mouseX, mouseY, delta);
+    public void render(DrawContext context, int mouseX, int mouseY, float delta){ // Adds basic background & title drawing.
+        renderBackground(context);
+        renderForeground(context, mouseX, mouseY, delta);
         if(title != null)
-            this.textRenderer.draw(matrices, title, titleX, titleY, 0x404040);
+            drawText(context, title, titleX, titleY, 0x404040);
+    }
+
+    protected int drawText(DrawContext context, Text text, int x, int y, int color, boolean shadow){
+        return context.drawText(this.textRenderer, text, x, y, color, shadow);
+    }
+
+    protected int drawText(DrawContext context, String text, int x, int y, int color, boolean shadow){
+        return context.drawText(this.textRenderer, text, x, y, color, shadow);
+    }
+
+    protected int drawText(DrawContext context, Text text, int x, int y, int color){
+        return drawText(context, text, x, y, color, false);
+    }
+
+    protected int drawText(DrawContext context, String text, int x, int y, int color){
+        return drawText(context, text, x, y, color, false);
+    }
+
+    protected int drawTextWithShadow(DrawContext context, Text text, int x, int y, int color){
+        return drawText(context, text, x, y, color, true);
+    }
+
+    protected int drawTextWithShadow(DrawContext context, String text, int x, int y, int color){
+        return drawText(context, text, x, y, color, true);
     }
 
     /**
@@ -119,7 +139,7 @@ public class BaseScreen extends Screen {
      * When overriding, you still need to call it, so this class functions properly.
      */
     @Override
-    protected void init() {
+    protected void init(){
         super.init();
         if(this.panelWidth < 0) this.panelWidth = this.width;
         if(this.panelHeight < 0) this.panelHeight = this.height;
@@ -127,7 +147,7 @@ public class BaseScreen extends Screen {
         this.panelY = height - panelHeight >> 1;
         wXr();
         wYr();
-        titleX = panelX + (panelWidth - (title != null ? textRenderer.getWidth(title) : 0)) / 2F;
+        titleX = Math.round(panelX + (panelWidth - (title != null ? textRenderer.getWidth(title) : 0)) / 2F);
         titleY = wY(8);
     }
 }

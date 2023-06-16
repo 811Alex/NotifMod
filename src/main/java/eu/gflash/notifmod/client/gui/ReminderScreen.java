@@ -8,7 +8,7 @@ import eu.gflash.notifmod.config.ModConfig;
 import eu.gflash.notifmod.util.ReminderTimer;
 import eu.gflash.notifmod.util.TextUtil;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
@@ -41,9 +41,9 @@ public class ReminderScreen extends BaseScreen {
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        super.render(matrices, mouseX, mouseY, delta);
-        this.textRenderer.draw(matrices, TEXT_TITLEFIELD, titleFieldTitleX, titleFieldTitleY, 0x404040);
+    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+        super.render(context, mouseX, mouseY, delta);
+        drawText(context, TEXT_TITLEFIELD, titleFieldTitleX, titleFieldTitleY, 0x404040);
     }
 
     @Override

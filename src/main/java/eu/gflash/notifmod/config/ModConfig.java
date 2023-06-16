@@ -112,6 +112,7 @@ public class ModConfig implements ConfigData {
                 Log.debug("Settings: adding new field (path: " + setting.path + ")!");
                 setting.reset();   // not in json, reset to default
             }else if(setting.isCategory()){
+                //noinspection rawtypes
                 if(setting.jsonCurr instanceof Map jc) return updateConfig(setting.curr, setting.def, jc, setting.path + ".");  // recurse for categories
                 Log.debug("Settings: field changed to category in this version, resetting (path: " + setting.path + ")!");
                 setting.reset();   // not a category in json, reset to default

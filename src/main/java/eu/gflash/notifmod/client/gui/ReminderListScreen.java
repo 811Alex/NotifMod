@@ -6,11 +6,11 @@ import eu.gflash.notifmod.client.gui.widgets.CustomButtonWidget;
 import eu.gflash.notifmod.util.NumUtil;
 import eu.gflash.notifmod.util.ReminderTimer;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.Selectable;
 import net.minecraft.client.gui.widget.ElementListWidget;
 import net.minecraft.client.render.*;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
@@ -38,12 +38,10 @@ public class ReminderListScreen extends BaseScreen {
     }
 
     @Override
-    public void renderForeground(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        super.renderForeground(matrices, mouseX, mouseY, delta);
-        RenderSystem.setShader(GameRenderer::getPositionTexProgram);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, MASK);
-        drawTexture(matrices, panelX, panelY, 0, 0, panelWidth, panelHeight);
+    public void renderForeground(DrawContext context, int mouseX, int mouseY, float delta) {
+        super.renderForeground(context, mouseX, mouseY, delta);
+        context.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        context.drawTexture(MASK, panelX, panelY, 0, 0, panelWidth, panelHeight);
     }
 
     @Override
@@ -114,8 +112,8 @@ public class ReminderListScreen extends BaseScreen {
                 this.timer = timer;
                 this.stopButton = new CustomButtonWidget(0, 0, 50, ITEM_HEIGHT, TEXT_ENTRY_STOP, b -> this.timer.kill()){
                     @Override
-                    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-                        super.render(matrices, ReminderListWidget.this.isMouseOver(mouseX, mouseY) ? mouseX : -1, mouseY, delta);   // if mouse outside of widget, pretend it's outside the button too
+                    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+                        super.render(context, ReminderListWidget.this.isMouseOver(mouseX, mouseY) ? mouseX : -1, mouseY, delta);   // if mouse outside of widget, pretend it's outside the button too
                     }
                 };
             }
@@ -156,7 +154,7 @@ public class ReminderListScreen extends BaseScreen {
             }
 
             @Override
-            public void render(MatrixStack matrices, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
+            public void render(DrawContext context, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
                 if(this.isMouseOver(mouseX, mouseY)){   // highlight hovered entry
                     Tessellator tessellator = Tessellator.getInstance();
                     BufferBuilder bufferBuilder = tessellator.getBuffer();
@@ -177,14 +175,14 @@ public class ReminderListScreen extends BaseScreen {
                     RenderSystem.disableBlend();
                 }
                 int textY = y + (entryHeight >> 1) - 2;
-                textRenderer.drawWithShadow(matrices, title, x, textY, 0xFFFFFF);
+                drawTextWithShadow(context, title, x, textY, 0xFFFFFF);
                 stopButton.active = timer.isActive();
                 if(stopButton.active)
-                    textRenderer.drawWithShadow(matrices, NumUtil.secToHMSString(timer.getRemaining()), ReminderListWidget.this.timeX, textY, timer.isRepeating() ? 0xFFC4FF : 0xC4FFFF);
+                    drawTextWithShadow(context, NumUtil.secToHMSString(timer.getRemaining()), ReminderListWidget.this.timeX, textY, timer.isRepeating() ? 0xFFC4FF : 0xC4FFFF);
                 else
-                    textRenderer.drawWithShadow(matrices, "--:--:--", ReminderListWidget.this.timeX, textY, 0xFFFFC4);
+                    drawTextWithShadow(context, "--:--:--", ReminderListWidget.this.timeX, textY, 0xFFFFC4);
                 stopButton.setY(y);
-                stopButton.render(matrices, mouseX, mouseY, tickDelta);
+                stopButton.render(context, mouseX, mouseY, tickDelta);
             }
         }
     }
