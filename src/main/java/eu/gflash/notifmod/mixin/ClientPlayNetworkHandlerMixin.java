@@ -19,6 +19,7 @@ import net.minecraft.network.packet.s2c.play.WorldTimeUpdateS2CPacket;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -35,7 +36,8 @@ public class ClientPlayNetworkHandlerMixin {
     private static final int TICKS_PER_DAY = 24000;
     private static boolean loaded = false;
 
-    @Shadow @Final private MinecraftClient client;
+    @Unique private MinecraftClient getClient() {return MinecraftClient.getInstance();}
+
     @Shadow @Final private Map<UUID, PlayerListEntry> playerListEntries;
 
     @Inject(method = "handlePlayerListAction(Lnet/minecraft/network/packet/s2c/play/PlayerListS2CPacket$Action;Lnet/minecraft/network/packet/s2c/play/PlayerListS2CPacket$Entry;Lnet/minecraft/client/network/PlayerListEntry;)V", at = @At("HEAD"))
@@ -47,7 +49,7 @@ public class ClientPlayNetworkHandlerMixin {
 
     @Inject(method = "onPlayerRemove(Lnet/minecraft/network/packet/s2c/play/PlayerRemoveS2CPacket;)V", at = @At("HEAD"))
     public void onPlayerRemove(PlayerRemoveS2CPacket packet, CallbackInfo ci){
-        if(this.client.isOnThread() && packet.profileIds().stream().anyMatch(playerListEntries::containsKey))   // is main thread ('cause this gets executed multiple times) & current player list contains received ID
+        if(getClient().isOnThread() && packet.profileIds().stream().anyMatch(playerListEntries::containsKey))   // is main thread ('cause this gets executed multiple times) & current player list contains received ID
             PlayerListListener.onLeave();
     }
 
@@ -70,25 +72,25 @@ public class ClientPlayNetworkHandlerMixin {
     @Inject(method = "onScreenHandlerSlotUpdate(Lnet/minecraft/network/packet/s2c/play/ScreenHandlerSlotUpdateS2CPacket;)V", at = @At("HEAD"))
     public void onScreenHandlerSlotUpdate(ScreenHandlerSlotUpdateS2CPacket packet, CallbackInfo ci){
         if(packet.getSyncId() != 0 || Thread.currentThread().getName().equals("Render thread")) return; // stop if in a GUI or the render thread (since this fires there too)
-        PlayerEntity player = this.client.player;
+        PlayerEntity player = getClient().player;
         if(player == null) return;
         ItemStack oldStack = player.playerScreenHandler.getSlot(packet.getSlot()).getStack().copy();
-        ItemStack newStack = packet.getItemStack().copy();
+        ItemStack newStack = packet.getStack().copy();
         int oldDmg = oldStack.getDamage();
         int newDmg = newStack.getDamage();
         oldStack.setDamage(0);
         newStack.setDamage(0);
         if(ItemStack.areEqual(oldStack, newStack) && oldDmg != newDmg && DamageListener.isTracked(newStack)){   // if it's the same ItemStack with different damage & it's supposed to be tracked
             if(oldDmg < newDmg)
-                DamageListener.onDamage(packet.getItemStack());
+                DamageListener.onDamage(packet.getStack());
             else
-                DamageListener.onRepair(packet.getItemStack());
+                DamageListener.onRepair(packet.getStack());
         }
     }
 
     @Inject(method = "onWorldTimeUpdate(Lnet/minecraft/network/packet/s2c/play/WorldTimeUpdateS2CPacket;)V", at = @At("RETURN"))
     public void onWorldTimeUpdate(WorldTimeUpdateS2CPacket packet, CallbackInfo ci){
-        MinecraftClient mc = this.client;
+        MinecraftClient mc = getClient();
         WorldTimeListener.onTimeUpdate((int) (Math.abs(packet.getTimeOfDay()) % TICKS_PER_DAY), mc.world, mc.player, mc.currentScreen instanceof DownloadingTerrainScreen);    // abs() because if gamerule doDaylightCycle is false, TimeOfDay will be negative
     }
 }

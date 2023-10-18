@@ -73,7 +73,6 @@ public class ReminderListScreen extends BaseScreen {
             this.left = ReminderListScreen.this.wX();
             this.right += this.left;
             this.setRenderBackground(false);
-            this.setRenderHorizontalShadows(false);
 
             ReminderTimer.getActive().stream()
                     .sorted(Comparator.comparingInt(ReminderTimer::getRemaining).reversed())    // timers with most time left first
