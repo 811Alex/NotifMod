@@ -103,6 +103,10 @@
   "text.autoconfig.notifmod.option.playerJoinLeave.leave.soundSequence.@Tooltip": "Format: sound(pitch); delay; sound(pitch)...\nPitch is a decimal between 0 and 2 (inclusive), with 1 being normal.\nFor normal pitch, you can omit it and the parentheses.\nDelays between sounds are in milliseconds and are NOT optional.\nSeparate entries with semicolons, spaces will be ignored.",
   "text.autoconfig.notifmod.option.playerJoinLeave.leave.volume": "Sound volume",
 
+  "text.autoconfig.notifmod.option.playerJoinLeave.filters": "Filters",
+  "text.autoconfig.notifmod.option.playerJoinLeave.filters.no0Latency": "Ignore players with 0 ping",
+  "text.autoconfig.notifmod.option.playerJoinLeave.filters.no0Latency.@Tooltip": "A player having no ping can be an indicator that it's a fake player (NPC).\nIt can also happen if the server is hosted on this computer or similar.",
+
   "text.autoconfig.notifmod.option.sleepReminder": "Sleep reminder",
   "text.autoconfig.notifmod.option.sleepReminder.enabled.@PrefixText": "This will notify you, the moment you're able to sleep.",
   "text.autoconfig.notifmod.option.sleepReminder.enabled": "Enabled",

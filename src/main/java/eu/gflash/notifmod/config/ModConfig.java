@@ -339,6 +339,8 @@ public class ModConfig implements ConfigData {
         public Sound join = new Sound("notifmod:player.join(1.3)");
         @CollapsibleObject
         public Sound leave = new Sound("notifmod:player.leave(1.3)");
+        @CollapsibleObject
+        public Filters filters = new Filters();
 
         public static class Sound implements AudibleNotif {
             public boolean enabled = true;
@@ -357,6 +359,11 @@ public class ModConfig implements ConfigData {
             public SoundSequence getSoundSequence() {return soundSequence;}
             @Override
             public int getVolume() {return volume;}
+        }
+
+        public static class Filters{
+            @Tooltip
+            public boolean no0Latency = true;
         }
     }
 

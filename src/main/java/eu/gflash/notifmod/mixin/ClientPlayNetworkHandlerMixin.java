@@ -25,6 +25,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -39,18 +40,23 @@ public class ClientPlayNetworkHandlerMixin {
     @Unique private MinecraftClient getClient() {return MinecraftClient.getInstance();}
 
     @Shadow @Final private Map<UUID, PlayerListEntry> playerListEntries;
+    @Shadow @Final private Set<PlayerListEntry> listedPlayerListEntries;
 
     @Inject(method = "handlePlayerListAction(Lnet/minecraft/network/packet/s2c/play/PlayerListS2CPacket$Action;Lnet/minecraft/network/packet/s2c/play/PlayerListS2CPacket$Entry;Lnet/minecraft/client/network/PlayerListEntry;)V", at = @At("HEAD"))
     public void onPlayerListAction(PlayerListS2CPacket.Action action, PlayerListS2CPacket.Entry receivedEntry, PlayerListEntry currentEntry, CallbackInfo ci){
-        if(!loaded || action != PlayerListS2CPacket.Action.UPDATE_LISTED) return;   // to skip the first player list sync & other actions
-        if(receivedEntry.listed()) PlayerListListener.onJoin();
-        else PlayerListListener.onLeave();
+        if(!loaded || action != PlayerListS2CPacket.Action.ADD_PLAYER) return;   // to skip the first player list sync & other actions
+        if(receivedEntry.listed()) PlayerListListener.onJoin(currentEntry);
     }
 
     @Inject(method = "onPlayerRemove(Lnet/minecraft/network/packet/s2c/play/PlayerRemoveS2CPacket;)V", at = @At("HEAD"))
     public void onPlayerRemove(PlayerRemoveS2CPacket packet, CallbackInfo ci){
-        if(getClient().isOnThread() && packet.profileIds().stream().anyMatch(playerListEntries::containsKey))   // is main thread ('cause this gets executed multiple times) & current player list contains received ID
-            PlayerListListener.onLeave();
+        if(getClient().isOnThread())   // must be main thread ('cause this gets executed multiple times)
+            packet.profileIds().stream()
+                    .filter(playerListEntries::containsKey)         // if current player list contains received ID
+                    .map(playerListEntries::get)
+                    .filter(listedPlayerListEntries::contains)      // & player entry is listed
+                    .findFirst()
+                    .ifPresent(PlayerListListener::onLeave);        // notify
     }
 
     @Inject(method = "onAdvancements(Lnet/minecraft/network/packet/s2c/play/AdvancementUpdateS2CPacket;)V", at = @At("RETURN"))
