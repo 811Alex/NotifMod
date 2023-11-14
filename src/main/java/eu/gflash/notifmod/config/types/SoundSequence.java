@@ -5,6 +5,7 @@ import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import eu.gflash.notifmod.config.ConfigTypeBase;
+import eu.gflash.notifmod.util.ThreadUtils;
 import joptsimple.internal.Strings;
 import me.shedaniel.autoconfig.gui.registry.api.GuiRegistryAccess;
 import me.shedaniel.autoconfig.util.Utils;
@@ -137,27 +138,24 @@ public class SoundSequence extends ConfigTypeBase {
     }
 
     private record Sound(SoundEvent soundEvent, float pitch, int delay) {
-
         /**
          * Plays {@link this#soundEvent}, using the defined {@link this#pitch} and the {@code volume} parameter.
          * @param volume volume, range 0 - 1
          */
-            public void play(float volume) {
-                MinecraftClient mc = MinecraftClient.getInstance();
-                if (mc.player != null && mc.world != null)
-                    mc.world.playSoundFromEntity(mc.player, mc.player, soundEvent, SoundCategory.MASTER, volume, pitch);
-                else mc.getSoundManager().play(PositionedSoundInstance.master(soundEvent, pitch, volume));
-            }
-
-            /**
-             * The delay to be used after this sound is played.
-             * @return the following delay
-             */
-            @Override
-            public int delay() {
-                return delay;
-            }
+        public void play(float volume) {
+            MinecraftClient mc = MinecraftClient.getInstance();
+            ThreadUtils.execOnMainThread(mc, () -> mc.getSoundManager().play(PositionedSoundInstance.master(soundEvent, pitch, volume)));
         }
+
+        /**
+         * The delay to be used after this sound is played.
+         * @return the following delay
+         */
+        @Override
+        public int delay() {
+            return delay;
+        }
+    }
 
     public static class Adapter extends TypeAdapter<SoundSequence> { // JSON adapter
         @Override
