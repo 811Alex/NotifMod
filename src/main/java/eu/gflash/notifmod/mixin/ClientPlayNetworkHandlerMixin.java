@@ -34,8 +34,8 @@ import java.util.UUID;
  */
 @Mixin(ClientPlayNetworkHandler.class)
 public class ClientPlayNetworkHandlerMixin {
-    private static final int TICKS_PER_DAY = 24000;
-    private static boolean loaded = false;
+    @Unique private static final int TICKS_PER_DAY = 24000;
+    @Unique private static boolean loaded = false;
 
     @Unique private MinecraftClient getClient() {return MinecraftClient.getInstance();}
 

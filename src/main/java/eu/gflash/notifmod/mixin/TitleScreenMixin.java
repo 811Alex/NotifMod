@@ -6,6 +6,7 @@ import net.minecraft.client.gui.screen.TitleScreen;
 import net.minecraft.util.Util;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -16,8 +17,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  */
 @Mixin(TitleScreen.class)
 public class TitleScreenMixin {
-    private static boolean loadedPreFade = false;
-    private static boolean loadedPostFade = false;
+    @Unique private static boolean loadedPreFade = false;
+    @Unique private static boolean loadedPostFade = false;
 
     @Shadow private long backgroundFadeStart;
 

@@ -11,6 +11,5 @@ import org.spongepowered.asm.mixin.gen.Accessor;
  */
 @Mixin(InputUtil.Type.class)
 public interface InputUtilTypeAccessor {
-    @Accessor
-    Int2ObjectMap<InputUtil.Key> getMap();
+    @Accessor Int2ObjectMap<InputUtil.Key> getMap();
 }

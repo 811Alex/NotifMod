@@ -11,7 +11,7 @@ import java.util.stream.Stream;
  * {@link Text} related utility functions.
  * @author Alex811
  */
-public class TextUtil {
+public abstract class TextUtil {
     public static final Text EMPTY = Text.of("");
 
     /**
@@ -26,13 +26,13 @@ public class TextUtil {
 
     /**
      * Get formatted copy of a {@link Text}.
-     * Note: the internal structure of the {@link Text} will be different.
+     * Note: the internal structure of the result {@link Text} might be different.
      * @param text input {@link Text} to format
      * @param format the {@link Formatting} to use
      * @return the formatted text
      */
     public static Text getWithFormat(Text text, Formatting format){
-        return buildText(text.copyContentOnly().getWithStyle(Style.EMPTY.withFormatting(format)).toArray(Text[]::new));
+        return text.copyContentOnly().fillStyle(Style.EMPTY.withFormatting(format));
     }
 
     /**
@@ -45,4 +45,11 @@ public class TextUtil {
         Stream.of(texts).forEach(result::append);
         return result;
     }
+
+    /**
+     * Merges the input {@link List} of {@link Text}s into a single {@link Text}.
+     * @param texts {@link List} of {@link Text}s to merge
+     * @return {@link Text} that includes all input {@link Text}s
+     */
+    public static Text buildText(List<? extends Text> texts) {return buildText(texts.toArray(Text[]::new));}
 }
