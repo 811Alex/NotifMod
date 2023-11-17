@@ -63,9 +63,7 @@ public class RegExPattern extends ConfigTypeBase {
         }
     }
 
-    public static RegExPattern getDefault(){
-        return new RegExPattern(".*");
-    }
+    public static RegExPattern getDefault() {return new RegExPattern(".*");}
 
     @Override
     protected Text getUnsafeError() {
@@ -81,9 +79,7 @@ public class RegExPattern extends ConfigTypeBase {
         return new RegExPattern(pattern).getError();
     }
 
-    public boolean matches(String str){
-        return get().matcher(str).matches();
-    }
+    public boolean matches(String str) {return get().matcher(str).matches();}
 
     public Pattern get() {
         compile();  // make sure to recompile if the username changed
@@ -91,9 +87,7 @@ public class RegExPattern extends ConfigTypeBase {
     }
 
     @Override
-    public String toString() {
-        return original;
-    }
+    public String toString() {return original;}
 
     public static class Adapter extends TypeAdapter<RegExPattern> { // JSON adapter
         @Override
