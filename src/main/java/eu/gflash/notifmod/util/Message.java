@@ -1,8 +1,10 @@
 package eu.gflash.notifmod.util;
 
 import com.mojang.authlib.GameProfile;
+import eu.gflash.notifmod.config.ModConfig;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.hud.InGameHud;
+import net.minecraft.client.gui.hud.MessageIndicator;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.message.MessageType;
@@ -66,15 +68,39 @@ public class Message {
 
     /**
      * Incoming message + meta wrapper.
-     * @param sender message sender, or null
-     * @param params message type parameters, or null
-     * @param message original message, or null
-     * @param msgTxt {@link Text} representation of the message, or original message if it was originally a {@link Text}.
      */
-    public record Incoming(GameProfile sender, MessageType.Parameters params, SignedMessage message, Text msgTxt){
-        public Incoming(GameProfile sender, MessageType.Parameters params, SignedMessage message) {this(sender, params, message, msgToTxt(sender, message));}
-        public Incoming(MessageType.Parameters params, Text message) {this(null, params, null, message);}
-        public Incoming(Text message) {this(null, message);}
+    public static class Incoming {
+        public enum NotifType {NONE, DROPPED, MESSAGE, MENTION}
+
+        private static Incoming latest;
+
+        private final GameProfile sender;
+        private final MessageType.Parameters params;
+        private final SignedMessage message;
+        private final Text msgTxt;
+        public NotifType notifType = NotifType.NONE;
+
+        private static Incoming setLatest(Incoming newMsg) {return latest = newMsg;}
+        public static Incoming mkNew(GameProfile sender, MessageType.Parameters params, SignedMessage message) {return setLatest(new Incoming(sender, params, message));}
+        public static Incoming mkNew(MessageType.Parameters params, Text message) {return setLatest(new Incoming(params, message));}
+        public static Incoming mkNew(Text message) {return setLatest(new Incoming(message));}
+
+        /**
+         * @param sender message sender, or null
+         * @param params message type parameters, or null
+         * @param message original message, or null
+         * @param msgTxt {@link Text} representation of the message, or original message if it was originally a {@link Text}.
+         */
+        private Incoming(GameProfile sender, MessageType.Parameters params, SignedMessage message, Text msgTxt) {
+            this.sender = sender;
+            this.params = params;
+            this.message = message;
+            this.msgTxt = msgTxt;
+        }
+
+        private Incoming(GameProfile sender, MessageType.Parameters params, SignedMessage message) {this(sender, params, message, msgToTxt(sender, message));}
+        private Incoming(MessageType.Parameters params, Text message) {this(null, params, null, message);}
+        private Incoming(Text message) {this(null, message);}
 
         private static Text msgToTxt(GameProfile sender, SignedMessage message){
             if(message == null) return Text.empty();
@@ -83,6 +109,8 @@ public class Message {
                     .map(fm -> fm.isPassThrough() ? message.getContent() : fm.getFilteredText(message.getSignedContent()))
                     .orElseGet(Text::empty);
         }
+
+        public static Incoming latest() {return latest;}
 
         public Text getDecorated(){
             return params == null ? msgTxt : params.applyChatDecoration(msgTxt);
@@ -97,10 +125,46 @@ public class Message {
             return hasSender() && sender.getId().equals(player.getUuid());
         }
 
+        public GameProfile getSender() {return sender;}
+        public SignedMessage getMessage() {return message;}
+        public MessageType.Parameters getParams() {return params;}
+        public Text getMsgTxt() {return msgTxt;}
+
         @Override
         public String toString() {return msgTxt.getString();}
         public boolean isEmpty() {return toString().isEmpty();}
         public boolean hasSender() {return sender != null;}
+
+        public static class Customization{
+            private static Optional<ModConfig.Chat.Sub> getSettings(){
+                ModConfig.Chat settings = ModConfig.getInstance().chat;
+                return Optional.ofNullable(switch(latest().notifType){
+                    case MENTION -> settings.mention;
+                    case MESSAGE -> settings.message;
+                    default -> null;
+                });
+            }
+
+            public static MessageIndicator mapIndicator(MessageIndicator indicator){
+                Optional<Integer> color = getSettings()
+                        .filter(s -> s.enabled)
+                        .map(s -> s.highlighting.indicator)
+                        .filter(s -> s.enabled)
+                        .map(s -> s.color);
+                if(color.isEmpty()) return indicator;
+                if(indicator == null) indicator = MessageIndicator.notSecure();
+                return new MessageIndicator(color.get(), indicator.icon(), indicator.text(), indicator.loggedName());
+            }
+
+            public static Text mapText(Text message){
+                return getSettings()
+                        .filter(s -> s.enabled)
+                        .map(s -> s.highlighting.matchedTextStyle)
+                        .filter(ModConfig.Chat.Sub.Highlighting.MatchedTextStyle::isEnabled)
+                        .map(s -> s.fill(message))
+                        .orElse(message);
+            }
+        }
     }
 
     /**

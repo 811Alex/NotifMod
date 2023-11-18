@@ -86,6 +86,8 @@ public class RegExPattern extends ConfigTypeBase {
         return pattern;
     }
 
+    public boolean isEmpty() {return original.isEmpty();}
+
     @Override
     public String toString() {return original;}
 

@@ -7,12 +7,14 @@ import eu.gflash.notifmod.config.types.ItemList;
 import eu.gflash.notifmod.config.types.Key;
 import eu.gflash.notifmod.config.types.RegExPattern;
 import eu.gflash.notifmod.config.types.SoundSequence;
+import eu.gflash.notifmod.util.TextUtil;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.ConfigHolder;
 import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.autoconfig.annotation.Config.Gui.Background;
 import me.shedaniel.autoconfig.annotation.ConfigEntry.BoundedDiscrete;
+import me.shedaniel.autoconfig.annotation.ConfigEntry.ColorPicker;
 import me.shedaniel.autoconfig.annotation.ConfigEntry.Gui.CollapsibleObject;
 import me.shedaniel.autoconfig.annotation.ConfigEntry.Gui.EnumHandler;
 import me.shedaniel.autoconfig.annotation.ConfigEntry.Gui.Tooltip;
@@ -21,6 +23,7 @@ import me.shedaniel.autoconfig.annotation.ConfigEntry.Gui.Excluded;
 import me.shedaniel.autoconfig.gui.registry.GuiRegistry;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import me.shedaniel.autoconfig.util.Utils;
+import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
 import org.apache.commons.lang3.NotImplementedException;
@@ -275,9 +278,21 @@ public class ModConfig implements ConfigData {
     public static class Chat {
         @PrefixText
         @CollapsibleObject
-        public Sub message = new Sub(".+", ".+", "", "notifmod:chat.message");
+        public Sub message = new Sub(
+                ".+", ".+", "",
+                new Sub.Highlighting(
+                        new Sub.Highlighting.Indicator(false, 0x00FFFF),
+                        new Sub.Highlighting.MatchedTextStyle(false, "", 0x00FFFF)
+                ), "notifmod:chat.message"
+        );
         @CollapsibleObject
-        public Sub mention = new Sub(".*\\p.*", ".*\\p.*", "", "notifmod:chat.mention");
+        public Sub mention = new Sub(
+                ".*\\p.*", ".*\\p.*", "",
+                new Sub.Highlighting(
+                        new Sub.Highlighting.Indicator(true, 0xFF00FF),
+                        new Sub.Highlighting.MatchedTextStyle(true, "\\p", 0xFF00FF)
+                ), "notifmod:chat.mention"
+        );
         @Tooltip
         public boolean LogMsgInfo = false;
 
@@ -296,11 +311,14 @@ public class ModConfig implements ConfigData {
             public SoundSequence soundSequence;
             @BoundedDiscrete(min = 0, max = 100)
             public int volume = 100;
+            @CollapsibleObject
+            public Highlighting highlighting;
 
-            public Sub(String defRegExFilter, String defRegExFilterSys, String defRegExFilterGame, String... defSoundSeq){
+            public Sub(String defRegExFilter, String defRegExFilterSys, String defRegExFilterGame, Highlighting defHighlighting, String... defSoundSeq){
                 regexFilter = new RegExPattern(defRegExFilter);
                 regexFilterSys = new RegExPattern(defRegExFilterSys);
                 regexFilterGame = new RegExPattern(defRegExFilterGame);
+                highlighting = defHighlighting;
                 soundSequence = new SoundSequence(defSoundSeq);
             }
 
@@ -331,6 +349,68 @@ public class ModConfig implements ConfigData {
             public SoundSequence getSoundSequence() {return soundSequence;}
             @Override
             public int getVolume() {return volume;}
+
+            public static class Highlighting {
+                @PrefixText
+                @CollapsibleObject
+                public Indicator indicator;
+                @CollapsibleObject
+                public MatchedTextStyle matchedTextStyle;
+
+                public Highlighting(Indicator defIndicator, MatchedTextStyle defMatchedTextStyle){
+                    indicator = defIndicator;
+                    matchedTextStyle = defMatchedTextStyle;
+                }
+
+                public static class Indicator {
+                    @PrefixText
+                    public boolean enabled;
+                    @ColorPicker
+                    public int color;
+
+                    public Indicator(boolean defEnabled, int defColor){
+                        enabled = defEnabled;
+                        color = defColor;
+                    }
+                }
+
+                public static class MatchedTextStyle {
+                    @PrefixText
+                    @Tooltip
+                    public RegExPattern regexPattern;
+                    @Tooltip
+                    public boolean caseSens = false;
+                    public boolean colorEnabled;
+                    @ColorPicker
+                    public int color;
+                    public boolean bold = false;
+                    public boolean italic = false;
+                    public boolean underline = false;
+                    @Tooltip
+                    public boolean maintainParent = true;
+
+                    public MatchedTextStyle(boolean defColorEnabled, String defRegexPattern, int defColor){
+                        colorEnabled = defColorEnabled;
+                        regexPattern = new RegExPattern(defRegexPattern);
+                        color = defColor;
+                    }
+
+                    public Style getAttrStyle(){
+                        Style s = Style.EMPTY;
+                        if(colorEnabled) s = s.withColor(color);
+                        if(bold) s = s.withBold(true);
+                        if(italic) s = s.withItalic(true);
+                        if(underline) s = s.withUnderline(true);
+                        return s;
+                    }
+
+                    public Text fill(Text text){
+                        return TextUtil.matchFillStyle(regexPattern.setCaseSensitivity(caseSens).get(), text, getAttrStyle(), maintainParent, true, true);
+                    }
+
+                    public boolean isEnabled() {return !regexPattern.isEmpty() && (colorEnabled || bold || italic || underline);}
+                }
+            }
         }
     }
 
