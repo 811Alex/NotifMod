@@ -219,14 +219,14 @@
   "msg.notifmod.pre.warn": "Warning",
   "msg.notifmod.pre.info": "Notice",
 
-  "msg.notifmod.durability.damage.percentage.long": "durability of %s at %d%%",
+  "msg.notifmod.durability.damage.percentage.long": "Durability of %s at %d%%",
   "msg.notifmod.durability.damage.percentage.short": "%s at %d%%",
-  "msg.notifmod.durability.damage.brokenUnbreakable.long": "your %s stopped working, it needs repairs",
+  "msg.notifmod.durability.damage.brokenUnbreakable.long": "Your %s stopped working, it needs repairs!",
   "msg.notifmod.durability.damage.brokenUnbreakable.short": "%s broke",
-  "msg.notifmod.durability.repair.long": "your %s has been %s",
+  "msg.notifmod.durability.repair.long": "Your %s has been %s",
   "msg.notifmod.durability.repair.short": "%s is %s",
-  "msg.notifmod.durability.repair.long.full": "fully repaired",
-  "msg.notifmod.durability.repair.short.full": "repaired",
+  "msg.notifmod.durability.repair.long.full": "fully repaired!",
+  "msg.notifmod.durability.repair.short.full": "Repaired",
 
   "msg.notifmod.sleep": "You can sleep now!",
 
