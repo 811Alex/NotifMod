@@ -23,6 +23,7 @@ import me.shedaniel.autoconfig.annotation.ConfigEntry.Gui.Excluded;
 import me.shedaniel.autoconfig.gui.registry.GuiRegistry;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import me.shedaniel.autoconfig.util.Utils;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
@@ -238,6 +239,8 @@ public class ModConfig implements ConfigData {
                 public SoundSequence soundSequence;
                 @BoundedDiscrete(min = 0, max = 100)
                 public int volume = 100;
+                @BoundedDiscrete(min = 0, max = 100)
+                public int unfocusedVolume = 100;
 
                 public Sub(String... defSoundSeq){
                     soundSequence = new SoundSequence(defSoundSeq);
@@ -251,6 +254,8 @@ public class ModConfig implements ConfigData {
                 public SoundSequence getSoundSequence() {return soundSequence;}
                 @Override
                 public int getVolume() {return volume;}
+                @Override
+                public int getUnfocusedVolume() {return unfocusedVolume;}
             }
         }
 
@@ -265,6 +270,8 @@ public class ModConfig implements ConfigData {
             public SoundSequence soundSequence = new SoundSequence("notifmod:durability.mend(1.1)");
             @BoundedDiscrete(min = 0, max = 100)
             public int volume = 100;
+            @BoundedDiscrete(min = 0, max = 100)
+            public int unfocusedVolume = 100;
 
             @Override
             public Message.Type getMsgType() {return msgType;}
@@ -274,6 +281,8 @@ public class ModConfig implements ConfigData {
             public SoundSequence getSoundSequence() {return soundSequence;}
             @Override
             public int getVolume() {return volume;}
+            @Override
+            public int getUnfocusedVolume() {return unfocusedVolume;}
         }
     }
 
@@ -313,6 +322,8 @@ public class ModConfig implements ConfigData {
             public SoundSequence soundSequence;
             @BoundedDiscrete(min = 0, max = 100)
             public int volume = 100;
+            @BoundedDiscrete(min = 0, max = 100)
+            public int unfocusedVolume = 100;
             @CollapsibleObject
             public Highlighting highlighting;
 
@@ -351,6 +362,8 @@ public class ModConfig implements ConfigData {
             public SoundSequence getSoundSequence() {return soundSequence;}
             @Override
             public int getVolume() {return volume;}
+            @Override
+            public int getUnfocusedVolume() {return unfocusedVolume;}
 
             public static class Highlighting {
                 @PrefixText
@@ -430,6 +443,8 @@ public class ModConfig implements ConfigData {
             public SoundSequence soundSequence;
             @BoundedDiscrete(min = 0, max = 100)
             public int volume = 100;
+            @BoundedDiscrete(min = 0, max = 100)
+            public int unfocusedVolume = 100;
 
             public Sound(String... defSoundSeq){
                 soundSequence = new SoundSequence(defSoundSeq);
@@ -441,6 +456,8 @@ public class ModConfig implements ConfigData {
             public SoundSequence getSoundSequence() {return soundSequence;}
             @Override
             public int getVolume() {return volume;}
+            @Override
+            public int getUnfocusedVolume() {return unfocusedVolume;}
         }
 
         public static class Filters{
@@ -462,6 +479,8 @@ public class ModConfig implements ConfigData {
         public SoundSequence soundSequence = new SoundSequence("notifmod:sleep.now");
         @BoundedDiscrete(min = 0, max = 100)
         public int volume = 100;
+        @BoundedDiscrete(min = 0, max = 100)
+        public int unfocusedVolume = 100;
 
         @Override
         public Message.Type getMsgType() {return msgType;}
@@ -471,6 +490,8 @@ public class ModConfig implements ConfigData {
         public SoundSequence getSoundSequence() {return soundSequence;}
         @Override
         public int getVolume() {return volume;}
+        @Override
+        public int getUnfocusedVolume() {return unfocusedVolume;}
 
         public static class Conditions {
             @Tooltip
@@ -500,6 +521,8 @@ public class ModConfig implements ConfigData {
             public SoundSequence soundSequence;
             @BoundedDiscrete(min = 0, max = 100)
             public int volume = 100;
+            @BoundedDiscrete(min = 0, max = 100)
+            public int unfocusedVolume = 100;
 
             public Game(String... defSoundSeq){
                 soundSequence = new SoundSequence(defSoundSeq);
@@ -511,6 +534,8 @@ public class ModConfig implements ConfigData {
             public SoundSequence getSoundSequence() {return soundSequence;}
             @Override
             public int getVolume() {return volume;}
+            @Override
+            public int getUnfocusedVolume() {return unfocusedVolume;}
         }
 
         public static class World implements AudibleNotif {
@@ -522,6 +547,8 @@ public class ModConfig implements ConfigData {
             public SoundSequence soundSequence;
             @BoundedDiscrete(min = 0, max = 100)
             public int volume = 100;
+            @BoundedDiscrete(min = 0, max = 100)
+            public int unfocusedVolume = 100;
 
             public World(String... defSoundSeq){
                 soundSequence = new SoundSequence(defSoundSeq);
@@ -533,6 +560,8 @@ public class ModConfig implements ConfigData {
             public SoundSequence getSoundSequence() {return soundSequence;}
             @Override
             public int getVolume() {return volume;}
+            @Override
+            public int getUnfocusedVolume() {return unfocusedVolume;}
         }
     }
 
@@ -545,6 +574,8 @@ public class ModConfig implements ConfigData {
         public SoundSequence soundSequence = new SoundSequence("notifmod:lead.break");
         @BoundedDiscrete(min = 0, max = 100)
         public int volume = 100;
+        @BoundedDiscrete(min = 0, max = 100)
+        public int unfocusedVolume = 100;
 
         @Override
         public Message.Type getMsgType() {return msgType;}
@@ -554,6 +585,8 @@ public class ModConfig implements ConfigData {
         public SoundSequence getSoundSequence() {return soundSequence;}
         @Override
         public int getVolume() {return volume;}
+        @Override
+        public int getUnfocusedVolume() {return unfocusedVolume;}
     }
 
     public static class Reminder implements AudibleNotif {
@@ -581,6 +614,8 @@ public class ModConfig implements ConfigData {
         public SoundSequence soundSequence = new SoundSequence("notifmod:reminder.done");
         @BoundedDiscrete(min = 0, max = 100)
         public int volume = 100;
+        @BoundedDiscrete(min = 0, max = 100)
+        public int unfocusedVolume = 100;
 
         @Override
         public boolean isSoundEnabled() {return soundEnabled;}
@@ -588,6 +623,8 @@ public class ModConfig implements ConfigData {
         public SoundSequence getSoundSequence() {return soundSequence;}
         @Override
         public int getVolume() {return volume;}
+        @Override
+        public int getUnfocusedVolume() {return unfocusedVolume;}
     }
 
     /// INTERFACES ///
@@ -608,12 +645,13 @@ public class ModConfig implements ConfigData {
         boolean isSoundEnabled();
         SoundSequence getSoundSequence();
         int getVolume();
+        int getUnfocusedVolume();
 
         /**
          * Plays the selected {@link SoundSequence}, with the selected volume, if the sound notification is enabled.
          */
         default void playSound(){
-            if(isSoundEnabled()) getSoundSequence().play(getVolume());
+            if(isSoundEnabled()) getSoundSequence().play(MinecraftClient.getInstance().isWindowFocused() ? getVolume() : getUnfocusedVolume());
         }
     }
 

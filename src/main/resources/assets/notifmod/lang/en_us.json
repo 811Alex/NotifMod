@@ -41,12 +41,14 @@
   "text.autoconfig.notifmod.option.durability.damageSettings.damage.soundSequence": "Sound sequence",
   "text.autoconfig.notifmod.option.durability.damageSettings.damage.soundSequence.@Tooltip": "Format: sound(pitch); delay; sound(pitch)...\nPitch is a decimal between 0 and 2 (inclusive), with 1 being normal.\nFor normal pitch, you can omit it and the parentheses.\nDelays between sounds are in milliseconds and are NOT optional.\nSeparate entries with semicolons, spaces will be ignored.",
   "text.autoconfig.notifmod.option.durability.damageSettings.damage.volume": "Sound volume",
+  "text.autoconfig.notifmod.option.durability.damageSettings.damage.unfocusedVolume": "Unfocused sound volume",
   "text.autoconfig.notifmod.option.durability.damageSettings.stop": "Unbreakable stopped working",
   "text.autoconfig.notifmod.option.durability.damageSettings.stop.msgType": "Message type",
   "text.autoconfig.notifmod.option.durability.damageSettings.stop.soundEnabled": "Sound enabled",
   "text.autoconfig.notifmod.option.durability.damageSettings.stop.soundSequence": "Sound sequence",
   "text.autoconfig.notifmod.option.durability.damageSettings.stop.soundSequence.@Tooltip": "Format: sound(pitch); delay; sound(pitch)...\nPitch is a decimal between 0 and 2 (inclusive), with 1 being normal.\nFor normal pitch, you can omit it and the parentheses.\nDelays between sounds are in milliseconds and are NOT optional.\nSeparate entries with semicolons, spaces will be ignored.",
   "text.autoconfig.notifmod.option.durability.damageSettings.stop.volume": "Sound volume",
+  "text.autoconfig.notifmod.option.durability.damageSettings.stop.unfocusedVolume": "Unfocused sound volume",
   "text.autoconfig.notifmod.option.durability.repairSettings": "Repair notifications",
   "text.autoconfig.notifmod.option.durability.repairSettings.unlockThreshold": "Notification unlock threshold",
   "text.autoconfig.notifmod.option.durability.repairSettings.unlockThreshold.@Tooltip": "You'll only get notifications when you mend an item that\nhas had its durability be lower than this percentage.",
@@ -55,6 +57,7 @@
   "text.autoconfig.notifmod.option.durability.repairSettings.soundSequence": "Sound sequence",
   "text.autoconfig.notifmod.option.durability.repairSettings.soundSequence.@Tooltip": "Format: sound(pitch); delay; sound(pitch)...\nPitch is a decimal between 0 and 2 (inclusive), with 1 being normal.\nFor normal pitch, you can omit it and the parentheses.\nDelays between sounds are in milliseconds and are NOT optional.\nSeparate entries with semicolons, spaces will be ignored.",
   "text.autoconfig.notifmod.option.durability.repairSettings.volume": "Sound volume",
+  "text.autoconfig.notifmod.option.durability.repairSettings.unfocusedVolume": "Unfocused sound volume",
 
   "text.autoconfig.notifmod.option.chat": "Chat Notifications",
   "text.autoconfig.notifmod.option.chat.message.@PrefixText": "Note #1: in the background, message & mention notifications\n  work the same way, they just use different RegEx filters\n  and mentions take priority, if both match.\nNote #2: there are 3 different types of messages: chat,\n  system, game info. Each has a separate RegEx filter.\nNote #3: empty RegEx patterns won't match anything.",
@@ -72,6 +75,7 @@
   "text.autoconfig.notifmod.option.chat.message.soundSequence": "Sound sequence",
   "text.autoconfig.notifmod.option.chat.message.soundSequence.@Tooltip": "Format: sound(pitch); delay; sound(pitch)...\nPitch is a decimal between 0 and 2 (inclusive), with 1 being normal.\nFor normal pitch, you can omit it and the parentheses.\nDelays between sounds are in milliseconds and are NOT optional.\nSeparate entries with semicolons, spaces will be ignored.",
   "text.autoconfig.notifmod.option.chat.message.volume": "Sound volume",
+  "text.autoconfig.notifmod.option.chat.message.unfocusedVolume": "Unfocused sound volume",
   "text.autoconfig.notifmod.option.chat.message.highlighting": "Message Highlighting",
   "text.autoconfig.notifmod.option.chat.message.highlighting.indicator.@PrefixText": "These provide a visual component to message notifications.",
   "text.autoconfig.notifmod.option.chat.message.highlighting.indicator": "Indicator Color Change",
@@ -105,6 +109,7 @@
   "text.autoconfig.notifmod.option.chat.mention.soundSequence": "Sound sequence",
   "text.autoconfig.notifmod.option.chat.mention.soundSequence.@Tooltip": "Format: sound(pitch); delay; sound(pitch)...\nPitch is a decimal between 0 and 2 (inclusive), with 1 being normal.\nFor normal pitch, you can omit it and the parentheses.\nDelays between sounds are in milliseconds and are NOT optional.\nSeparate entries with semicolons, spaces will be ignored.",
   "text.autoconfig.notifmod.option.chat.mention.volume": "Sound volume",
+  "text.autoconfig.notifmod.option.chat.mention.unfocusedVolume": "Unfocused sound volume",
   "text.autoconfig.notifmod.option.chat.mention.highlighting": "Message Highlighting",
   "text.autoconfig.notifmod.option.chat.mention.highlighting.indicator.@PrefixText": "These provide a visual component to message notifications.",
   "text.autoconfig.notifmod.option.chat.mention.highlighting.indicator": "Indicator Color Change",
@@ -135,12 +140,14 @@
   "text.autoconfig.notifmod.option.playerJoinLeave.join.soundSequence": "Sound sequence",
   "text.autoconfig.notifmod.option.playerJoinLeave.join.soundSequence.@Tooltip": "Format: sound(pitch); delay; sound(pitch)...\nPitch is a decimal between 0 and 2 (inclusive), with 1 being normal.\nFor normal pitch, you can omit it and the parentheses.\nDelays between sounds are in milliseconds and are NOT optional.\nSeparate entries with semicolons, spaces will be ignored.",
   "text.autoconfig.notifmod.option.playerJoinLeave.join.volume": "Sound volume",
+  "text.autoconfig.notifmod.option.playerJoinLeave.join.unfocusedVolume": "Unfocused sound volume",
 
   "text.autoconfig.notifmod.option.playerJoinLeave.leave": "Leave Notifications",
   "text.autoconfig.notifmod.option.playerJoinLeave.leave.enabled": "Enabled",
   "text.autoconfig.notifmod.option.playerJoinLeave.leave.soundSequence": "Sound sequence",
   "text.autoconfig.notifmod.option.playerJoinLeave.leave.soundSequence.@Tooltip": "Format: sound(pitch); delay; sound(pitch)...\nPitch is a decimal between 0 and 2 (inclusive), with 1 being normal.\nFor normal pitch, you can omit it and the parentheses.\nDelays between sounds are in milliseconds and are NOT optional.\nSeparate entries with semicolons, spaces will be ignored.",
   "text.autoconfig.notifmod.option.playerJoinLeave.leave.volume": "Sound volume",
+  "text.autoconfig.notifmod.option.playerJoinLeave.leave.unfocusedVolume": "Unfocused sound volume",
 
   "text.autoconfig.notifmod.option.playerJoinLeave.filters": "Filters",
   "text.autoconfig.notifmod.option.playerJoinLeave.filters.no0Latency": "Ignore players with 0 ping",
@@ -166,6 +173,7 @@
   "text.autoconfig.notifmod.option.sleepReminder.soundSequence": "Sound sequence",
   "text.autoconfig.notifmod.option.sleepReminder.soundSequence.@Tooltip": "Format: sound(pitch); delay; sound(pitch)...\nPitch is a decimal between 0 and 2 (inclusive), with 1 being normal.\nFor normal pitch, you can omit it and the parentheses.\nDelays between sounds are in milliseconds and are NOT optional.\nSeparate entries with semicolons, spaces will be ignored.",
   "text.autoconfig.notifmod.option.sleepReminder.volume": "Sound volume",
+  "text.autoconfig.notifmod.option.sleepReminder.unfocusedVolume": "Unfocused sound volume",
 
   "text.autoconfig.notifmod.option.doneLoading": "Done Loading Notifications",
 
@@ -176,6 +184,7 @@
   "text.autoconfig.notifmod.option.doneLoading.game.soundSequence": "Sound sequence",
   "text.autoconfig.notifmod.option.doneLoading.game.soundSequence.@Tooltip": "Format: sound(pitch); delay; sound(pitch)...\nPitch is a decimal between 0 and 2 (inclusive), with 1 being normal.\nFor normal pitch, you can omit it and the parentheses.\nDelays between sounds are in milliseconds and are NOT optional.\nSeparate entries with semicolons, spaces will be ignored.",
   "text.autoconfig.notifmod.option.doneLoading.game.volume": "Sound volume",
+  "text.autoconfig.notifmod.option.doneLoading.game.unfocusedVolume": "Unfocused sound volume",
 
   "text.autoconfig.notifmod.option.doneLoading.world": "World Loading Notifications",
   "text.autoconfig.notifmod.option.doneLoading.world.enabled": "Enabled",
@@ -184,6 +193,7 @@
   "text.autoconfig.notifmod.option.doneLoading.world.soundSequence": "Sound sequence",
   "text.autoconfig.notifmod.option.doneLoading.world.soundSequence.@Tooltip": "Format: sound(pitch); delay; sound(pitch)...\nPitch is a decimal between 0 and 2 (inclusive), with 1 being normal.\nFor normal pitch, you can omit it and the parentheses.\nDelays between sounds are in milliseconds and are NOT optional.\nSeparate entries with semicolons, spaces will be ignored.",
   "text.autoconfig.notifmod.option.doneLoading.world.volume": "Sound volume",
+  "text.autoconfig.notifmod.option.doneLoading.world.unfocusedVolume": "Unfocused sound volume",
 
   "text.autoconfig.notifmod.option.lead": "Lead Notifications",
   "text.autoconfig.notifmod.option.lead.msgType.@PrefixText": "This will notify you if your lead breaks or the leashed mob dies.",
@@ -192,6 +202,7 @@
   "text.autoconfig.notifmod.option.lead.soundSequence": "Sound sequence",
   "text.autoconfig.notifmod.option.lead.soundSequence.@Tooltip": "Format: sound(pitch); delay; sound(pitch)...\nPitch is a decimal between 0 and 2 (inclusive), with 1 being normal.\nFor normal pitch, you can omit it and the parentheses.\nDelays between sounds are in milliseconds and are NOT optional.\nSeparate entries with semicolons, spaces will be ignored.",
   "text.autoconfig.notifmod.option.lead.volume": "Sound volume",
+  "text.autoconfig.notifmod.option.lead.unfocusedVolume": "Unfocused sound volume",
 
   "text.autoconfig.notifmod.option.reminder": "Reminder Settings",
   "text.autoconfig.notifmod.option.reminder.keyBind": "Key to create a reminder",
@@ -212,6 +223,7 @@
   "text.autoconfig.notifmod.option.reminder.soundSequence": "Sound sequence",
   "text.autoconfig.notifmod.option.reminder.soundSequence.@Tooltip": "Format: sound(pitch); delay; sound(pitch)...\nPitch is a decimal between 0 and 2 (inclusive), with 1 being normal.\nFor normal pitch, you can omit it and the parentheses.\nDelays between sounds are in milliseconds and are NOT optional.\nSeparate entries with semicolons, spaces will be ignored.",
   "text.autoconfig.notifmod.option.reminder.volume": "Sound volume",
+  "text.autoconfig.notifmod.option.reminder.unfocusedVolume": "Unfocused sound volume",
 
   "error.config.notifmod.itemList.doesNotExist": "Item does not exist: %s",
   "error.config.notifmod.itemList.invalidIdentifier": "Invalid item identifier: %s",
