@@ -1,6 +1,7 @@
 {
   "text.autoconfig.notifmod.title": "NotifMod Config",
 
+  "text.autoconfig.notifmod.enum.message.type.none": "None",
   "text.autoconfig.notifmod.enum.message.type.chat": "Chat",
   "text.autoconfig.notifmod.enum.message.type.actionbar": "Actionbar",
   "text.autoconfig.notifmod.enum.message.type.title": "Title",

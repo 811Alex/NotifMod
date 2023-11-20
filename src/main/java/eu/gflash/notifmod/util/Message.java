@@ -34,7 +34,7 @@ public class Message {
     }
 
     public enum Type {
-        CHAT, ACTIONBAR, TITLE, SUBTITLE;
+        NONE, CHAT, ACTIONBAR, TITLE, SUBTITLE;
 
         @Override
         public String toString() {
