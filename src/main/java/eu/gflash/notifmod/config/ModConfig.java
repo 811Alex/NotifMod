@@ -183,6 +183,8 @@ public class ModConfig implements ConfigData {
     @CollapsibleObject
     public DoneLoading doneLoading = new DoneLoading();
     @CollapsibleObject
+    public Lead lead = new Lead();
+    @CollapsibleObject
     public Reminder reminder = new Reminder();
 
     /// SETTINGS CLASSES/CATEGORIES ///
@@ -532,6 +534,26 @@ public class ModConfig implements ConfigData {
             @Override
             public int getVolume() {return volume;}
         }
+    }
+
+    public static class Lead implements SimpleAudibleTextNotif {
+        @PrefixText
+        @EnumHandler(option = BUTTON)
+        public Message.Type msgType = Message.Type.ACTIONBAR;
+        public boolean soundEnabled = true;
+        @Tooltip
+        public SoundSequence soundSequence = new SoundSequence("notifmod:lead.break");
+        @BoundedDiscrete(min = 0, max = 100)
+        public int volume = 100;
+
+        @Override
+        public Message.Type getMsgType() {return msgType;}
+        @Override
+        public boolean isSoundEnabled() {return soundEnabled;}
+        @Override
+        public SoundSequence getSoundSequence() {return soundSequence;}
+        @Override
+        public int getVolume() {return volume;}
     }
 
     public static class Reminder implements AudibleNotif {

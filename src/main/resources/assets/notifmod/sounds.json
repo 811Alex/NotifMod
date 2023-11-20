@@ -9,5 +9,6 @@
   "done_loading.game": {"sounds": ["notifmod:game"]},
   "done_loading.world": {"sounds": ["notifmod:world"]},
   "reminder.done": {"sounds": ["notifmod:reminder"]},
-  "sleep.now": {"sounds": ["notifmod:sleep"]}
+  "sleep.now": {"sounds": ["notifmod:sleep"]},
+  "lead.break": {"sounds": ["notifmod:lead"]}
 }

@@ -184,6 +184,14 @@
   "text.autoconfig.notifmod.option.doneLoading.world.soundSequence.@Tooltip": "Format: sound(pitch); delay; sound(pitch)...\nPitch is a decimal between 0 and 2 (inclusive), with 1 being normal.\nFor normal pitch, you can omit it and the parentheses.\nDelays between sounds are in milliseconds and are NOT optional.\nSeparate entries with semicolons, spaces will be ignored.",
   "text.autoconfig.notifmod.option.doneLoading.world.volume": "Sound volume",
 
+  "text.autoconfig.notifmod.option.lead": "Lead Notifications",
+  "text.autoconfig.notifmod.option.lead.msgType.@PrefixText": "This will notify you if your lead breaks or the leashed mob dies.",
+  "text.autoconfig.notifmod.option.lead.msgType": "Message type",
+  "text.autoconfig.notifmod.option.lead.soundEnabled": "Sound enabled",
+  "text.autoconfig.notifmod.option.lead.soundSequence": "Sound sequence",
+  "text.autoconfig.notifmod.option.lead.soundSequence.@Tooltip": "Format: sound(pitch); delay; sound(pitch)...\nPitch is a decimal between 0 and 2 (inclusive), with 1 being normal.\nFor normal pitch, you can omit it and the parentheses.\nDelays between sounds are in milliseconds and are NOT optional.\nSeparate entries with semicolons, spaces will be ignored.",
+  "text.autoconfig.notifmod.option.lead.volume": "Sound volume",
+
   "text.autoconfig.notifmod.option.reminder": "Reminder Settings",
   "text.autoconfig.notifmod.option.reminder.keyBind": "Key to create a reminder",
   "text.autoconfig.notifmod.option.reminder.keyBind.@Tooltip": "Opens the reminder GUI.",
@@ -229,6 +237,11 @@
   "msg.notifmod.durability.repair.short.full": "Repaired",
 
   "msg.notifmod.sleep": "You can sleep now!",
+
+  "msg.notifmod.lead.break.long.distance": "Your lead on %s broke!",
+  "msg.notifmod.lead.break.short.distance": "Lead broke",
+  "msg.notifmod.lead.break.long.mobDied": "%s died, your lead broke!",
+  "msg.notifmod.lead.break.short.mobDied": "Leashed died",
 
   "msg.notifmod.reminder.start.long.unnamed": "Timer started: %s",
   "msg.notifmod.reminder.start.long.named": "Timer started: %s | %s",

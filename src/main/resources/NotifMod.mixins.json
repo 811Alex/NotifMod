@@ -11,7 +11,8 @@
     "ClientPlayNetworkHandlerMixin",
     "InGameHudListenerMixin",
     "InputUtilTypeAccessor",
-    "TitleScreenMixin"
+    "TitleScreenMixin",
+    "MobEntityMixin"
   ],
   "injectors": {
     "defaultRequire": 1
