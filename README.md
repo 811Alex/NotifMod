@@ -9,6 +9,7 @@ The mod is highly configurable and currently supports the following events:
 - Chat message
 - Chat username mention
 - Able to sleep
+- Your lead broke
 - Player joined server
 - Player left server
 - Game's done loading
