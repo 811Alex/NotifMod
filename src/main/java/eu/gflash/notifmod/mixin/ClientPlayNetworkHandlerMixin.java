@@ -1,10 +1,12 @@
 package eu.gflash.notifmod.mixin;
 
-import eu.gflash.notifmod.client.listeners.WorldLoadListener;
 import eu.gflash.notifmod.client.listeners.DamageListener;
 import eu.gflash.notifmod.client.listeners.PlayerListListener;
+import eu.gflash.notifmod.client.listeners.WorldLoadListener;
 import eu.gflash.notifmod.client.listeners.WorldTimeListener;
+import eu.gflash.notifmod.util.ItemUtil;
 import eu.gflash.notifmod.util.ReminderTimer;
+import eu.gflash.notifmod.util.ThreadUtils;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.DownloadingTerrainScreen;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
@@ -50,13 +52,13 @@ public class ClientPlayNetworkHandlerMixin {
 
     @Inject(method = "onPlayerRemove(Lnet/minecraft/network/packet/s2c/play/PlayerRemoveS2CPacket;)V", at = @At("HEAD"))
     public void onPlayerRemove(PlayerRemoveS2CPacket packet, CallbackInfo ci){
-        if(getClient().isOnThread())   // must be main thread ('cause this gets executed multiple times)
+        if(ThreadUtils.isMainThread())                          // must be main thread ('cause this gets executed multiple times)
             packet.profileIds().stream()
-                    .filter(playerListEntries::containsKey)         // if current player list contains received ID
+                    .filter(playerListEntries::containsKey)     // if current player list contains received ID
                     .map(playerListEntries::get)
-                    .filter(listedPlayerListEntries::contains)      // & player entry is listed
+                    .filter(listedPlayerListEntries::contains)  // & player entry is listed
                     .findFirst()
-                    .ifPresent(PlayerListListener::onLeave);        // notify
+                    .ifPresent(PlayerListListener::onLeave);    // notify
     }
 
     @Inject(method = "onAdvancements(Lnet/minecraft/network/packet/s2c/play/AdvancementUpdateS2CPacket;)V", at = @At("RETURN"))
@@ -77,20 +79,15 @@ public class ClientPlayNetworkHandlerMixin {
 
     @Inject(method = "onScreenHandlerSlotUpdate(Lnet/minecraft/network/packet/s2c/play/ScreenHandlerSlotUpdateS2CPacket;)V", at = @At("HEAD"))
     public void onScreenHandlerSlotUpdate(ScreenHandlerSlotUpdateS2CPacket packet, CallbackInfo ci){
-        if(packet.getSyncId() != 0 || Thread.currentThread().getName().equals("Render thread")) return; // stop if in a GUI or the render thread (since this fires there too)
-        PlayerEntity player = getClient().player;
-        if(player == null) return;
-        ItemStack oldStack = player.playerScreenHandler.getSlot(packet.getSlot()).getStack().copy();
-        ItemStack newStack = packet.getStack().copy();
+        if(packet.getSyncId() != 0 || !ThreadUtils.isMainThread()) return;   // stop if in a GUI or not on the main thread (since this fires in multiple threads)
+        ItemStack oldStack = ItemUtil.getPlayerSlotItems(packet.getSlot());
+        ItemStack newStack = packet.getStack();
+        if(oldStack == null) return;                                        // happens if player == null
         int oldDmg = oldStack.getDamage();
         int newDmg = newStack.getDamage();
-        oldStack.setDamage(0);
-        newStack.setDamage(0);
-        if(ItemStack.areEqual(oldStack, newStack) && oldDmg != newDmg && DamageListener.isTracked(newStack)){   // if it's the same ItemStack with different damage & it's supposed to be tracked
-            if(oldDmg < newDmg)
-                DamageListener.onDamage(packet.getStack());
-            else
-                DamageListener.onRepair(packet.getStack());
+        if(ItemUtil.areEqualIgnoringDmg(oldStack, newStack) && oldDmg != newDmg && DamageListener.isTracked(newStack)){   // if it's the same ItemStack with different damage & it's supposed to be tracked
+            if(oldDmg < newDmg) DamageListener.onDamage(newStack);
+            else DamageListener.onRepair(newStack);
         }
     }
 

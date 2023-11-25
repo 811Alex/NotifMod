@@ -143,7 +143,7 @@ public class SoundSequence extends ConfigTypeBase {
          */
         public void play(float volume) {
             MinecraftClient mc = MinecraftClient.getInstance();
-            ThreadUtils.execOnMainThread(mc, () -> mc.getSoundManager().play(PositionedSoundInstance.master(soundEvent, pitch, volume)));
+            ThreadUtils.execOnThread(mc, () -> mc.getSoundManager().play(PositionedSoundInstance.master(soundEvent, pitch, volume)));
         }
 
         /**
