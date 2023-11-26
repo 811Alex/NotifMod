@@ -21,7 +21,7 @@ public class DamageListener {
     public static void onDamage(ItemStack itemStack){
         ModConfig.Durability settings = ModConfig.getInstance().durability;
         if(itemStack.getDamage() == itemStack.getMaxDamage() - 1 && settings.unbreakableItems.contains(itemStack))  // if unbreakable item stopped working
-            notify(settings.damageSettings.stop,
+            settings.damageSettings.stop.notif(
                     () -> TextUtil.buildText(
                         Message.CHAT_PRE_WARN,
                         Text.translatable(
@@ -43,7 +43,7 @@ public class DamageListener {
         if(durabilityPercentage <= settings.repairSettings.unlockThreshold)
             itemInfo.setUnlockedRepairNotif(true);
         if(durabilityPercentage > 0 && isPastDmgThreshold(itemStack.getMaxDamage(), durabilityPercentage))
-            notify(settings.damageSettings.damage,
+            settings.damageSettings.damage.notif(
                     () -> TextUtil.buildText(
                             Message.CHAT_PRE_WARN,
                             Text.translatable(
@@ -62,7 +62,7 @@ public class DamageListener {
         if(!itemStack.isDamaged()){
             TrackedInfo itemInfo = itemTracker.get(new ItemStackWrapper(itemStack));
             if(itemInfo != null && itemInfo.setUnlockedRepairNotif(false))
-                notify(settings.repairSettings,
+                settings.repairSettings.notif(
                         () -> TextUtil.buildText(
                                 Message.CHAT_PRE_INFO,
                                 Text.translatable(
@@ -88,17 +88,6 @@ public class DamageListener {
         if(settings.trackedItems.contains(itemStack)) return true;
         if(settings.alwaysNamed && itemStack.hasCustomName()) return true;
         return settings.alwaysEnchanted && itemStack.hasEnchantments() && !settings.blacklistedEnchantedItems.contains(itemStack);
-    }
-
-    /**
-     * Send message and play sound according to the settings.
-     * @param settings settings to use
-     * @param longMsg regular message {@link Supplier}
-     * @param shortMsg message {@link Supplier} to use when there's less available space
-     */
-    private static void notify(ModConfig.SimpleAudibleTextNotif settings, Supplier<Text> longMsg, Supplier<Text> shortMsg){
-        settings.msg(longMsg, shortMsg);
-        settings.playSound();
     }
 
     /**

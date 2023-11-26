@@ -629,7 +629,18 @@ public class ModConfig implements ConfigData {
 
     /// INTERFACES ///
 
-    public interface SimpleAudibleTextNotif extends AudibleNotif, SimpleTextNotif {}
+    public interface SimpleAudibleTextNotif extends AudibleNotif, SimpleTextNotif {
+        private void notif(Runnable msgRunnable){
+            msgRunnable.run();
+            playSound();
+        }
+
+        // Message.Type.msg()/msgWithPre() + AudibleNotif.playSound() shortcuts
+        default void notif(Supplier<Text> msg) {notif(() -> msg(msg));}
+        default void notif(Supplier<Text> longMsg, Supplier<Text> shortMsg) {notif(() -> msg(longMsg, shortMsg));}
+        default void notifWithPre(Supplier<Text> msg) {notif(() -> msgWithPre(msg));}
+        default void notifWithPre(Supplier<Text> longMsg, Supplier<Text> shortMsg) {notif(() -> msgWithPre(longMsg, shortMsg));}
+    }
 
     public interface SimpleTextNotif {
         Message.Type getMsgType();

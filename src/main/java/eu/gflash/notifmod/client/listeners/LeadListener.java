@@ -16,8 +16,7 @@ public class LeadListener {
     public static void onLeadBreak(ClientPlayerEntity player, Entity mob){
         if(!player.isAlive()) return;
         String langKeyPart = mob.isAlive() ? "distance" : "mobDied";
-        ModConfig.Lead settings = ModConfig.getInstance().lead;
-        settings.msg(
+        ModConfig.getInstance().lead.notif(
                 () -> TextUtil.buildText(
                         Message.CHAT_PRE_WARN,
                         Text.translatable(
@@ -25,6 +24,5 @@ public class LeadListener {
                                 TextUtil.getWithFormat(mob.getName(), Formatting.AQUA))),
                 () -> Text.translatable("msg.notifmod.lead.break.short." + langKeyPart)
         );
-        settings.playSound();
     }
 }

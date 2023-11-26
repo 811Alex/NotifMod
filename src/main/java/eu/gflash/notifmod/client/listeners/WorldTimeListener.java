@@ -38,8 +38,7 @@ public class WorldTimeListener {
 
     private static void tryNotify(int timeOfDay, World world, PlayerEntity player, ModConfig.SleepReminder settings){
         if(noNotify(timeOfDay, world, player, settings)) return;
-        settings.msgWithPre(() -> SLEEP_MSG);
-        settings.playSound();
+        settings.notifWithPre(() -> SLEEP_MSG);
         notified = true;
         lastNotifTime = System.currentTimeMillis();
     }
