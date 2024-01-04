@@ -138,7 +138,7 @@ public class Message {
         public static class Customization{
             private static Optional<ModConfig.Chat.Sub> getSettings(){
                 ModConfig.Chat settings = ModConfig.getInstance().chat;
-                return Optional.ofNullable(switch(latest().notifType){
+                return Optional.ofNullable(latest()).map(latest -> switch(latest.notifType){
                     case MENTION -> settings.mention;
                     case MESSAGE -> settings.message;
                     default -> null;
