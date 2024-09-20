@@ -25,7 +25,7 @@ public abstract class MobEntityMixin extends Entity {
 
     public MobEntityMixin(EntityType<?> type, World world) {super(type, world);}
 
-    @Unique private static Identifier getDimId(Entity entity) {return entity.getWorld().getDimensionKey().getValue();}
+    @Unique private static Identifier getDimId(Entity entity) {return entity.getWorld().getDimension().effects();}
 
     @Inject(method = "setHoldingEntityId(I)V", at = @At("HEAD"))
     public void setHoldingEntityId(int newHoldingEntityId, CallbackInfo ci){

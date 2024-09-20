@@ -31,11 +31,11 @@
     "NotifMod.mixins.json"
   ],
   "depends": {
-    "java": ">=17",
-    "minecraft": ">=1.20.3",
-    "fabricloader": ">=0.15.10",
+    "java": ">=${javaVer}",
+    "minecraft": ">=1.20.6",
+    "fabricloader": ">=0.16.5",
     "fabric": "*",
-    "cloth-config2": ">=13.0.112"
+    "cloth-config2": ">=14.0.126"
   },
   "recommends": {
     "modmenu": "*"

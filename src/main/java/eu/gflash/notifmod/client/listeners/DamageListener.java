@@ -3,6 +3,7 @@ package eu.gflash.notifmod.client.listeners;
 import eu.gflash.notifmod.util.Message;
 import eu.gflash.notifmod.util.TextUtil;
 import eu.gflash.notifmod.config.ModConfig;
+import net.minecraft.component.DataComponentTypes;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -86,7 +87,7 @@ public class DamageListener {
         ModConfig.Durability settings = ModConfig.getInstance().durability;
         if(!settings.enabled) return false;
         if(settings.trackedItems.contains(itemStack)) return true;
-        if(settings.alwaysNamed && itemStack.hasCustomName()) return true;
+        if(settings.alwaysNamed && itemStack.contains(DataComponentTypes.CUSTOM_NAME)) return true;
         return settings.alwaysEnchanted && itemStack.hasEnchantments() && !settings.blacklistedEnchantedItems.contains(itemStack);
     }
 
@@ -135,7 +136,7 @@ public class DamageListener {
             return new HashCodeBuilder(19, 61)
                     .append(noDmg.getCount())
                     .append(noDmg.getItem().toString())
-                    .append(noDmg.getNbt())
+                    .append(noDmg.getComponents().toString())
                     .toHashCode();
         }
     }
