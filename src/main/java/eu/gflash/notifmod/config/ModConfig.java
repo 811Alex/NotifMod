@@ -8,6 +8,8 @@ import eu.gflash.notifmod.config.types.Key;
 import eu.gflash.notifmod.config.types.RegExPattern;
 import eu.gflash.notifmod.config.types.SoundSequence;
 import eu.gflash.notifmod.util.TextUtil;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.ConfigHolder;
@@ -31,8 +33,6 @@ import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.lwjgl.glfw.GLFW;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.lang.annotation.*;

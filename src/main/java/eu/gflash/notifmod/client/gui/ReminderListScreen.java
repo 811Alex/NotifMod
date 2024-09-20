@@ -69,24 +69,22 @@ public class ReminderListScreen extends BaseScreen {
         private final int trimTitleWidth;
 
         public ReminderListWidget() {
-            super(ReminderListScreen.this.client, WIDGET_WIDTH, WIDGET_HEIGHT, ReminderListScreen.this.panelY + ITEM_HEIGHT, ReminderListScreen.this.panelY + RELATIVE_BOTTOM, ITEM_HEIGHT);
-            this.left = ReminderListScreen.this.wX();
-            this.right += this.left;
-            this.setRenderBackground(false);
+            super(ReminderListScreen.this.client, WIDGET_WIDTH, WIDGET_HEIGHT, ReminderListScreen.this.panelY + ITEM_HEIGHT, ITEM_HEIGHT);
+            this.setX(ReminderListScreen.this.wX());
 
             ReminderTimer.getActive().stream()
                     .sorted(Comparator.comparingInt(ReminderTimer::getRemaining).reversed())    // timers with most time left first
                     .forEach(timer -> addEntry(new ReminderEntry(timer)));
 
-            this.buttonX = this.right - (this.getMaxScroll() > 0 ? 62 : 52);
+            this.buttonX = this.getRowRight() - (this.getMaxScroll() > 0 ? 62 : 52);
             this.timeX = this.buttonX - ReminderListScreen.this.textRenderer.getWidth("00:00:00") - 6;
-            this.maxTitleWidth = this.timeX - this.left - 6;
+            this.maxTitleWidth = this.timeX - this.getRowLeft() - 6;
             this.trimTitleWidth = maxTitleWidth - ReminderListScreen.this.textRenderer.getWidth("...");
             this.children().forEach(ReminderEntry::init);
         }
 
-        protected int getScrollbarPositionX() {
-            return this.right - 6;
+        protected int getScrollbarX() {
+            return this.getRowRight() - 6;
         }
 
         public int getRowWidth() {
@@ -109,12 +107,7 @@ public class ReminderListScreen extends BaseScreen {
              */
             public ReminderEntry(ReminderTimer timer){
                 this.timer = timer;
-                this.stopButton = new CustomButtonWidget(0, 0, 50, ITEM_HEIGHT, TEXT_ENTRY_STOP, b -> this.timer.kill()){
-                    @Override
-                    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-                        super.render(context, ReminderListWidget.this.isMouseOver(mouseX, mouseY) ? mouseX : -1, mouseY, delta);   // if mouse outside of widget, pretend it's outside the button too
-                    }
-                };
+                this.stopButton = new CustomButtonWidget(0, 0, 50, ITEM_HEIGHT, TEXT_ENTRY_STOP, b -> this.timer.kill());
             }
 
             /**

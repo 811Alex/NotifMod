@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '0.12-SNAPSHOT'
+    id 'fabric-loom' version '1.6-SNAPSHOT'
     id 'maven-publish'
 }
 
@@ -24,6 +24,7 @@ dependencies {
         exclude(group: 'net.fabricmc.fabric-api')
     }
     modImplementation "com.terraformersmc:modmenu:${project.modmenu_fabric}"
+    implementation "jakarta.annotation:jakarta.annotation-api:2.1.0"
 }
 
 processResources {

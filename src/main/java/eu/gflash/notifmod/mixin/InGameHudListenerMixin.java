@@ -3,6 +3,7 @@ package eu.gflash.notifmod.mixin;
 import com.mojang.authlib.GameProfile;
 import eu.gflash.notifmod.client.listeners.MessageListener;
 import eu.gflash.notifmod.util.Message;
+import jakarta.annotation.Nullable;
 import net.minecraft.client.network.message.MessageHandler;
 import net.minecraft.network.message.MessageSignatureData;
 import net.minecraft.network.message.MessageType;
@@ -17,7 +18,6 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import javax.annotation.Nullable;
 import java.time.Instant;
 import java.util.function.BooleanSupplier;
 

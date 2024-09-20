@@ -1,10 +1,10 @@
 package eu.gflash.notifmod.util;
 
 import eu.gflash.notifmod.config.types.ItemList;
+import jakarta.annotation.Nullable;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.item.ItemStack;
 
-import javax.annotation.Nullable;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
