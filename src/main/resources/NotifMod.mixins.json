@@ -12,7 +12,7 @@
     "InGameHudListenerMixin",
     "InputUtilTypeAccessor",
     "TitleScreenMixin",
-    "MobEntityMixin"
+    "LeashableMixin"
   ],
   "injectors": {
     "defaultRequire": 1

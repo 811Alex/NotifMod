@@ -59,7 +59,7 @@ import static me.shedaniel.autoconfig.annotation.ConfigEntry.Gui.EnumHandler.Enu
  */
 @SuppressWarnings("CanBeFinal")
 @Config(name = "notifmod")
-@Background("minecraft:textures/block/note_block.png")
+//@Background("minecraft:textures/block/note_block.png")    // doesn't seem to work properly on 1.21 atm
 public class ModConfig implements ConfigData {
     @SuppressWarnings("rawtypes")
     @Excluded

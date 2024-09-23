@@ -50,7 +50,7 @@ loom {
     runs { remove server }
 }
 
-configurations { runtimeClasspath.extendsFrom loomDevelopmentDependencies}
+configurations { runtimeClasspath.extendsFrom loomDevelopmentDependencies }
 
 jar {
     from("LICENSE") {

@@ -33,7 +33,7 @@ public class CustomSounds {
     }
 
     private static void register(String sound){
-        Identifier id = new Identifier(MOD_ID, sound);
+        Identifier id = Identifier.of(MOD_ID, sound);
         Registry.register(Registries.SOUND_EVENT, id, SoundEvent.of(id));
     }
 }

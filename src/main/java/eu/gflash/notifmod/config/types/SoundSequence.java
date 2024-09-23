@@ -5,6 +5,7 @@ import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import eu.gflash.notifmod.config.ConfigTypeBase;
+import eu.gflash.notifmod.util.IdentifierUtil;
 import eu.gflash.notifmod.util.ThreadUtils;
 import joptsimple.internal.Strings;
 import me.shedaniel.autoconfig.gui.registry.api.GuiRegistryAccess;
@@ -53,8 +54,8 @@ public class SoundSequence extends ConfigTypeBase {
                 float pitch = parseNum(soundMatcher.group(4), "invalidPitch", 1);
                 int delay = i + 1 < entrySplit.length - 1 ? (int) parseNum(entrySplit[i + 1], "invalidDelay", 0) : 0;  // next delay (assuming it's not the last element), or 0
                 String id = soundMatcher.group(1);
-                if(Identifier.isValid(id))
-                    Registries.SOUND_EVENT.getOrEmpty(new Identifier(id)).ifPresentOrElse(
+                if(IdentifierUtil.isValid(id))
+                    Registries.SOUND_EVENT.getOrEmpty(Identifier.of(id)).ifPresentOrElse(
                             soundEvent -> this.sequence.add(new Sound(soundEvent, pitch, delay)),
                             () -> setError("doesNotExist", id)
                     );

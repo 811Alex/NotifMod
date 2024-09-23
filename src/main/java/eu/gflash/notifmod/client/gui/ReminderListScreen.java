@@ -25,8 +25,8 @@ import java.util.List;
  * @author Alex811
  */
 public class ReminderListScreen extends BaseScreen {
-    private static final Identifier BACKGROUND = new Identifier("notifmod:textures/gui_reminder_list.png");
-    private static final Identifier MASK = new Identifier("notifmod:textures/gui_reminder_list_mask.png");
+    private static final Identifier BACKGROUND = Identifier.of("notifmod:textures/gui_reminder_list.png");
+    private static final Identifier MASK = Identifier.of("notifmod:textures/gui_reminder_list_mask.png");
     private static final Text TEXT_TITLE = Text.translatable("gui.screen.reminderList.title");
     private static final Text TEXT_ENTRY_UNTITLED = Text.translatable("gui.screen.reminderList.entry.untitled");
     private static final Text TEXT_ENTRY_STOP = Text.translatable("gui.screen.reminderList.entry.stop");
@@ -148,22 +148,11 @@ public class ReminderListScreen extends BaseScreen {
             @Override
             public void render(DrawContext context, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
                 if(this.isMouseOver(mouseX, mouseY)){   // highlight hovered entry
-                    Tessellator tessellator = Tessellator.getInstance();
-                    BufferBuilder bufferBuilder = tessellator.getBuffer();
                     RenderSystem.enableBlend(); // set up for transparency
                     RenderSystem.blendFuncSeparate(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SrcFactor.ZERO, GlStateManager.DstFactor.ONE);
                     RenderSystem.setShader(GameRenderer::getPositionColorProgram);   // set up for colored quadrilateral
-                    bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
                     int minX = x - 2;
-                    int maxX = minX + entryWidth;
-                    int maxY = y + ReminderListWidget.ITEM_HEIGHT;
-                    Arrays.stream(new int[][]{  // vertex coords
-                            {minX, maxY},
-                            {maxX, maxY},
-                            {maxX, y},
-                            {minX, y}
-                    }).forEach(c -> bufferBuilder.vertex(c[0], c[1], 0D).color(64, 64, 64, 120).next());
-                    tessellator.draw();
+                    context.fill(minX, y, minX + entryWidth, y + ReminderListWidget.ITEM_HEIGHT, 0x78404040);
                     RenderSystem.disableBlend();
                 }
                 int textY = y + (entryHeight >> 1) - 2;

@@ -6,6 +6,7 @@ import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import eu.gflash.notifmod.config.ConfigTypeBase;
+import eu.gflash.notifmod.util.IdentifierUtil;
 import joptsimple.internal.Strings;
 import me.shedaniel.autoconfig.gui.registry.api.GuiRegistryAccess;
 import me.shedaniel.autoconfig.util.Utils;
@@ -45,8 +46,8 @@ public class ItemList extends ConfigTypeBase {
             String[] entrySplit = DELIMITER_PATTERN.split(noSpaceItemList);
             ArrayList<String> itemIds = Lists.newArrayList(entrySplit);
             if(itemIds.stream().noneMatch(id -> {    // validity check
-                if(Identifier.isValid(id)){
-                    if(Registries.ITEM.containsId(new Identifier(id)))
+                if(IdentifierUtil.isValid(id)){
+                    if(Registries.ITEM.containsId(Identifier.of(id)))
                         return false;   // success
                     else setError("doesNotExist", id);
                 }else setError("invalidIdentifier", id);
