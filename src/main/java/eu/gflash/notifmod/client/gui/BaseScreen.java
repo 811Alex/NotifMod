@@ -2,6 +2,7 @@ package eu.gflash.notifmod.client.gui;
 
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
@@ -20,6 +21,8 @@ public class BaseScreen extends Screen {
     private int titleX;
     private int titleY;
     protected final Identifier background;      // background texture
+    protected final int bgWidth = 256;          // background texture width
+    protected final int bgHeight = 256;         // background texture height
     protected int panelWidth;                   // GUI width
     protected int panelHeight;                  // GUI height
     protected int panelX;                       // GUI x coordinate
@@ -42,10 +45,8 @@ public class BaseScreen extends Screen {
     @Override
     public void renderBackground(DrawContext context, int mouseX, int mouseY, float delta){
         super.renderBackground(context, mouseX, mouseY, delta);
-        if(background != null && panelWidth > 0 && panelHeight > 0){
-            context.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-            context.drawTexture(background, panelX, panelY, 0, 0, panelWidth, panelHeight);
-        }
+        if(background != null && panelWidth > 0 && panelHeight > 0)
+            context.drawTexture(RenderLayer::getGuiTextured, background, panelX, panelY, 0, 0, panelWidth, panelHeight, bgWidth, bgHeight);
     }
 
     public void renderForeground(DrawContext context, int mouseX, int mouseY, float delta){

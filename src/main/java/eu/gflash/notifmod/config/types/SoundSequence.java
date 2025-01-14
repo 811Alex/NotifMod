@@ -55,7 +55,7 @@ public class SoundSequence extends ConfigTypeBase {
                 int delay = i + 1 < entrySplit.length - 1 ? (int) parseNum(entrySplit[i + 1], "invalidDelay", 0) : 0;  // next delay (assuming it's not the last element), or 0
                 String id = soundMatcher.group(1);
                 if(IdentifierUtil.isValid(id))
-                    Registries.SOUND_EVENT.getOrEmpty(Identifier.of(id)).ifPresentOrElse(
+                    Registries.SOUND_EVENT.getOptionalValue(Identifier.of(id)).ifPresentOrElse(
                             soundEvent -> this.sequence.add(new Sound(soundEvent, pitch, delay)),
                             () -> setError("doesNotExist", id)
                     );

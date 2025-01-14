@@ -32,10 +32,10 @@
   ],
   "depends": {
     "java": ">=${javaVer}",
-    "minecraft": ">=1.21",
+    "minecraft": ">=1.21.2",
     "fabricloader": ">=0.16.5",
     "fabric": "*",
-    "cloth-config2": ">=15.0.127"
+    "cloth-config2": ">=16.0.141"
   },
   "recommends": {
     "modmenu": "*"

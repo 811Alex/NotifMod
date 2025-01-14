@@ -40,8 +40,7 @@ public class ReminderListScreen extends BaseScreen {
     @Override
     public void renderForeground(DrawContext context, int mouseX, int mouseY, float delta) {
         super.renderForeground(context, mouseX, mouseY, delta);
-        context.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        context.drawTexture(MASK, panelX, panelY, 0, 0, panelWidth, panelHeight);
+        context.drawTexture(RenderLayer::getGuiTextured, MASK, panelX, panelY, 0, 0, panelWidth, panelHeight, bgWidth, bgHeight);
     }
 
     @Override
@@ -148,12 +147,8 @@ public class ReminderListScreen extends BaseScreen {
             @Override
             public void render(DrawContext context, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
                 if(this.isMouseOver(mouseX, mouseY)){   // highlight hovered entry
-                    RenderSystem.enableBlend(); // set up for transparency
-                    RenderSystem.blendFuncSeparate(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SrcFactor.ZERO, GlStateManager.DstFactor.ONE);
-                    RenderSystem.setShader(GameRenderer::getPositionColorProgram);   // set up for colored quadrilateral
                     int minX = x - 2;
                     context.fill(minX, y, minX + entryWidth, y + ReminderListWidget.ITEM_HEIGHT, 0x78404040);
-                    RenderSystem.disableBlend();
                 }
                 int textY = y + (entryHeight >> 1) - 2;
                 drawTextWithShadow(context, title, x, textY, 0xFFFFFF);

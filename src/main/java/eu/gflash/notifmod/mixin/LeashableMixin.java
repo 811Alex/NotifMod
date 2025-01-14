@@ -20,14 +20,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  */
 @Mixin(Leashable.class)
 public interface LeashableMixin extends Leashable {
-    @Shadow @Nullable Leashable.LeashData getLeashData();
+    @Shadow @Nullable LeashData getLeashData();
 
     @Unique private static Identifier getDimId(Entity entity) {return entity.getWorld().getDimension().effects();}
 
     @Inject(method = "setUnresolvedLeashHolderId(I)V", at = @At("HEAD"))
     default void setUnresolvedLeashHolderId(int unresolvedLeashHolderId, CallbackInfo ci){
         if(unresolvedLeashHolderId != 0) return;                            // if not detach event, abort
-        Leashable.LeashData currLD = getLeashData();
+        LeashData currLD = getLeashData();
         if(currLD == null || currLD.leashHolder == null) return;            // if no current holder data, abort
         Entity currHolder = currLD.leashHolder;
         ClientPlayerEntity player = MinecraftClient.getInstance().player;
