@@ -44,7 +44,7 @@ public class BaseScreen extends Screen {
 
     @Override
     public void renderBackground(DrawContext context, int mouseX, int mouseY, float delta){
-        super.renderBackground(context, mouseX, mouseY, delta);
+        applyBlur();
         if(background != null && panelWidth > 0 && panelHeight > 0)
             context.drawTexture(RenderLayer::getGuiTextured, background, panelX, panelY, 0, 0, panelWidth, panelHeight, bgWidth, bgHeight);
     }
@@ -55,7 +55,6 @@ public class BaseScreen extends Screen {
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta){ // Adds basic background & title drawing.
-        renderBackground(context, mouseX, mouseY, delta);
         renderForeground(context, mouseX, mouseY, delta);
         if(title != null)
             drawText(context, title, titleX, titleY, 0x404040);
