@@ -83,6 +83,12 @@ public class ReminderListScreen extends BaseScreen {
             this.children().forEach(ReminderEntry::init);
         }
 
+        @Override
+        protected void drawMenuListBackground(DrawContext context) {}
+
+        @Override
+        protected void drawHeaderAndFooterSeparators(DrawContext context) {}
+
         protected int getScrollbarX() {
             return this.getRowRight() - 6;
         }
