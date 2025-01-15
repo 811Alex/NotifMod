@@ -1,5 +1,6 @@
 package eu.gflash.notifmod.client.listeners;
 
+import eu.gflash.notifmod.client.gui.ReminderListScreen;
 import eu.gflash.notifmod.client.gui.ReminderScreen;
 import eu.gflash.notifmod.util.ReminderTimer;
 import eu.gflash.notifmod.config.types.Key;
@@ -22,10 +23,14 @@ public class ReminderListener {
             boolean NoGUIKeyPressed = gotPressed(settings.keyBindNoGUI, 1); // Note: must always run gotPressed() for all bindings
             if(!(GUIKeyPressed || NoGUIKeyPressed)) return;
             Screen currScreen = MinecraftClient.getInstance().currentScreen;
-            if(currScreen == null){
-                if(GUIKeyPressed) ReminderScreen.open();
-                else ReminderTimer.startNew(settings.defSeconds, null);
-            }else if(GUIKeyPressed && currScreen instanceof ReminderScreen) currScreen.close();
+            if(!GUIKeyPressed){
+                if(currScreen == null) ReminderTimer.startNew(settings.defSeconds, null);
+            }else switch(currScreen){
+                case null -> ReminderScreen.open();
+                case ReminderScreen s -> currScreen.close();
+                case ReminderListScreen s -> ReminderScreen.open();
+                default -> {}
+            }
         });
     }
 
