@@ -75,7 +75,7 @@ public class ReminderListScreen extends BaseScreen {
                     .sorted(Comparator.comparingInt(ReminderTimer::getRemaining).reversed())    // timers with most time left first
                     .forEach(timer -> addEntry(new ReminderEntry(timer)));
 
-            this.buttonX = this.getRowRight() - (this.getMaxScroll() > 0 ? 62 : 52);
+            this.buttonX = this.getRowRight() - (this.overflows() ? 62 : 52);
             this.timeX = this.buttonX - ReminderListScreen.this.textRenderer.getWidth("00:00:00") - 6;
             this.maxTitleWidth = this.timeX - this.getRowLeft() - 6;
             this.trimTitleWidth = maxTitleWidth - ReminderListScreen.this.textRenderer.getWidth("...");
