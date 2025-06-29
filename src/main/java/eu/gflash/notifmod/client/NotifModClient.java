@@ -1,6 +1,7 @@
 package eu.gflash.notifmod.client;
 
 import eu.gflash.notifmod.client.listeners.ReminderListener;
+import eu.gflash.notifmod.client.listeners.WorldLoadListener;
 import eu.gflash.notifmod.client.sound.CustomSounds;
 import eu.gflash.notifmod.config.ModConfig;
 import eu.gflash.notifmod.util.Log;
@@ -22,6 +23,7 @@ public class NotifModClient implements ClientModInitializer {
         CustomSounds.register();
         ModConfig.register();
         ReminderListener.register();
+        WorldLoadListener.register();
         Log.info("NotifMod loaded!");
     }
 }
