@@ -1,14 +1,27 @@
 package eu.gflash.notifmod.client.listeners;
 
 import eu.gflash.notifmod.config.ModConfig;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientChunkEvents;
+import net.minecraft.client.MinecraftClient;
+
+import java.util.Optional;
 
 /**
  * Handles world loading related events.
  * @author Alex811
  */
 public class WorldLoadListener {
-    private static int chunkCounter = 0;
     private static boolean notified = false;
+
+    public static void register(){
+        ClientChunkEvents.CHUNK_LOAD.register((s, c) -> WorldLoadListener.onChunkBuild());
+    }
+
+    private static int getLoadedChunkCount(){
+        return Optional.ofNullable(MinecraftClient.getInstance().world)
+                .map(world -> world.getChunkManager().getLoadedChunkCount())
+                .orElse(0);
+    }
 
     /**
      * Gets called after a successful connection to a server.
@@ -26,7 +39,7 @@ public class WorldLoadListener {
     public static void onChunkBuild(){
         if(notified) return;
         ModConfig.DoneLoading.World settings = ModConfig.getInstance().doneLoading.world;
-        if(settings.enabled && ++chunkCounter >= settings.chunks)
+        if(settings.enabled && getLoadedChunkCount() >= settings.chunks)
             notify(settings);
     }
 
@@ -34,7 +47,6 @@ public class WorldLoadListener {
      * Resets variables when we disconnect from the server.
      */
     public static void reset(){
-        chunkCounter = 0;
         notified = false;
     }
 

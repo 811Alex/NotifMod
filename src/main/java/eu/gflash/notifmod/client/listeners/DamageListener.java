@@ -8,8 +8,8 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import java.util.*;
-import java.util.function.Supplier;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Handles item damage changes, for items we want to track.
