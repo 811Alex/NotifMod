@@ -32,7 +32,7 @@
   ],
   "depends": {
     "java": ">=${javaVer}",
-    "minecraft": ">=1.20.6",
+    "minecraft": ">=1.20.5",
     "fabricloader": ">=0.16.5",
     "fabric": "*",
     "cloth-config2": ">=14.0.126"
