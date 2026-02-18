@@ -6,15 +6,14 @@ import eu.gflash.notifmod.client.gui.widgets.CustomButtonWidget;
 import eu.gflash.notifmod.util.NumUtil;
 import eu.gflash.notifmod.util.ReminderTimer;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.Selectable;
 import net.minecraft.client.gui.widget.ElementListWidget;
-import net.minecraft.client.render.*;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -25,7 +24,7 @@ import java.util.List;
  * @author Alex811
  */
 public class ReminderListScreen extends BaseScreen {
-    private static final Identifier BACKGROUND = Identifier.of("notifmod:textures/gui_reminder_list.png");
+    private static final Identifier REMINDER_LIST_BACKGROUND = Identifier.of("notifmod:textures/gui_reminder_list.png");
     private static final Identifier MASK = Identifier.of("notifmod:textures/gui_reminder_list_mask.png");
     private static final Text TEXT_TITLE = Text.translatable("gui.screen.reminderList.title");
     private static final Text TEXT_ENTRY_UNTITLED = Text.translatable("gui.screen.reminderList.entry.untitled");
@@ -34,13 +33,13 @@ public class ReminderListScreen extends BaseScreen {
     private static final int PANEL_HEIGHT = 146;
 
     protected ReminderListScreen() {
-        super(TEXT_TITLE, PANEL_WIDTH, PANEL_HEIGHT, BACKGROUND);
+        super(TEXT_TITLE, PANEL_WIDTH, PANEL_HEIGHT, REMINDER_LIST_BACKGROUND);
     }
 
     @Override
     public void renderForeground(DrawContext context, int mouseX, int mouseY, float delta) {
         super.renderForeground(context, mouseX, mouseY, delta);
-        context.drawTexture(RenderLayer::getGuiTextured, MASK, panelX, panelY, 0, 0, panelWidth, panelHeight, bgWidth, bgHeight);
+        context.drawTexture(RenderPipelines.GUI_TEXTURED, MASK, panelX, panelY, 0, 0, panelWidth, panelHeight, bgWidth, bgHeight);
     }
 
     @Override

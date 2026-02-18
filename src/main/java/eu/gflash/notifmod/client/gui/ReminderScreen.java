@@ -19,7 +19,7 @@ import org.apache.commons.lang3.tuple.Triple;
  * @author Alex811
  */
 public class ReminderScreen extends BaseScreen {
-    private static final Identifier BACKGROUND = Identifier.of("notifmod:textures/gui_reminder.png");
+    private static final Identifier REMINDER_SCREEN_BACKGROUND = Identifier.of("notifmod:textures/gui_reminder.png");
     private static final Text TEXT_TITLE = Text.translatable("gui.screen.reminder.title");
     private static final Text TEXT_TITLEFIELD = Text.translatable("gui.screen.reminder.titleField");
     private static final Text TEXT_PRESET_1 = Text.translatable("gui.screen.reminder.preset1");
@@ -37,7 +37,7 @@ public class ReminderScreen extends BaseScreen {
     private boolean repeat = false;
 
     protected ReminderScreen() {
-        super(TEXT_TITLE, 250, 146, BACKGROUND);
+        super(TEXT_TITLE, 250, 146, REMINDER_SCREEN_BACKGROUND);
     }
 
     @Override

@@ -1,8 +1,8 @@
 package eu.gflash.notifmod.client.gui;
 
+import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.render.RenderLayer;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
@@ -44,9 +44,9 @@ public class BaseScreen extends Screen {
 
     @Override
     public void renderBackground(DrawContext context, int mouseX, int mouseY, float delta){
-        applyBlur();
+        applyBlur(context);
         if(background != null && panelWidth > 0 && panelHeight > 0)
-            context.drawTexture(RenderLayer::getGuiTextured, background, panelX, panelY, 0, 0, panelWidth, panelHeight, bgWidth, bgHeight);
+            context.drawTexture(RenderPipelines.GUI_TEXTURED, background, panelX, panelY, 0, 0, panelWidth, panelHeight, bgWidth, bgHeight);
     }
 
     public void renderForeground(DrawContext context, int mouseX, int mouseY, float delta){
@@ -60,28 +60,28 @@ public class BaseScreen extends Screen {
             drawText(context, title, titleX, titleY, 0x404040);
     }
 
-    protected int drawText(DrawContext context, Text text, int x, int y, int color, boolean shadow){
-        return context.drawText(this.textRenderer, text, x, y, color, shadow);
+    protected void drawText(DrawContext context, Text text, int x, int y, int color, boolean shadow){
+        context.drawText(this.textRenderer, text, x, y, color, shadow);
     }
 
-    protected int drawText(DrawContext context, String text, int x, int y, int color, boolean shadow){
-        return context.drawText(this.textRenderer, text, x, y, color, shadow);
+    protected void drawText(DrawContext context, String text, int x, int y, int color, boolean shadow){
+        context.drawText(this.textRenderer, text, x, y, color, shadow);
     }
 
-    protected int drawText(DrawContext context, Text text, int x, int y, int color){
-        return drawText(context, text, x, y, color, false);
+    protected void drawText(DrawContext context, Text text, int x, int y, int color){
+        drawText(context, text, x, y, color, false);
     }
 
-    protected int drawText(DrawContext context, String text, int x, int y, int color){
-        return drawText(context, text, x, y, color, false);
+    protected void drawText(DrawContext context, String text, int x, int y, int color){
+        drawText(context, text, x, y, color, false);
     }
 
-    protected int drawTextWithShadow(DrawContext context, Text text, int x, int y, int color){
-        return drawText(context, text, x, y, color, true);
+    protected void drawTextWithShadow(DrawContext context, Text text, int x, int y, int color){
+        drawText(context, text, x, y, color, true);
     }
 
-    protected int drawTextWithShadow(DrawContext context, String text, int x, int y, int color){
-        return drawText(context, text, x, y, color, true);
+    protected void drawTextWithShadow(DrawContext context, String text, int x, int y, int color){
+        drawText(context, text, x, y, color, true);
     }
 
     /**

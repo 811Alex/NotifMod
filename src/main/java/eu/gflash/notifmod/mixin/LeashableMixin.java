@@ -20,20 +20,25 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  */
 @Mixin(Leashable.class)
 public interface LeashableMixin extends Leashable {
-    @Shadow @Nullable LeashData getLeashData();
+    @Shadow @Nullable Entity getLeashHolder();
+
+    @Shadow boolean canBeLeashedTo(Entity entity);
 
     @Unique private static Identifier getDimId(Entity entity) {return entity.getWorld().getDimension().effects();}
 
+    @Unique private boolean isInDimOf(Entity entity) {return this instanceof Entity thisEntity && getDimId(entity).equals(getDimId(thisEntity));}
+
     @Inject(method = "setUnresolvedLeashHolderId(I)V", at = @At("HEAD"))
     default void setUnresolvedLeashHolderId(int unresolvedLeashHolderId, CallbackInfo ci){
-        if(unresolvedLeashHolderId != 0) return;                            // if not detach event, abort
-        LeashData currLD = getLeashData();
-        if(currLD == null || currLD.leashHolder == null) return;            // if no current holder data, abort
-        Entity currHolder = currLD.leashHolder;
+        if(unresolvedLeashHolderId != 0) return;                    // if not detach event, abort
+        Entity leashHolder = getLeashHolder();
+        if(leashHolder == null) return;                             // if no current holder data, abort
         ClientPlayerEntity player = MinecraftClient.getInstance().player;
-        if(player == null || player.getId() != currHolder.getId()) return;  // if player wasn't the holder, abort
-        Entity leashed = (Entity) this;
-        if(player.distanceTo(leashed) > MAX_LEASH_LENGTH || !leashed.isAlive() || !getDimId(player).equals(getDimId(leashed)))  // if the lead broke, not detached by the player
-            LeadListener.onLeadBreak(player, leashed);
+        if(leashHolder.equals(player) && this instanceof Entity leashedEntity && (  // if player was the holder
+                !leashedEntity.isAlive() ||                                         // notify if leashed died
+                !isInDimOf(player) ||                                               // notify if they're not in the same dimension
+                !canBeLeashedTo(player) ||                                          // notify if it definitely snapped due to distance
+                !player.canInteractWithEntity(leashedEntity, 0)       // notify if this couldn't have been a leashed entity interaction detach
+        )) LeadListener.onLeadBreak(player, leashedEntity);         // note: vanilla doesn't call this for block interactions (leashing to fence) - update if that changes
     }
 }

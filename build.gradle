@@ -10,8 +10,8 @@ version = project.mod_version
 group = project.maven_group
 
 repositories {
-    maven { url 'https://maven.shedaniel.me/' }
-    maven { url 'https://maven.terraformersmc.com/' }
+    maven { url = 'https://maven.shedaniel.me/' }
+    maven { url = 'https://maven.terraformersmc.com/' }
 }
 
 dependencies {
@@ -23,7 +23,7 @@ dependencies {
         exclude(group: 'net.fabricmc.fabric-api')
     }
     modImplementation "com.terraformersmc:modmenu:${project.modmenu_fabric}"
-    implementation "jakarta.annotation:jakarta.annotation-api:2.1.0"
+    implementation "jakarta.annotation:jakarta.annotation-api:3.0.0"
 }
 
 processResources {
