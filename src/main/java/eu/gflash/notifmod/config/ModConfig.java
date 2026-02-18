@@ -1,6 +1,7 @@
 package eu.gflash.notifmod.config;
 
 import com.google.gson.Gson;
+import eu.gflash.notifmod.util.Color;
 import eu.gflash.notifmod.util.Log;
 import eu.gflash.notifmod.util.Message;
 import eu.gflash.notifmod.config.types.ItemList;
@@ -291,16 +292,16 @@ public class ModConfig implements ConfigData {
         public Sub message = new Sub(
                 ".+", ".+", "",
                 new Sub.Highlighting(
-                        new Sub.Highlighting.Indicator(false, 0x00FFFF),
-                        new Sub.Highlighting.MatchedTextStyle(false, "", 0x00FFFF)
+                        new Sub.Highlighting.Indicator(false, Color.CFG_DEF_MESSAGE_INDICATOR),
+                        new Sub.Highlighting.MatchedTextStyle(false, "", Color.CFG_DEF_MESSAGE_TXT_MATCH)
                 ), "notifmod:chat.message"
         );
         @CollapsibleObject
         public Sub mention = new Sub(
                 ".*\\p.*", ".*\\p.*", "",
                 new Sub.Highlighting(
-                        new Sub.Highlighting.Indicator(true, 0xFF00FF),
-                        new Sub.Highlighting.MatchedTextStyle(true, "\\p", 0xFF00FF)
+                        new Sub.Highlighting.Indicator(true, Color.CFG_DEF_MENTION_INDICATOR),
+                        new Sub.Highlighting.MatchedTextStyle(true, "\\p", Color.CFG_DEF_MENTION_TXT_MATCH)
                 ), "notifmod:chat.mention"
         );
         @Tooltip

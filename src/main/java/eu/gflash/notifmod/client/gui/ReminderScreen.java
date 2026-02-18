@@ -1,5 +1,6 @@
 package eu.gflash.notifmod.client.gui;
 
+import eu.gflash.notifmod.util.Color;
 import eu.gflash.notifmod.client.gui.widgets.CustomButtonWidget;
 import eu.gflash.notifmod.client.gui.widgets.CustomIntSliderWidget;
 import eu.gflash.notifmod.client.gui.widgets.CustomTextFieldWidget;
@@ -43,7 +44,7 @@ public class ReminderScreen extends BaseScreen {
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         super.render(context, mouseX, mouseY, delta);
-        drawText(context, TEXT_TITLEFIELD, titleFieldTitleX, titleFieldTitleY, 0x404040);
+        drawText(context, TEXT_TITLEFIELD, titleFieldTitleX, titleFieldTitleY, Color.TEXT_DARK);
     }
 
     @Override

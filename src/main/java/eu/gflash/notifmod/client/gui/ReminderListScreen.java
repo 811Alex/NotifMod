@@ -1,7 +1,6 @@
 package eu.gflash.notifmod.client.gui;
 
-import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.systems.RenderSystem;
+import eu.gflash.notifmod.util.Color;
 import eu.gflash.notifmod.client.gui.widgets.CustomButtonWidget;
 import eu.gflash.notifmod.util.NumUtil;
 import eu.gflash.notifmod.util.ReminderTimer;
@@ -153,15 +152,15 @@ public class ReminderListScreen extends BaseScreen {
             public void render(DrawContext context, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
                 if(this.isMouseOver(mouseX, mouseY)){   // highlight hovered entry
                     int minX = x - 2;
-                    context.fill(minX, y, minX + entryWidth, y + ReminderListWidget.ITEM_HEIGHT, 0x78404040);
+                    context.fill(minX, y, minX + entryWidth, y + ReminderListWidget.ITEM_HEIGHT, Color.LIST_ENTRY_HOVER_HIGHLIGHT);
                 }
                 int textY = y + (entryHeight >> 1) - 2;
-                drawTextWithShadow(context, title, x, textY, 0xFFFFFF);
+                drawTextWithShadow(context, title, x, textY, Color.TEXT_LIGHT);
                 stopButton.active = timer.isActive();
                 if(stopButton.active)
-                    drawTextWithShadow(context, NumUtil.secToHMSString(timer.getRemaining()), ReminderListWidget.this.timeX, textY, timer.isRepeating() ? 0xFFC4FF : 0xC4FFFF);
+                    drawTextWithShadow(context, NumUtil.secToHMSString(timer.getRemaining()), ReminderListWidget.this.timeX, textY, timer.isRepeating() ? Color.TEXT_BTN_TIMER_REPEATING : Color.TEXT_BTN_TIMER_NORMAL);
                 else
-                    drawTextWithShadow(context, "--:--:--", ReminderListWidget.this.timeX, textY, 0xFFFFC4);
+                    drawTextWithShadow(context, "--:--:--", ReminderListWidget.this.timeX, textY, Color.TEXT_BTN_TIMER_ABORTED);
                 stopButton.setY(y);
                 stopButton.render(context, mouseX, mouseY, tickDelta);
             }

@@ -1,5 +1,6 @@
 package eu.gflash.notifmod.client.gui;
 
+import eu.gflash.notifmod.util.Color;
 import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
@@ -57,7 +58,7 @@ public class BaseScreen extends Screen {
     public void render(DrawContext context, int mouseX, int mouseY, float delta){ // Adds basic background & title drawing.
         renderForeground(context, mouseX, mouseY, delta);
         if(title != null)
-            drawText(context, title, titleX, titleY, 0x404040);
+            drawText(context, title, titleX, titleY, Color.TEXT_DARK);
     }
 
     protected void drawText(DrawContext context, Text text, int x, int y, int color, boolean shadow){
