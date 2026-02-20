@@ -162,6 +162,10 @@ public class ReminderTimer {
     private class Task extends TimerTask {
         @Override
         public void run() {
+            if(!ThreadUtils.isMainThread()) {
+                ThreadUtils.execOnMainThread(this);
+                return;
+            }
             ModConfig.Reminder settings = ModConfig.getInstance().reminder;
             settings.msgTypeDone.msgWithPre(
                     () -> TextUtil.getWithFormat(

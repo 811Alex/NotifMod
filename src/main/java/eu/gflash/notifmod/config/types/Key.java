@@ -55,7 +55,7 @@ public class Key extends ConfigTypeBase {
     }
 
     public boolean isDown(){
-        return key != InputUtil.UNKNOWN_KEY && InputUtil.isKeyPressed(MinecraftClient.getInstance().getWindow().getHandle(), getCode());
+        return key != InputUtil.UNKNOWN_KEY && InputUtil.isKeyPressed(MinecraftClient.getInstance().getWindow(), getCode());
     }
 
     @Override

@@ -56,10 +56,13 @@ public class ReminderListScreen extends BaseScreen {
      * @see ReminderEntry
      */
     public class ReminderListWidget extends ElementListWidget<ReminderListWidget.ReminderEntry> {
+        private static final int ROW_ELEMENT_GAP = 6;
         private static final int ITEM_HEIGHT = 20;
-        private static final int WIDGET_WIDTH = ReminderListScreen.PANEL_WIDTH - (ReminderListScreen.PANEL_PADDING << 1);
+        private static final int BUTTON_WIDTH = 50;
+        private static final int WIDGET_WIDTH = ReminderListScreen.PANEL_WIDTH - (BaseScreen.PANEL_PADDING << 1);
         private static final int WIDGET_HEIGHT = ReminderListScreen.PANEL_HEIGHT - (ITEM_HEIGHT << 1);
-        private static final int RELATIVE_BOTTOM = ITEM_HEIGHT + WIDGET_HEIGHT;
+        private static final int EXTRA_TOP_PADDING = 2;
+        private static final int EXTRA_BOTTOM_PADDING = 4;
         private final int buttonX;
         private final int timeX;
         private final int maxTitleWidth;
@@ -73,25 +76,32 @@ public class ReminderListScreen extends BaseScreen {
                     .sorted(Comparator.comparingInt(ReminderTimer::getRemaining).reversed())    // timers with most time left first
                     .forEach(timer -> addEntry(new ReminderEntry(timer)));
 
-            this.buttonX = this.getRowRight() - (this.overflows() ? 62 : 52);
-            this.timeX = this.buttonX - ReminderListScreen.this.textRenderer.getWidth("00:00:00") - 6;
-            this.maxTitleWidth = this.timeX - this.getRowLeft() - 6;
+            this.buttonX = (overflows() ? getScrollbarX() : getRowRight()) - BUTTON_WIDTH - Entry.PADDING;
+            this.timeX = this.buttonX - ReminderListScreen.this.textRenderer.getWidth("00:00:00") - ROW_ELEMENT_GAP;
+            this.maxTitleWidth = this.timeX - getRowLeft() - ROW_ELEMENT_GAP;
             this.trimTitleWidth = maxTitleWidth - ReminderListScreen.this.textRenderer.getWidth("...");
             this.children().forEach(ReminderEntry::init);
         }
 
         @Override
-        protected void drawMenuListBackground(DrawContext context) {}
+        protected void drawMenuListBackground(DrawContext context) { /* disable vanilla background */ }
 
         @Override
-        protected void drawHeaderAndFooterSeparators(DrawContext context) {}
+        protected void drawHeaderAndFooterSeparators(DrawContext context) { /* disable vanilla separators */ }
 
+        @Override
         protected int getScrollbarX() {
-            return this.getRowRight() - 6;
+            return getRowRight() - SCROLLBAR_WIDTH;
         }
 
+        @Override
         public int getRowWidth() {
-            return this.width;
+            return width;
+        }
+
+        @Override
+        protected int getContentsHeightWithPadding() {
+            return super.getContentsHeightWithPadding() + EXTRA_BOTTOM_PADDING;    // add bottom margin to list
         }
 
         /**
@@ -102,6 +112,7 @@ public class ReminderListScreen extends BaseScreen {
             private final ReminderTimer timer;
             private final CustomButtonWidget stopButton;
             private Text title = TEXT_ENTRY_UNTITLED;
+            private int relativeTextY;
 
             /**
              * Entry constructor. Adds elements, sets timer instance.
@@ -110,7 +121,7 @@ public class ReminderListScreen extends BaseScreen {
              */
             public ReminderEntry(ReminderTimer timer){
                 this.timer = timer;
-                this.stopButton = new CustomButtonWidget(0, 0, 50, ITEM_HEIGHT, TEXT_ENTRY_STOP, b -> this.timer.kill());
+                this.stopButton = new CustomButtonWidget(0, 0, BUTTON_WIDTH, ITEM_HEIGHT, TEXT_ENTRY_STOP, b -> this.timer.kill());
             }
 
             /**
@@ -118,8 +129,9 @@ public class ReminderListScreen extends BaseScreen {
              * @see ReminderListWidget#ReminderListWidget()
              */
             public void init(){
-                this.stopButton.setX(ReminderListWidget.this.buttonX);
-                if(timer.hasName()) this.title = Text.of(trimTitle(timer.getName()));
+                stopButton.setX(ReminderListWidget.this.buttonX);
+                relativeTextY = getContentHeight() / 2 - getTextRenderer().fontHeight / 2;
+                if(timer.hasName()) title = Text.of(trimTitle(timer.getName()));
             }
 
             /**
@@ -145,23 +157,26 @@ public class ReminderListScreen extends BaseScreen {
 
             @Override
             public boolean isMouseOver(double mouseX, double mouseY) {
+                if(overflows() && isInScrollbar(mouseX, mouseY)) return false;
                 return ReminderListWidget.this.isMouseOver(mouseX, mouseY) && super.isMouseOver(mouseX, mouseY); // only highlight entry if the mouse is within the widget area
             }
 
             @Override
-            public void render(DrawContext context, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
-                if(this.isMouseOver(mouseX, mouseY)){   // highlight hovered entry
-                    int minX = x - 2;
-                    context.fill(minX, y, minX + entryWidth, y + ReminderListWidget.ITEM_HEIGHT, Color.LIST_ENTRY_HOVER_HIGHLIGHT);
-                }
-                int textY = y + (entryHeight >> 1) - 2;
-                drawTextWithShadow(context, title, x, textY, Color.TEXT_LIGHT);
+            public int getY() {
+                return super.getY() + EXTRA_TOP_PADDING;  // add top padding to list
+            }
+
+            @Override
+            public void render(DrawContext context, int mouseX, int mouseY, boolean hovered, float tickDelta) {
+                if(hovered) context.fill(getX(), getY(), getX() + getWidth(), getY() + getHeight(), Color.LIST_ENTRY_HOVER_HIGHLIGHT);  // highlight hovered entry
+                int textY = getContentY() + relativeTextY;
+                drawTextWithShadow(context, title, getContentX(), textY, Color.TEXT_LIGHT);
                 stopButton.active = timer.isActive();
                 if(stopButton.active)
                     drawTextWithShadow(context, NumUtil.secToHMSString(timer.getRemaining()), ReminderListWidget.this.timeX, textY, timer.isRepeating() ? Color.TEXT_BTN_TIMER_REPEATING : Color.TEXT_BTN_TIMER_NORMAL);
                 else
                     drawTextWithShadow(context, "--:--:--", ReminderListWidget.this.timeX, textY, Color.TEXT_BTN_TIMER_ABORTED);
-                stopButton.setY(y);
+                stopButton.setY(getY());
                 stopButton.render(context, mouseX, mouseY, tickDelta);
             }
         }

@@ -1,6 +1,7 @@
 package eu.gflash.notifmod.client.gui.widgets;
 
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.text.Text;
 
@@ -14,10 +15,14 @@ public class CustomTextFieldWidget extends TextFieldWidget {
     }
 
     @Override
+    public boolean mouseClicked(Click click, boolean doubled) {
+        if(super.mouseClicked(click, doubled)) return true;
+        return mouseClicked(click.x(), click.y(), click.button());
+    }
+
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if(super.mouseClicked(mouseX, mouseY, button)) return true;
         if(!this.isVisible()) return false;
-        boolean bl = mouseX >= (double) this.getX() && mouseX < (double)(this.getX() + this.width) && mouseY >= (double) this.getY() && mouseY < (double)(this.getY() + this.height);
+        boolean bl = mouseX >= this.getX() && mouseX < (this.getX() + this.width) && mouseY >= this.getY() && mouseY < (this.getY() + this.height);
         if(!(this.isFocused() && bl && button == 1)) return false;
         this.setText("");
         return true;

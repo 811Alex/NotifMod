@@ -24,8 +24,7 @@ public class WorldTimeListener {
         lastNotifTime = 0L;
     }
 
-    public static void onTimeUpdate(int timeOfDay, World world, PlayerEntity player, boolean isLoading){
-        if(isLoading) return;
+    public static void onTimeUpdate(int timeOfDay, World world, PlayerEntity player){
         ModConfig.SleepReminder settings = ModConfig.getInstance().sleepReminder;
         if(!settings.enabled || (System.currentTimeMillis() - lastNotifTime) < (settings.conditions.cooldown * 1000L)) return;
         if(notified) tryResetNotified(timeOfDay, world, player, settings);

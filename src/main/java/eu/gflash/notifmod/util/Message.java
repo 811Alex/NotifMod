@@ -122,7 +122,7 @@ public class Message {
         }
 
         public boolean senderIs(PlayerEntity player){
-            return hasSender() && sender.getId().equals(player.getUuid());
+            return hasSender() && sender.id().equals(player.getUuid());
         }
 
         public GameProfile getSender() {return sender;}

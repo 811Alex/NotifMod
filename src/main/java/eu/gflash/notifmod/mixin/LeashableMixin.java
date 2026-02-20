@@ -24,7 +24,7 @@ public interface LeashableMixin extends Leashable {
 
     @Shadow boolean canBeLeashedTo(Entity entity);
 
-    @Unique private static Identifier getDimId(Entity entity) {return entity.getWorld().getDimension().effects();}
+    @Unique private static Identifier getDimId(Entity entity) {return entity.getEntityWorld().getDimension().effects();}
 
     @Unique private boolean isInDimOf(Entity entity) {return this instanceof Entity thisEntity && getDimId(entity).equals(getDimId(thisEntity));}
 
