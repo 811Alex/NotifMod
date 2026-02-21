@@ -12,6 +12,7 @@ import eu.gflash.notifmod.util.TextUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import me.shedaniel.autoconfig.AutoConfig;
+import me.shedaniel.autoconfig.AutoConfigClient;
 import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.ConfigHolder;
 import me.shedaniel.autoconfig.annotation.Config;
@@ -80,7 +81,7 @@ public class ModConfig implements ConfigData {
      */
     public static void register(){
         AutoConfig.register(ModConfig.class, GsonConfigSerializer::new);
-        GuiRegistry registry = AutoConfig.getGuiRegistry(ModConfig.class);
+        GuiRegistry registry = AutoConfigClient.getGuiRegistry(ModConfig.class);
 
         registry.registerTypeProvider(new Key.Provider(), Key.class);
         registry.registerTypeProvider(new RegExPattern.Provider(), RegExPattern.class);
