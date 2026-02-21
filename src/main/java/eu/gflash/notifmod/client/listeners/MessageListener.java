@@ -3,8 +3,8 @@ package eu.gflash.notifmod.client.listeners;
 import eu.gflash.notifmod.config.ModConfig;
 import eu.gflash.notifmod.util.Log;
 import eu.gflash.notifmod.util.Message;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
 
 /**
  * Handles incoming messages.
@@ -18,7 +18,7 @@ public class MessageListener {
      * @return msg for convenience
      */
     public static Message.Incoming onMessagePreprocess(Message.Incoming msg){
-        ClientPlayerEntity player = MinecraftClient.getInstance().player;
+        LocalPlayer player = Minecraft.getInstance().player;
         if(player != null && (!msg.hasSender() || !msg.senderIs(player)) && !msg.isEmpty())  // player exists & is msg from another client & msg not empty (this will also make it so empty patterns never match incoming messages)
             onIncomingMessagePreprocess(msg.channel(), msg.toString(), msg);
         else msg.notifType = Message.Incoming.NotifType.DROPPED;

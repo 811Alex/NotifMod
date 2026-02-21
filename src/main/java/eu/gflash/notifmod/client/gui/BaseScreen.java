@@ -1,13 +1,12 @@
 package eu.gflash.notifmod.client.gui;
 
 import eu.gflash.notifmod.util.Color;
-import net.minecraft.client.gl.RenderPipelines;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
-
 import java.util.concurrent.atomic.AtomicInteger;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 
 /**
  * Base class for the mod's GUIs.
@@ -36,7 +35,7 @@ public class BaseScreen extends Screen {
      * @param panelHeight the GUI's height (or negative for full screen height)
      * @param background the background texture (or null)
      */
-    protected BaseScreen(Text title, int panelWidth, int panelHeight, Identifier background){
+    protected BaseScreen(Component title, int panelWidth, int panelHeight, Identifier background){
         super(title);
         this.panelWidth = panelWidth;
         this.panelHeight = panelHeight;
@@ -44,44 +43,44 @@ public class BaseScreen extends Screen {
     }
 
     @Override
-    public void renderBackground(DrawContext context, int mouseX, int mouseY, float delta){
-        applyBlur(context);
+    public void renderBackground(GuiGraphics context, int mouseX, int mouseY, float delta){
+        renderBlurredBackground(context);
         if(background != null && panelWidth > 0 && panelHeight > 0)
-            context.drawTexture(RenderPipelines.GUI_TEXTURED, background, panelX, panelY, 0, 0, panelWidth, panelHeight, bgWidth, bgHeight);
+            context.blit(RenderPipelines.GUI_TEXTURED, background, panelX, panelY, 0, 0, panelWidth, panelHeight, bgWidth, bgHeight);
     }
 
-    public void renderForeground(DrawContext context, int mouseX, int mouseY, float delta){
+    public void renderForeground(GuiGraphics context, int mouseX, int mouseY, float delta){
         super.render(context, mouseX, mouseY, delta);
     }
 
     @Override
-    public void render(DrawContext context, int mouseX, int mouseY, float delta){ // Adds basic background & title drawing.
+    public void render(GuiGraphics context, int mouseX, int mouseY, float delta){ // Adds basic background & title drawing.
         renderForeground(context, mouseX, mouseY, delta);
         if(title != null)
             drawText(context, title, titleX, titleY, Color.TEXT_DARK);
     }
 
-    protected void drawText(DrawContext context, Text text, int x, int y, int color, boolean shadow){
-        context.drawText(this.textRenderer, text, x, y, color, shadow);
+    protected void drawText(GuiGraphics context, Component text, int x, int y, int color, boolean shadow){
+        context.drawString(this.font, text, x, y, color, shadow);
     }
 
-    protected void drawText(DrawContext context, String text, int x, int y, int color, boolean shadow){
-        context.drawText(this.textRenderer, text, x, y, color, shadow);
+    protected void drawText(GuiGraphics context, String text, int x, int y, int color, boolean shadow){
+        context.drawString(this.font, text, x, y, color, shadow);
     }
 
-    protected void drawText(DrawContext context, Text text, int x, int y, int color){
+    protected void drawText(GuiGraphics context, Component text, int x, int y, int color){
         drawText(context, text, x, y, color, false);
     }
 
-    protected void drawText(DrawContext context, String text, int x, int y, int color){
+    protected void drawText(GuiGraphics context, String text, int x, int y, int color){
         drawText(context, text, x, y, color, false);
     }
 
-    protected void drawTextWithShadow(DrawContext context, Text text, int x, int y, int color){
+    protected void drawTextWithShadow(GuiGraphics context, Component text, int x, int y, int color){
         drawText(context, text, x, y, color, true);
     }
 
-    protected void drawTextWithShadow(DrawContext context, String text, int x, int y, int color){
+    protected void drawTextWithShadow(GuiGraphics context, String text, int x, int y, int color){
         drawText(context, text, x, y, color, true);
     }
 
@@ -148,7 +147,7 @@ public class BaseScreen extends Screen {
         this.panelY = height - panelHeight >> 1;
         wXr();
         wYr();
-        titleX = Math.round(panelX + (panelWidth - (title != null ? textRenderer.getWidth(title) : 0)) / 2F);
+        titleX = Math.round(panelX + (panelWidth - (title != null ? font.width(title) : 0)) / 2F);
         titleY = wY(8);
     }
 }

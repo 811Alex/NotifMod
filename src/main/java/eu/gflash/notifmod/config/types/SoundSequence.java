@@ -11,12 +11,12 @@ import joptsimple.internal.Strings;
 import me.shedaniel.autoconfig.gui.registry.api.GuiRegistryAccess;
 import me.shedaniel.autoconfig.util.Utils;
 import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.sound.PositionedSoundInstance;
-import net.minecraft.registry.Registries;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
+import net.minecraft.sounds.SoundEvent;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -55,7 +55,7 @@ public class SoundSequence extends ConfigTypeBase {
                 int delay = i + 1 < entrySplit.length - 1 ? (int) parseNum(entrySplit[i + 1], "invalidDelay", 0) : 0;  // next delay (assuming it's not the last element), or 0
                 String id = soundMatcher.group(1);
                 if(IdentifierUtil.isValid(id))
-                    Registries.SOUND_EVENT.getOptionalValue(Identifier.of(id)).ifPresentOrElse(
+                    BuiltInRegistries.SOUND_EVENT.getOptional(Identifier.parse(id)).ifPresentOrElse(
                             soundEvent -> this.sequence.add(new Sound(soundEvent, pitch, delay)),
                             () -> setError("doesNotExist", id)
                     );
@@ -96,8 +96,8 @@ public class SoundSequence extends ConfigTypeBase {
     }
 
     @Override
-    protected Text getUnsafeError() {
-        return Text.translatable("error.config.notifmod.soundSequence." + error, errorId);
+    protected Component getUnsafeError() {
+        return Component.translatable("error.config.notifmod.soundSequence." + error, errorId);
     }
 
     /**
@@ -105,7 +105,7 @@ public class SoundSequence extends ConfigTypeBase {
      * @param sequence string to validate
      * @return empty if valid, otherwise contains the error
      */
-    public static Optional<Text> validate(String sequence){
+    public static Optional<Component> validate(String sequence){
         return new SoundSequence(sequence).getError();
     }
 
@@ -143,8 +143,8 @@ public class SoundSequence extends ConfigTypeBase {
          * @param volume volume, range 0 - 1
          */
         public void play(float volume) {
-            MinecraftClient mc = MinecraftClient.getInstance();
-            ThreadUtils.execOnThread(mc, () -> mc.getSoundManager().play(PositionedSoundInstance.ui(soundEvent, pitch, volume)));
+            Minecraft mc = Minecraft.getInstance();
+            ThreadUtils.execOnThread(mc, () -> mc.getSoundManager().play(SimpleSoundInstance.forUI(soundEvent, pitch, volume)));
         }
 
         /**
@@ -172,7 +172,7 @@ public class SoundSequence extends ConfigTypeBase {
     public static class Provider extends ProviderBase<String> { // GUI provider
         @Override
         public AbstractConfigListEntry<String> getEntry(String i13n, Field field, Object config, Object defaults, GuiRegistryAccess registry) {
-            return ENTRY_BUILDER.startStrField(Text.translatable(i13n), Utils.getUnsafely(field, config, SoundSequence.getDefault()).toString())
+            return ENTRY_BUILDER.startStrField(Component.translatable(i13n), Utils.getUnsafely(field, config, SoundSequence.getDefault()).toString())
                     .setDefaultValue(() -> Utils.getUnsafely(field, defaults).toString())
                     .setSaveConsumer(newValue -> Utils.setUnsafely(field, config, new SoundSequence(newValue)))
                     .setErrorSupplier(SoundSequence::validate)

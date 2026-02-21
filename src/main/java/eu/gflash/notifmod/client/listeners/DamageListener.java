@@ -3,14 +3,14 @@ package eu.gflash.notifmod.client.listeners;
 import eu.gflash.notifmod.util.Message;
 import eu.gflash.notifmod.util.TextUtil;
 import eu.gflash.notifmod.config.ModConfig;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.item.ItemStack;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.util.HashMap;
 import java.util.Map;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.ItemStack;
 
 /**
  * Handles item damage changes, for items we want to track.
@@ -21,16 +21,16 @@ public class DamageListener {
 
     public static void onDamage(ItemStack itemStack){
         ModConfig.Durability settings = ModConfig.getInstance().durability;
-        if(itemStack.getDamage() == itemStack.getMaxDamage() - 1 && settings.unbreakableItems.contains(itemStack))  // if unbreakable item stopped working
+        if(itemStack.getDamageValue() == itemStack.getMaxDamage() - 1 && settings.unbreakableItems.contains(itemStack))  // if unbreakable item stopped working
             settings.damageSettings.stop.notif(
                     () -> TextUtil.buildText(
                         Message.CHAT_PRE_WARN,
-                        Text.translatable(
+                        Component.translatable(
                                 "msg.notifmod.durability.damage.brokenUnbreakable.long",
-                                TextUtil.getWithFormat(itemStack.getName(), Formatting.AQUA))),
-                    () -> Text.translatable(
+                                TextUtil.getWithFormat(itemStack.getHoverName(), ChatFormatting.AQUA))),
+                    () -> Component.translatable(
                             "msg.notifmod.durability.damage.brokenUnbreakable.short",
-                            TextUtil.getWithFormat(itemStack.getName(), Formatting.AQUA))
+                            TextUtil.getWithFormat(itemStack.getHoverName(), ChatFormatting.AQUA))
             );
 
         int durabilityPercentage = getDurabilityPercentage(itemStack);
@@ -47,14 +47,14 @@ public class DamageListener {
             settings.damageSettings.damage.notif(
                     () -> TextUtil.buildText(
                             Message.CHAT_PRE_WARN,
-                            Text.translatable(
+                            Component.translatable(
                                     "msg.notifmod.durability.damage.percentage.long",
-                                    TextUtil.getWithFormat(itemStack.getName(), Formatting.AQUA),
-                                    TextUtil.getWithFormat(durabilityPercentage, Formatting.RED))),
-                    () -> Text.translatable(
+                                    TextUtil.getWithFormat(itemStack.getHoverName(), ChatFormatting.AQUA),
+                                    TextUtil.getWithFormat(durabilityPercentage, ChatFormatting.RED))),
+                    () -> Component.translatable(
                             "msg.notifmod.durability.damage.percentage.short",
-                            TextUtil.getWithFormat(itemStack.getName(), Formatting.AQUA),
-                            TextUtil.getWithFormat(durabilityPercentage, Formatting.RED))
+                            TextUtil.getWithFormat(itemStack.getHoverName(), ChatFormatting.AQUA),
+                            TextUtil.getWithFormat(durabilityPercentage, ChatFormatting.RED))
             );
     }
 
@@ -66,14 +66,14 @@ public class DamageListener {
                 settings.repairSettings.notif(
                         () -> TextUtil.buildText(
                                 Message.CHAT_PRE_INFO,
-                                Text.translatable(
+                                Component.translatable(
                                         "msg.notifmod.durability.repair.long",
-                                        TextUtil.getWithFormat(itemStack.getName(), Formatting.AQUA),
-                                        TextUtil.getWithFormat(Text.translatable("msg.notifmod.durability.repair.long.full"), Formatting.GREEN))),
-                        () -> Text.translatable(
+                                        TextUtil.getWithFormat(itemStack.getHoverName(), ChatFormatting.AQUA),
+                                        TextUtil.getWithFormat(Component.translatable("msg.notifmod.durability.repair.long.full"), ChatFormatting.GREEN))),
+                        () -> Component.translatable(
                                 "msg.notifmod.durability.repair.short",
-                                TextUtil.getWithFormat(itemStack.getName(), Formatting.AQUA),
-                                TextUtil.getWithFormat(Text.translatable("msg.notifmod.durability.repair.short.full"), Formatting.GREEN))
+                                TextUtil.getWithFormat(itemStack.getHoverName(), ChatFormatting.AQUA),
+                                TextUtil.getWithFormat(Component.translatable("msg.notifmod.durability.repair.short.full"), ChatFormatting.GREEN))
                 );
         }
     }
@@ -87,8 +87,8 @@ public class DamageListener {
         ModConfig.Durability settings = ModConfig.getInstance().durability;
         if(!settings.enabled) return false;
         if(settings.trackedItems.contains(itemStack)) return true;
-        if(settings.alwaysNamed && itemStack.contains(DataComponentTypes.CUSTOM_NAME)) return true;
-        return settings.alwaysEnchanted && itemStack.hasEnchantments() && !settings.blacklistedEnchantedItems.contains(itemStack);
+        if(settings.alwaysNamed && itemStack.has(DataComponents.CUSTOM_NAME)) return true;
+        return settings.alwaysEnchanted && itemStack.isEnchanted() && !settings.blacklistedEnchantedItems.contains(itemStack);
     }
 
     /**
@@ -105,7 +105,7 @@ public class DamageListener {
     }
 
     private static int getDurabilityPercentage(ItemStack itemStack){
-        return 100 - Math.round((100F * itemStack.getDamage()) / itemStack.getMaxDamage());
+        return 100 - Math.round((100F * itemStack.getDamageValue()) / itemStack.getMaxDamage());
     }
 
     /**
@@ -119,7 +119,7 @@ public class DamageListener {
          */
         public ItemStack getNoDmg() {
             ItemStack itemStack = this.itemStack.copy();
-            itemStack.setDamage(0);
+            itemStack.setDamageValue(0);
             return itemStack;
         }
 
@@ -127,7 +127,7 @@ public class DamageListener {
         public boolean equals(Object o) {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
-            return ItemStack.areEqual(getNoDmg(), ((ItemStackWrapper) o).getNoDmg());
+            return ItemStack.matches(getNoDmg(), ((ItemStackWrapper) o).getNoDmg());
         }
 
         @Override

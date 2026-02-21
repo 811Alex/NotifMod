@@ -11,11 +11,11 @@ import joptsimple.internal.Strings;
 import me.shedaniel.autoconfig.gui.registry.api.GuiRegistryAccess;
 import me.shedaniel.autoconfig.util.Utils;
 import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.registry.Registries;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -47,7 +47,7 @@ public class ItemList extends ConfigTypeBase {
             ArrayList<String> itemIds = Lists.newArrayList(entrySplit);
             if(itemIds.stream().noneMatch(id -> {    // validity check
                 if(IdentifierUtil.isValid(id)){
-                    if(Registries.ITEM.containsId(Identifier.of(id)))
+                    if(BuiltInRegistries.ITEM.containsKey(Identifier.parse(id)))
                         return false;   // success
                     else setError("doesNotExist", id);
                 }else setError("invalidIdentifier", id);
@@ -75,8 +75,8 @@ public class ItemList extends ConfigTypeBase {
     }
 
     @Override
-    protected Text getUnsafeError() {
-        return Text.translatable("error.config.notifmod.itemList." + error, errorId);
+    protected Component getUnsafeError() {
+        return Component.translatable("error.config.notifmod.itemList." + error, errorId);
     }
 
     /**
@@ -84,12 +84,12 @@ public class ItemList extends ConfigTypeBase {
      * @param itemList string to validate
      * @return empty if valid, otherwise contains the error
      */
-    public static Optional<Text> validate(String itemList){
+    public static Optional<Component> validate(String itemList){
         return new ItemList(itemList).getError();
     }
 
     public boolean contains(Item item){
-        return itemList.contains(Registries.ITEM.getId(item).toString());
+        return itemList.contains(BuiltInRegistries.ITEM.getKey(item).toString());
     }
 
     public boolean contains(ItemStack itemStack){
@@ -116,7 +116,7 @@ public class ItemList extends ConfigTypeBase {
     public static class Provider extends ProviderBase<String> { // GUI provider
         @Override
         public AbstractConfigListEntry<String> getEntry(String i13n, Field field, Object config, Object defaults, GuiRegistryAccess registry) {
-            return ENTRY_BUILDER.startStrField(Text.translatable(i13n), Utils.getUnsafely(field, config, ItemList.getDefault()).toString())
+            return ENTRY_BUILDER.startStrField(Component.translatable(i13n), Utils.getUnsafely(field, config, ItemList.getDefault()).toString())
                     .setDefaultValue(() -> Utils.getUnsafely(field, defaults).toString())
                     .setSaveConsumer(newValue -> Utils.setUnsafely(field, config, new ItemList(newValue)))
                     .setErrorSupplier(ItemList::validate)

@@ -2,14 +2,14 @@ package eu.gflash.notifmod.client.gui.widgets;
 
 import eu.gflash.notifmod.util.NumUtil;
 import eu.gflash.notifmod.util.TextUtil;
-import net.minecraft.client.gui.widget.SliderWidget;
-import net.minecraft.text.Text;
+import net.minecraft.client.gui.components.AbstractSliderButton;
+import net.minecraft.network.chat.Component;
 
 /**
  * Integer slider widget that can take a custom range.
  * @author Alex811
  */
-public class CustomIntSliderWidget extends SliderWidget {
+public class CustomIntSliderWidget extends AbstractSliderButton {
     protected final String langKey;
     protected final int min;
     protected final int max;
@@ -35,7 +35,7 @@ public class CustomIntSliderWidget extends SliderWidget {
 
     @Override
     protected void updateMessage() {
-        this.setMessage(Text.translatable(this.langKey, getValue()));
+        this.setMessage(Component.translatable(this.langKey, getValue()));
     }
 
     @Override

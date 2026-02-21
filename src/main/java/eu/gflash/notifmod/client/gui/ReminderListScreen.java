@@ -4,18 +4,17 @@ import eu.gflash.notifmod.util.Color;
 import eu.gflash.notifmod.client.gui.widgets.CustomButtonWidget;
 import eu.gflash.notifmod.util.NumUtil;
 import eu.gflash.notifmod.util.ReminderTimer;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gl.RenderPipelines;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.Element;
-import net.minecraft.client.gui.Selectable;
-import net.minecraft.client.gui.widget.ElementListWidget;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
-
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.ContainerObjectSelectionList;
+import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.narration.NarratableEntry;
+import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 
 /**
  * Active reminder list GUI.
@@ -23,11 +22,11 @@ import java.util.List;
  * @author Alex811
  */
 public class ReminderListScreen extends BaseScreen {
-    private static final Identifier REMINDER_LIST_BACKGROUND = Identifier.of("notifmod:textures/gui_reminder_list.png");
-    private static final Identifier MASK = Identifier.of("notifmod:textures/gui_reminder_list_mask.png");
-    private static final Text TEXT_TITLE = Text.translatable("gui.screen.reminderList.title");
-    private static final Text TEXT_ENTRY_UNTITLED = Text.translatable("gui.screen.reminderList.entry.untitled");
-    private static final Text TEXT_ENTRY_STOP = Text.translatable("gui.screen.reminderList.entry.stop");
+    private static final Identifier REMINDER_LIST_BACKGROUND = Identifier.parse("notifmod:textures/gui_reminder_list.png");
+    private static final Identifier MASK = Identifier.parse("notifmod:textures/gui_reminder_list_mask.png");
+    private static final Component TEXT_TITLE = Component.translatable("gui.screen.reminderList.title");
+    private static final Component TEXT_ENTRY_UNTITLED = Component.translatable("gui.screen.reminderList.entry.untitled");
+    private static final Component TEXT_ENTRY_STOP = Component.translatable("gui.screen.reminderList.entry.stop");
     private static final int PANEL_WIDTH = 250;
     private static final int PANEL_HEIGHT = 146;
 
@@ -36,26 +35,26 @@ public class ReminderListScreen extends BaseScreen {
     }
 
     @Override
-    public void renderForeground(DrawContext context, int mouseX, int mouseY, float delta) {
+    public void renderForeground(GuiGraphics context, int mouseX, int mouseY, float delta) {
         super.renderForeground(context, mouseX, mouseY, delta);
-        context.drawTexture(RenderPipelines.GUI_TEXTURED, MASK, panelX, panelY, 0, 0, panelWidth, panelHeight, bgWidth, bgHeight);
+        context.blit(RenderPipelines.GUI_TEXTURED, MASK, panelX, panelY, 0, 0, panelWidth, panelHeight, bgWidth, bgHeight);
     }
 
     @Override
     protected void init() {
         super.init();
-        addDrawableChild(new ReminderListWidget());
+        addRenderableWidget(new ReminderListWidget());
     }
 
     public static void open(){
-        MinecraftClient.getInstance().setScreen(new ReminderListScreen());
+        Minecraft.getInstance().setScreen(new ReminderListScreen());
     }
 
     /**
      * Reminder list widget. Scrollable, entries contain timer title, time left & abort button.
      * @see ReminderEntry
      */
-    public class ReminderListWidget extends ElementListWidget<ReminderListWidget.ReminderEntry> {
+    public class ReminderListWidget extends ContainerObjectSelectionList<ReminderListWidget.ReminderEntry> {
         private static final int ROW_ELEMENT_GAP = 6;
         private static final int ITEM_HEIGHT = 20;
         private static final int BUTTON_WIDTH = 50;
@@ -69,28 +68,28 @@ public class ReminderListScreen extends BaseScreen {
         private final int trimTitleWidth;
 
         public ReminderListWidget() {
-            super(ReminderListScreen.this.client, WIDGET_WIDTH, WIDGET_HEIGHT, ReminderListScreen.this.panelY + ITEM_HEIGHT, ITEM_HEIGHT);
+            super(ReminderListScreen.this.minecraft, WIDGET_WIDTH, WIDGET_HEIGHT, ReminderListScreen.this.panelY + ITEM_HEIGHT, ITEM_HEIGHT);
             this.setX(ReminderListScreen.this.wX());
 
             ReminderTimer.getActive().stream()
                     .sorted(Comparator.comparingInt(ReminderTimer::getRemaining).reversed())    // timers with most time left first
                     .forEach(timer -> addEntry(new ReminderEntry(timer)));
 
-            this.buttonX = (overflows() ? getScrollbarX() : getRowRight()) - BUTTON_WIDTH - Entry.PADDING;
-            this.timeX = this.buttonX - ReminderListScreen.this.textRenderer.getWidth("00:00:00") - ROW_ELEMENT_GAP;
+            this.buttonX = (scrollbarVisible() ? scrollBarX() : getRowRight()) - BUTTON_WIDTH - Entry.CONTENT_PADDING;
+            this.timeX = this.buttonX - ReminderListScreen.this.font.width("00:00:00") - ROW_ELEMENT_GAP;
             this.maxTitleWidth = this.timeX - getRowLeft() - ROW_ELEMENT_GAP;
-            this.trimTitleWidth = maxTitleWidth - ReminderListScreen.this.textRenderer.getWidth("...");
+            this.trimTitleWidth = maxTitleWidth - ReminderListScreen.this.font.width("...");
             this.children().forEach(ReminderEntry::init);
         }
 
         @Override
-        protected void drawMenuListBackground(DrawContext context) { /* disable vanilla background */ }
+        protected void renderListBackground(GuiGraphics context) { /* disable vanilla background */ }
 
         @Override
-        protected void drawHeaderAndFooterSeparators(DrawContext context) { /* disable vanilla separators */ }
+        protected void renderListSeparators(GuiGraphics context) { /* disable vanilla separators */ }
 
         @Override
-        protected int getScrollbarX() {
+        protected int scrollBarX() {
             return getRowRight() - SCROLLBAR_WIDTH;
         }
 
@@ -100,8 +99,8 @@ public class ReminderListScreen extends BaseScreen {
         }
 
         @Override
-        protected int getContentsHeightWithPadding() {
-            return super.getContentsHeightWithPadding() + EXTRA_BOTTOM_PADDING;    // add bottom margin to list
+        protected int contentHeight() {
+            return super.contentHeight() + EXTRA_BOTTOM_PADDING;    // add bottom margin to list
         }
 
         /**
@@ -111,7 +110,7 @@ public class ReminderListScreen extends BaseScreen {
         public class ReminderEntry extends Entry<ReminderEntry>{
             private final ReminderTimer timer;
             private final CustomButtonWidget stopButton;
-            private Text title = TEXT_ENTRY_UNTITLED;
+            private Component title = TEXT_ENTRY_UNTITLED;
             private int relativeTextY;
 
             /**
@@ -130,8 +129,8 @@ public class ReminderListScreen extends BaseScreen {
              */
             public void init(){
                 stopButton.setX(ReminderListWidget.this.buttonX);
-                relativeTextY = getContentHeight() / 2 - getTextRenderer().fontHeight / 2;
-                if(timer.hasName()) title = Text.of(trimTitle(timer.getName()));
+                relativeTextY = getContentHeight() / 2 - getFont().lineHeight / 2;
+                if(timer.hasName()) title = Component.nullToEmpty(trimTitle(timer.getName()));
             }
 
             /**
@@ -140,24 +139,24 @@ public class ReminderListScreen extends BaseScreen {
              * @return trimmed title with ellipsis, or original if it fits
              */
             private String trimTitle(String title){
-                if(ReminderListScreen.this.textRenderer.getWidth(title) > ReminderListWidget.this.maxTitleWidth)
-                    return ReminderListScreen.this.textRenderer.trimToWidth(title, ReminderListWidget.this.trimTitleWidth) + "...";
+                if(ReminderListScreen.this.font.width(title) > ReminderListWidget.this.maxTitleWidth)
+                    return ReminderListScreen.this.font.plainSubstrByWidth(title, ReminderListWidget.this.trimTitleWidth) + "...";
                 return title;
             }
 
             @Override
-            public List<? extends Selectable> selectableChildren() {
+            public List<? extends NarratableEntry> narratables() {
                 return Collections.singletonList(stopButton);
             }
 
             @Override
-            public List<? extends Element> children() {
+            public List<? extends GuiEventListener> children() {
                 return Collections.singletonList(stopButton);
             }
 
             @Override
             public boolean isMouseOver(double mouseX, double mouseY) {
-                if(overflows() && isInScrollbar(mouseX, mouseY)) return false;
+                if(scrollbarVisible() && isOverScrollbar(mouseX, mouseY)) return false;
                 return ReminderListWidget.this.isMouseOver(mouseX, mouseY) && super.isMouseOver(mouseX, mouseY); // only highlight entry if the mouse is within the widget area
             }
 
@@ -167,7 +166,7 @@ public class ReminderListScreen extends BaseScreen {
             }
 
             @Override
-            public void render(DrawContext context, int mouseX, int mouseY, boolean hovered, float tickDelta) {
+            public void renderContent(GuiGraphics context, int mouseX, int mouseY, boolean hovered, float tickDelta) {
                 if(hovered) context.fill(getX(), getY(), getX() + getWidth(), getY() + getHeight(), Color.LIST_ENTRY_HOVER_HIGHLIGHT);  // highlight hovered entry
                 int textY = getContentY() + relativeTextY;
                 drawTextWithShadow(context, title, getContentX(), textY, Color.TEXT_LIGHT);

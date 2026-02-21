@@ -6,8 +6,7 @@ import me.shedaniel.autoconfig.gui.registry.api.GuiProvider;
 import me.shedaniel.autoconfig.gui.registry.api.GuiRegistryAccess;
 import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
-import net.minecraft.text.Text;
-
+import net.minecraft.network.chat.Component;
 import java.lang.reflect.Field;
 import java.util.Collections;
 import java.util.List;
@@ -23,15 +22,15 @@ public abstract class ConfigTypeBase {
 
     /**
      * Get error when knowing for sure that there is one.
-     * @return the error {@link Text} to display
+     * @return the error {@link Component} to display
      */
-    protected abstract Text getUnsafeError();
+    protected abstract Component getUnsafeError();
 
     /**
      * Get error during construction.
      * @return {@link Optional} containing the error, or empty if none
      */
-    public Optional<Text> getError() {
+    public Optional<Component> getError() {
         return hasError() ? Optional.of(getUnsafeError()) : Optional.empty();
     }
 

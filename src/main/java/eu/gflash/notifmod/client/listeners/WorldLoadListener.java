@@ -2,8 +2,7 @@ package eu.gflash.notifmod.client.listeners;
 
 import eu.gflash.notifmod.config.ModConfig;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientChunkEvents;
-import net.minecraft.client.MinecraftClient;
-
+import net.minecraft.client.Minecraft;
 import java.util.Optional;
 
 /**
@@ -18,8 +17,8 @@ public class WorldLoadListener {
     }
 
     private static int getLoadedChunkCount(){
-        return Optional.ofNullable(MinecraftClient.getInstance().world)
-                .map(world -> world.getChunkManager().getLoadedChunkCount())
+        return Optional.ofNullable(Minecraft.getInstance().level)
+                .map(world -> world.getChunkSource().getLoadedChunksCount())
                 .orElse(0);
     }
 

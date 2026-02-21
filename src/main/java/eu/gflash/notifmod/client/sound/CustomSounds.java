@@ -2,14 +2,14 @@ package eu.gflash.notifmod.client.sound;
 
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.util.Identifier;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.Objects;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.Identifier;
+import net.minecraft.sounds.SoundEvent;
 
 /**
  * Registers the mod's custom sound events.
@@ -33,7 +33,7 @@ public class CustomSounds {
     }
 
     private static void register(String sound){
-        Identifier id = Identifier.of(MOD_ID, sound);
-        Registry.register(Registries.SOUND_EVENT, id, SoundEvent.of(id));
+        Identifier id = Identifier.fromNamespaceAndPath(MOD_ID, sound);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, id, SoundEvent.createVariableRangeEvent(id));
     }
 }

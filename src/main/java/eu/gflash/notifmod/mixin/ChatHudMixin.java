@@ -1,9 +1,9 @@
 package eu.gflash.notifmod.mixin;
 
 import eu.gflash.notifmod.util.Message;
-import net.minecraft.client.gui.hud.ChatHud;
-import net.minecraft.client.gui.hud.MessageIndicator;
-import net.minecraft.text.Text;
+import net.minecraft.client.GuiMessageTag;
+import net.minecraft.client.gui.components.ChatComponent;
+import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
@@ -12,15 +12,15 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
  * Mixin to customize the chat hud.
  * @author Alex811
  */
-@Mixin(ChatHud.class)
+@Mixin(ChatComponent.class)
 public class ChatHudMixin {
-    @ModifyVariable(method = "addMessage(Lnet/minecraft/text/Text;Lnet/minecraft/network/message/MessageSignatureData;Lnet/minecraft/client/gui/hud/MessageIndicator;)V", at = @At("HEAD"), argsOnly = true)
-    public MessageIndicator injectedIndicator(MessageIndicator indicator){
+    @ModifyVariable(method = "addMessage(Lnet/minecraft/network/chat/Component;Lnet/minecraft/network/chat/MessageSignature;Lnet/minecraft/client/GuiMessageTag;)V", at = @At("HEAD"), argsOnly = true)
+    public GuiMessageTag injectedIndicator(GuiMessageTag indicator){
         return Message.Incoming.Customization.mapIndicator(indicator);
     }
 
-    @ModifyVariable(method = "addMessage(Lnet/minecraft/text/Text;Lnet/minecraft/network/message/MessageSignatureData;Lnet/minecraft/client/gui/hud/MessageIndicator;)V", at = @At("HEAD"), argsOnly = true)
-    public Text injectedIndicator(Text message){
+    @ModifyVariable(method = "addMessage(Lnet/minecraft/network/chat/Component;Lnet/minecraft/network/chat/MessageSignature;Lnet/minecraft/client/GuiMessageTag;)V", at = @At("HEAD"), argsOnly = true)
+    public Component injectedIndicator(Component message){
         return Message.Incoming.Customization.mapText(message);
     }
 }

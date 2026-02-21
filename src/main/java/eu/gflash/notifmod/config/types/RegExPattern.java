@@ -8,9 +8,9 @@ import eu.gflash.notifmod.config.ConfigTypeBase;
 import me.shedaniel.autoconfig.gui.registry.api.GuiRegistryAccess;
 import me.shedaniel.autoconfig.util.Utils;
 import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.network.chat.Component;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.Objects;
@@ -48,7 +48,7 @@ public class RegExPattern extends ConfigTypeBase {
      * Recompiles pattern if necessary.
      */
     public void compile(){
-        ClientPlayerEntity player = MinecraftClient.getInstance().player;
+        LocalPlayer player = Minecraft.getInstance().player;
         String currName = player == null ? null : player.getDisplayName().getString();
         if(Objects.equals(lastName, currName) && pattern != null)   // compiled with current name
             if((pattern.flags() == 0) == caseSensitive)             // compiled with current case-sensitivity
@@ -66,8 +66,8 @@ public class RegExPattern extends ConfigTypeBase {
     public static RegExPattern getDefault() {return new RegExPattern(".*");}
 
     @Override
-    protected Text getUnsafeError() {
-        return Text.translatable("error.config.notifmod.RegExPattern", error);
+    protected Component getUnsafeError() {
+        return Component.translatable("error.config.notifmod.RegExPattern", error);
     }
 
     /**
@@ -75,7 +75,7 @@ public class RegExPattern extends ConfigTypeBase {
      * @param pattern string to validate
      * @return empty if valid, otherwise contains the error
      */
-    public static Optional<Text> validate(String pattern){
+    public static Optional<Component> validate(String pattern){
         return new RegExPattern(pattern).getError();
     }
 
@@ -106,7 +106,7 @@ public class RegExPattern extends ConfigTypeBase {
     public static class Provider extends ProviderBase<String> { // GUI provider
         @Override
         public AbstractConfigListEntry<String> getEntry(String i13n, Field field, Object config, Object defaults, GuiRegistryAccess registry) {
-            return ENTRY_BUILDER.startStrField(Text.translatable(i13n), Utils.getUnsafely(field, config, RegExPattern.getDefault()).toString())
+            return ENTRY_BUILDER.startStrField(Component.translatable(i13n), Utils.getUnsafely(field, config, RegExPattern.getDefault()).toString())
                     .setDefaultValue(() -> Utils.getUnsafely(field, defaults).toString())
                     .setSaveConsumer(newValue -> Utils.setUnsafely(field, config, new RegExPattern(newValue)))
                     .setErrorSupplier(RegExPattern::validate)

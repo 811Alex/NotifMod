@@ -26,10 +26,10 @@ import me.shedaniel.autoconfig.annotation.ConfigEntry.Gui.Excluded;
 import me.shedaniel.autoconfig.gui.registry.GuiRegistry;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import me.shedaniel.autoconfig.util.Utils;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
+import net.minecraft.util.Mth;
 import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.lwjgl.glfw.GLFW;
@@ -142,7 +142,7 @@ public class ModConfig implements ConfigData {
             }else if(setting.curr instanceof Integer c){
                 Optional<ImmutablePair<Long, Long>> bounds = setting.bounds();
                 if(bounds.isEmpty()) return false;
-                int n = bounds.map(b -> (int) MathHelper.clamp(c, b.left, b.right)).get();
+                int n = bounds.map(b -> (int) Mth.clamp(c, b.left, b.right)).get();
                 if(n == c) return false;
                 Log.debug("Settings: adjusting out of bounds number (path: " + setting.path + ", value: " + c + " -> " + n + ")!");
                 setting.set(n);
@@ -416,11 +416,11 @@ public class ModConfig implements ConfigData {
                         if(colorEnabled) s = s.withColor(color);
                         if(bold) s = s.withBold(true);
                         if(italic) s = s.withItalic(true);
-                        if(underline) s = s.withUnderline(true);
+                        if(underline) s = s.withUnderlined(true);
                         return s;
                     }
 
-                    public Text fill(Text text){
+                    public Component fill(Component text){
                         return TextUtil.matchFillStyle(regexPattern.setCaseSensitivity(caseSens).get(), text, getAttrStyle(), maintainParent, true, true);
                     }
 
@@ -637,20 +637,20 @@ public class ModConfig implements ConfigData {
         }
 
         // Message.Type.msg()/msgWithPre() + AudibleNotif.playSound() shortcuts
-        default void notif(Supplier<Text> msg) {notif(() -> msg(msg));}
-        default void notif(Supplier<Text> longMsg, Supplier<Text> shortMsg) {notif(() -> msg(longMsg, shortMsg));}
-        default void notifWithPre(Supplier<Text> msg) {notif(() -> msgWithPre(msg));}
-        default void notifWithPre(Supplier<Text> longMsg, Supplier<Text> shortMsg) {notif(() -> msgWithPre(longMsg, shortMsg));}
+        default void notif(Supplier<Component> msg) {notif(() -> msg(msg));}
+        default void notif(Supplier<Component> longMsg, Supplier<Component> shortMsg) {notif(() -> msg(longMsg, shortMsg));}
+        default void notifWithPre(Supplier<Component> msg) {notif(() -> msgWithPre(msg));}
+        default void notifWithPre(Supplier<Component> longMsg, Supplier<Component> shortMsg) {notif(() -> msgWithPre(longMsg, shortMsg));}
     }
 
     public interface SimpleTextNotif {
         Message.Type getMsgType();
 
         // Message.Type.msg()/msgWithPre() shortcuts
-        default void msg(Supplier<Text> msg) {getMsgType().msg(msg);}
-        default void msg(Supplier<Text> longMsg, Supplier<Text> shortMsg) {getMsgType().msg(longMsg, shortMsg);}
-        default void msgWithPre(Supplier<Text> msg) {getMsgType().msgWithPre(msg);}
-        default void msgWithPre(Supplier<Text> longMsg, Supplier<Text> shortMsg) {getMsgType().msgWithPre(longMsg, shortMsg);}
+        default void msg(Supplier<Component> msg) {getMsgType().msg(msg);}
+        default void msg(Supplier<Component> longMsg, Supplier<Component> shortMsg) {getMsgType().msg(longMsg, shortMsg);}
+        default void msgWithPre(Supplier<Component> msg) {getMsgType().msgWithPre(msg);}
+        default void msgWithPre(Supplier<Component> longMsg, Supplier<Component> shortMsg) {getMsgType().msgWithPre(longMsg, shortMsg);}
     }
 
     public interface AudibleNotif {
@@ -663,7 +663,7 @@ public class ModConfig implements ConfigData {
          * Plays the selected {@link SoundSequence}, with the selected volume, if the sound notification is enabled.
          */
         default void playSound(){
-            if(isSoundEnabled()) getSoundSequence().play(MinecraftClient.getInstance().isWindowFocused() ? getVolume() : getUnfocusedVolume());
+            if(isSoundEnabled()) getSoundSequence().play(Minecraft.getInstance().isWindowActive() ? getVolume() : getUnfocusedVolume());
         }
     }
 

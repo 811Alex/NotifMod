@@ -2,9 +2,6 @@ package eu.gflash.notifmod.util;
 
 import com.google.common.base.Strings;
 import eu.gflash.notifmod.config.ModConfig;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
-
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -13,6 +10,8 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
 
 /**
  * Handles reminder timers.
@@ -65,10 +64,10 @@ public class ReminderTimer {
         ModConfig.getInstance().reminder.msgTypeStart.msgWithPre(
                 () -> TextUtil.getWithFormat(
                         Strings.isNullOrEmpty(name) ?
-                                Text.translatable("msg.notifmod.reminder.start.long.unnamed", TextUtil.getWithFormat(NumUtil.secToHMSString(seconds), Formatting.YELLOW)) :
-                                Text.translatable("msg.notifmod.reminder.start.long.named", TextUtil.getWithFormat(NumUtil.secToHMSString(seconds), Formatting.YELLOW), TextUtil.getWithFormat(name, Formatting.YELLOW)),
-                        Formatting.AQUA),
-                () -> TextUtil.getWithFormat(Text.translatable("msg.notifmod.reminder.start.short"), Formatting.AQUA)
+                                Component.translatable("msg.notifmod.reminder.start.long.unnamed", TextUtil.getWithFormat(NumUtil.secToHMSString(seconds), ChatFormatting.YELLOW)) :
+                                Component.translatable("msg.notifmod.reminder.start.long.named", TextUtil.getWithFormat(NumUtil.secToHMSString(seconds), ChatFormatting.YELLOW), TextUtil.getWithFormat(name, ChatFormatting.YELLOW)),
+                        ChatFormatting.AQUA),
+                () -> TextUtil.getWithFormat(Component.translatable("msg.notifmod.reminder.start.short"), ChatFormatting.AQUA)
         );
         if(seconds > 0){
             active.put(id, this);
@@ -170,10 +169,10 @@ public class ReminderTimer {
             settings.msgTypeDone.msgWithPre(
                     () -> TextUtil.getWithFormat(
                             Strings.isNullOrEmpty(name) ?
-                                    Text.translatable("msg.notifmod.reminder.done.unnamed") :
-                                    Text.translatable("msg.notifmod.reminder.done.named", TextUtil.getWithFormat(name, Formatting.YELLOW)),
-                            Formatting.GREEN),
-                    () -> Strings.isNullOrEmpty(name) ? TextUtil.getWithFormat(Text.translatable("msg.notifmod.reminder.done.unnamed"), Formatting.GREEN) : TextUtil.getWithFormat(name, Formatting.GREEN)
+                                    Component.translatable("msg.notifmod.reminder.done.unnamed") :
+                                    Component.translatable("msg.notifmod.reminder.done.named", TextUtil.getWithFormat(name, ChatFormatting.YELLOW)),
+                            ChatFormatting.GREEN),
+                    () -> Strings.isNullOrEmpty(name) ? TextUtil.getWithFormat(Component.translatable("msg.notifmod.reminder.done.unnamed"), ChatFormatting.GREEN) : TextUtil.getWithFormat(name, ChatFormatting.GREEN)
             );
             settings.playSound();
             if(!repeat) active.remove(id);

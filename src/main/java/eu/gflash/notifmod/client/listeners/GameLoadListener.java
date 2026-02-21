@@ -8,7 +8,7 @@ import eu.gflash.notifmod.config.ModConfig;
  */
 public class GameLoadListener {
     /**
-     * Gets called the first time the {@link net.minecraft.client.gui.screen.TitleScreen} appears.
+     * Gets called the first time the {@link net.minecraft.client.gui.screens.TitleScreen} appears.
      * Note: this will be called once before the fade in animation and a second time when it's done.
      * @param afterFade true if called right before the fade in animation, false if the animation just finished
      */

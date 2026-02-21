@@ -2,12 +2,11 @@ package eu.gflash.notifmod.util;
 
 import eu.gflash.notifmod.config.types.ItemList;
 import jakarta.annotation.Nullable;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.item.ItemStack;
-
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import net.minecraft.client.Minecraft;
+import net.minecraft.world.item.ItemStack;
 
 /**
  * Item related utility functions.
@@ -52,9 +51,9 @@ public class ItemUtil {
     public static boolean areEqualIgnoringDmg(ItemStack left, ItemStack right){
         ItemStack leftCopy = left.copy();
         ItemStack rightCopy = right.copy();
-        leftCopy.setDamage(0);
-        rightCopy.setDamage(0);
-        return ItemStack.areEqual(leftCopy, rightCopy);
+        leftCopy.setDamageValue(0);
+        rightCopy.setDamageValue(0);
+        return ItemStack.matches(leftCopy, rightCopy);
     }
 
     /**
@@ -64,8 +63,8 @@ public class ItemUtil {
      */
     @Nullable
     public static ItemStack getPlayerSlotItems(int slot){
-        return Optional.ofNullable(MinecraftClient.getInstance().player)
-                .map(player -> player.playerScreenHandler.getSlot(slot).getStack())
+        return Optional.ofNullable(Minecraft.getInstance().player)
+                .map(player -> player.inventoryMenu.getSlot(slot).getItem())
                 .orElse(null);
     }
 }

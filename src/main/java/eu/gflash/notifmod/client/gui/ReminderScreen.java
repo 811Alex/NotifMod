@@ -8,11 +8,11 @@ import eu.gflash.notifmod.util.NumUtil;
 import eu.gflash.notifmod.config.ModConfig;
 import eu.gflash.notifmod.util.ReminderTimer;
 import eu.gflash.notifmod.util.TextUtil;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import org.apache.commons.lang3.tuple.Triple;
 
 /**
@@ -20,15 +20,15 @@ import org.apache.commons.lang3.tuple.Triple;
  * @author Alex811
  */
 public class ReminderScreen extends BaseScreen {
-    private static final Identifier REMINDER_SCREEN_BACKGROUND = Identifier.of("notifmod:textures/gui_reminder.png");
-    private static final Text TEXT_TITLE = Text.translatable("gui.screen.reminder.title");
-    private static final Text TEXT_TITLEFIELD = Text.translatable("gui.screen.reminder.titleField");
-    private static final Text TEXT_PRESET_1 = Text.translatable("gui.screen.reminder.preset1");
-    private static final Text TEXT_PRESET_2 = Text.translatable("gui.screen.reminder.preset2");
-    private static final Text TEXT_START = TextUtil.getWithFormat(Text.translatable("gui.screen.reminder.start"), Formatting.GREEN);
-    private static final Text TEXT_REPEAT_YES = Text.translatable("gui.screen.reminder.repeat.yes");
-    private static final Text TEXT_REPEAT_NO = Text.translatable("gui.screen.reminder.repeat.no");
-    private static final Text TEXT_LIST = Text.translatable("gui.screen.reminder.list");
+    private static final Identifier REMINDER_SCREEN_BACKGROUND = Identifier.parse("notifmod:textures/gui_reminder.png");
+    private static final Component TEXT_TITLE = Component.translatable("gui.screen.reminder.title");
+    private static final Component TEXT_TITLEFIELD = Component.translatable("gui.screen.reminder.titleField");
+    private static final Component TEXT_PRESET_1 = Component.translatable("gui.screen.reminder.preset1");
+    private static final Component TEXT_PRESET_2 = Component.translatable("gui.screen.reminder.preset2");
+    private static final Component TEXT_START = TextUtil.getWithFormat(Component.translatable("gui.screen.reminder.start"), ChatFormatting.GREEN);
+    private static final Component TEXT_REPEAT_YES = Component.translatable("gui.screen.reminder.repeat.yes");
+    private static final Component TEXT_REPEAT_NO = Component.translatable("gui.screen.reminder.repeat.no");
+    private static final Component TEXT_LIST = Component.translatable("gui.screen.reminder.list");
     private CustomIntSliderWidget sliderHours;
     private CustomIntSliderWidget sliderMinutes;
     private CustomIntSliderWidget sliderSeconds;
@@ -42,7 +42,7 @@ public class ReminderScreen extends BaseScreen {
     }
 
     @Override
-    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+    public void render(GuiGraphics context, int mouseX, int mouseY, float delta) {
         super.render(context, mouseX, mouseY, delta);
         drawText(context, TEXT_TITLEFIELD, titleFieldTitleX, titleFieldTitleY, Color.TEXT_DARK);
     }
@@ -51,24 +51,24 @@ public class ReminderScreen extends BaseScreen {
     protected void init() {
         super.init();
         ModConfig.Reminder settings = ModConfig.getInstance().reminder;
-        int titleFieldTitleW = textRenderer.getWidth(TEXT_TITLEFIELD);
+        int titleFieldTitleW = font.width(TEXT_TITLEFIELD);
         titleFieldTitleX = wX(titleFieldTitleW);
         titleFieldTitleY = wY() + 4;
-        addDrawableChild(titleField = new CustomTextFieldWidget(this.textRenderer, wXr(), wY(16), 240 - titleFieldTitleW - WIDGET_SPACING, 16, TextUtil.EMPTY));
-        addDrawableChild(sliderHours = new CustomIntSliderWidget(wX(), wY(20), 240, 20, "hours", 0, 24, 0));
-        addDrawableChild(sliderMinutes = new CustomIntSliderWidget(wX(), wY(20), 240, 20, "minutes", 0, 60, 0));
-        addDrawableChild(sliderSeconds = new CustomIntSliderWidget(wX(), wY(20), 240, 20, "seconds", 0, 60, 0));
-        addDrawableChild(new CustomButtonWidget(wX(70), wY(), 70, 20, TEXT_PRESET_1, b -> setTime(settings.pre1Seconds)));
-        addDrawableChild(new CustomButtonWidget(wX(96), wY(), 96, 20, TEXT_START, b -> {
-            ReminderTimer.startNew(getTime(), titleField.getText(), this.repeat);
-            close();
+        addRenderableWidget(titleField = new CustomTextFieldWidget(this.font, wXr(), wY(16), 240 - titleFieldTitleW - WIDGET_SPACING, 16, TextUtil.EMPTY));
+        addRenderableWidget(sliderHours = new CustomIntSliderWidget(wX(), wY(20), 240, 20, "hours", 0, 24, 0));
+        addRenderableWidget(sliderMinutes = new CustomIntSliderWidget(wX(), wY(20), 240, 20, "minutes", 0, 60, 0));
+        addRenderableWidget(sliderSeconds = new CustomIntSliderWidget(wX(), wY(20), 240, 20, "seconds", 0, 60, 0));
+        addRenderableWidget(new CustomButtonWidget(wX(70), wY(), 70, 20, TEXT_PRESET_1, b -> setTime(settings.pre1Seconds)));
+        addRenderableWidget(new CustomButtonWidget(wX(96), wY(), 96, 20, TEXT_START, b -> {
+            ReminderTimer.startNew(getTime(), titleField.getValue(), this.repeat);
+            onClose();
         }));
-        addDrawableChild(new CustomButtonWidget(wXr(), wY(20), 70, 20, TEXT_PRESET_2, b -> setTime(settings.pre2Seconds)));
-        addDrawableChild(new CustomButtonWidget(wX(70), wY(), 70, 20, TEXT_REPEAT_NO, b -> {
+        addRenderableWidget(new CustomButtonWidget(wXr(), wY(20), 70, 20, TEXT_PRESET_2, b -> setTime(settings.pre2Seconds)));
+        addRenderableWidget(new CustomButtonWidget(wX(70), wY(), 70, 20, TEXT_REPEAT_NO, b -> {
             this.repeat = !this.repeat;
             b.setMessage(this.repeat ? TEXT_REPEAT_YES : TEXT_REPEAT_NO);
         }));
-        addDrawableChild(new CustomButtonWidget(wX(), wY(), 168, 20, TEXT_LIST, b -> ReminderListScreen.open()){{
+        addRenderableWidget(new CustomButtonWidget(wX(), wY(), 168, 20, TEXT_LIST, b -> ReminderListScreen.open()){{
             this.active = !ReminderTimer.getActive().isEmpty();
         }});
         setTime(settings.defSeconds);
@@ -95,6 +95,6 @@ public class ReminderScreen extends BaseScreen {
     }
 
     public static void open(){
-        MinecraftClient.getInstance().setScreen(new ReminderScreen());
+        Minecraft.getInstance().setScreen(new ReminderScreen());
     }
 }

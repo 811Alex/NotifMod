@@ -6,8 +6,8 @@ import eu.gflash.notifmod.util.ReminderTimer;
 import eu.gflash.notifmod.config.types.Key;
 import eu.gflash.notifmod.config.ModConfig;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
 
 /**
  * Handles reminder key binding presses and starts reminder threads.
@@ -22,12 +22,12 @@ public class ReminderListener {
             boolean GUIKeyPressed = gotPressed(settings.keyBind, 0);
             boolean NoGUIKeyPressed = gotPressed(settings.keyBindNoGUI, 1); // Note: must always run gotPressed() for all bindings
             if(!(GUIKeyPressed || NoGUIKeyPressed)) return;
-            Screen currScreen = MinecraftClient.getInstance().currentScreen;
+            Screen currScreen = Minecraft.getInstance().screen;
             if(!GUIKeyPressed){
                 if(currScreen == null) ReminderTimer.startNew(settings.defSeconds, null);
             }else switch(currScreen){
                 case null -> ReminderScreen.open();
-                case ReminderScreen s -> currScreen.close();
+                case ReminderScreen s -> currScreen.onClose();
                 case ReminderListScreen s -> ReminderScreen.open();
                 default -> {}
             }

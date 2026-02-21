@@ -4,6 +4,7 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
+import com.mojang.blaze3d.platform.InputConstants;
 import eu.gflash.notifmod.config.ConfigTypeBase;
 import eu.gflash.notifmod.mixin.InputUtilTypeAccessor;
 import me.shedaniel.autoconfig.gui.registry.api.GuiRegistryAccess;
@@ -11,9 +12,8 @@ import me.shedaniel.autoconfig.util.Utils;
 import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
 import me.shedaniel.clothconfig2.api.ModifierKeyCode;
 import me.shedaniel.clothconfig2.gui.entries.KeyCodeEntry;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.util.InputUtil;
-import net.minecraft.text.Text;
+import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.Component;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -26,40 +26,40 @@ import java.lang.reflect.Field;
  */
 @JsonAdapter(Key.Adapter.class)
 public class Key extends ConfigTypeBase {
-    private final InputUtil.Key key;
+    private final InputConstants.Key key;
 
     public Key(int keyCode){
         this(safeFromCode(keyCode));
     }
 
-    public Key(InputUtil.Key key){
+    public Key(InputConstants.Key key){
         this.key = key;
     }
 
-    private static InputUtil.Key safeFromCode(int keyCode){
-        InputUtil.Type kb = InputUtil.Type.KEYSYM;
+    private static InputConstants.Key safeFromCode(int keyCode){
+        InputConstants.Type kb = InputConstants.Type.KEYSYM;
         return ((InputUtilTypeAccessor) (Object) kb).getMap().containsKey(keyCode) ?
-                kb.createFromCode(keyCode) : InputUtil.UNKNOWN_KEY;
+                kb.getOrCreate(keyCode) : InputConstants.UNKNOWN;
     }
 
     public static Key getDefault(){
-        return new Key(InputUtil.UNKNOWN_KEY);
+        return new Key(InputConstants.UNKNOWN);
     }
 
-    public InputUtil.Key get() {
+    public InputConstants.Key get() {
         return key;
     }
 
     public int getCode(){
-        return key.getCode();
+        return key.getValue();
     }
 
     public boolean isDown(){
-        return key != InputUtil.UNKNOWN_KEY && InputUtil.isKeyPressed(MinecraftClient.getInstance().getWindow(), getCode());
+        return key != InputConstants.UNKNOWN && InputConstants.isKeyDown(Minecraft.getInstance().getWindow(), getCode());
     }
 
     @Override
-    protected Text getUnsafeError() {
+    protected Component getUnsafeError() {
         return null;
     }
 
@@ -91,7 +91,7 @@ public class Key extends ConfigTypeBase {
     public static class Provider extends ProviderBase<ModifierKeyCode> { // GUI provider
         @Override
         public AbstractConfigListEntry<ModifierKeyCode> getEntry(String i13n, Field field, Object config, Object defaults, GuiRegistryAccess registry) {
-            KeyCodeEntry entry = ENTRY_BUILDER.startKeyCodeField(Text.translatable(i13n), Utils.getUnsafely(field, config, Key.getDefault()).get())
+            KeyCodeEntry entry = ENTRY_BUILDER.startKeyCodeField(Component.translatable(i13n), Utils.getUnsafely(field, config, Key.getDefault()).get())
                     .setDefaultValue(() -> ((Key) Utils.getUnsafely(field, defaults)).get())
                     .setKeySaveConsumer(newValue -> Utils.setUnsafely(field, config, new Key(newValue)))
                     .build();

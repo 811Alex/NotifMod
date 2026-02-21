@@ -1,7 +1,7 @@
 package eu.gflash.notifmod.util;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.util.thread.ThreadExecutor;
+import net.minecraft.client.Minecraft;
+import net.minecraft.util.thread.BlockableEventLoop;
 
 /**
  * Thread related utility functions.
@@ -10,12 +10,12 @@ import net.minecraft.util.thread.ThreadExecutor;
 public abstract class ThreadUtils {
     /**
      * Executes the {@code runnable} if currently on {@code engine}'s thread, otherwise queues it to run on it.
-     * @param engine the {@link ThreadExecutor} on whose thread to run on
+     * @param engine the {@link BlockableEventLoop} on whose thread to run on
      * @param runnable what to run on the thread
      * @see #execOnMainThread(Runnable)
      */
-    public static void execOnThread(ThreadExecutor<?> engine, Runnable runnable){
-        if(engine.isOnThread()) runnable.run();
+    public static void execOnThread(BlockableEventLoop<?> engine, Runnable runnable){
+        if(engine.isSameThread()) runnable.run();
         else engine.execute(runnable);
     }
 
@@ -23,10 +23,10 @@ public abstract class ThreadUtils {
      * Executes the {@code runnable} if on the main thread, otherwise queues it to run on it.
      * Useful, for example, when we're on a networking related thread and need to play a sound, to avoid {@link java.util.ConcurrentModificationException} or similar.
      * @param runnable what to run on the main thread
-     * @see #execOnThread(ThreadExecutor, Runnable)
+     * @see #execOnThread(BlockableEventLoop, Runnable)
      */
     public static void execOnMainThread(Runnable runnable){
-        execOnThread(MinecraftClient.getInstance(), runnable);
+        execOnThread(Minecraft.getInstance(), runnable);
     }
 
     /**
@@ -34,6 +34,6 @@ public abstract class ThreadUtils {
      * @return true if on main thread
      */
     public static boolean isMainThread(){
-        return MinecraftClient.getInstance().isOnThread();
+        return Minecraft.getInstance().isSameThread();
     }
 }
