@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
  * @author Alex811
  */
 @Mixin(ChatComponent.class)
-public class ChatHudMixin {
+public class ChatComponentMixin {
     @ModifyVariable(method = "addMessage(Lnet/minecraft/network/chat/Component;Lnet/minecraft/network/chat/MessageSignature;Lnet/minecraft/client/GuiMessageTag;)V", at = @At("HEAD"), argsOnly = true)
     public GuiMessageTag injectedIndicator(GuiMessageTag indicator){
         return Message.Incoming.Customization.mapIndicator(indicator);

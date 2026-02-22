@@ -6,10 +6,10 @@
   "mixins": [
   ],
   "client": [
-    "ChatHudMixin",
-    "ClientPlayNetworkHandlerMixin",
-    "InGameHudListenerMixin",
-    "InputUtilTypeAccessor",
+    "ChatComponentMixin",
+    "ClientPacketListenerMixin",
+    "ChatListenerMixin",
+    "InputConstantsTypeAccessor",
     "TitleScreenMixin",
     "LeashableMixin"
   ],

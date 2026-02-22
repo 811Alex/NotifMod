@@ -6,7 +6,7 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.mojang.blaze3d.platform.InputConstants;
 import eu.gflash.notifmod.config.ConfigTypeBase;
-import eu.gflash.notifmod.mixin.InputUtilTypeAccessor;
+import eu.gflash.notifmod.mixin.InputConstantsTypeAccessor;
 import me.shedaniel.autoconfig.gui.registry.api.GuiRegistryAccess;
 import me.shedaniel.autoconfig.util.Utils;
 import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
@@ -38,7 +38,7 @@ public class Key extends ConfigTypeBase {
 
     private static InputConstants.Key safeFromCode(int keyCode){
         InputConstants.Type kb = InputConstants.Type.KEYSYM;
-        return ((InputUtilTypeAccessor) (Object) kb).getMap().containsKey(keyCode) ?
+        return ((InputConstantsTypeAccessor) (Object) kb).getMap().containsKey(keyCode) ?
                 kb.getOrCreate(keyCode) : InputConstants.UNKNOWN;
     }
 

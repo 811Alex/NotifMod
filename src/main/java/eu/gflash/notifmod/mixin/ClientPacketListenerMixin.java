@@ -34,7 +34,7 @@ import net.minecraft.world.item.ItemStack;
  * @author Alex811
  */
 @Mixin(ClientPacketListener.class)
-public class ClientPlayNetworkHandlerMixin {
+public class ClientPacketListenerMixin {
     @Unique private static final int TICKS_PER_DAY = 24000;
     @Unique private static boolean loaded = false;
 

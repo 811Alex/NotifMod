@@ -10,6 +10,6 @@ import org.spongepowered.asm.mixin.gen.Accessor;
  * @author Alex811
  */
 @Mixin(InputConstants.Type.class)
-public interface InputUtilTypeAccessor {
+public interface InputConstantsTypeAccessor {
     @Accessor Int2ObjectMap<InputConstants.Key> getMap();
 }

@@ -26,7 +26,7 @@ import net.minecraft.network.chat.PlayerChatMessage;
  * @author Alex811
  */
 @Mixin(ChatListener.class)
-public abstract class InGameHudListenerMixin {
+public abstract class ChatListenerMixin {
     @Unique private static Message.Incoming lastMsg;
 
     @Unique
