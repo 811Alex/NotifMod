@@ -1,5 +1,7 @@
+import net.fabricmc.loom.task.ValidateMixinNameTask
+
 plugins {
-    id 'fabric-loom' version "${loom_version}"
+    id 'net.fabricmc.fabric-loom-remap' version "${loom_version}"
     id 'maven-publish'
 }
 
@@ -30,7 +32,7 @@ processResources {
     inputs.property 'version', project.version
 
     filesMatching('fabric.mod.json') {
-        expand 'version': project.version, 'javaVer': javaVer
+        expand 'version': inputs.properties.version, 'javaVer': javaVer
     }
 }
 
@@ -38,6 +40,12 @@ tasks.withType(JavaCompile).configureEach {
     it.options.encoding = 'UTF-8'
     it.options.release = javaVer
 }
+
+tasks.register('validateMixinNames', ValidateMixinNameTask) {
+    source(sourceSets.main.output)
+}
+
+check.dependsOn 'validateMixinNames'
 
 base { archivesName = modName }
 
