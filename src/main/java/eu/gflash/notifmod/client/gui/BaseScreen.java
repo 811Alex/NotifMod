@@ -2,7 +2,7 @@ package eu.gflash.notifmod.client.gui;
 
 import eu.gflash.notifmod.util.Color;
 import java.util.concurrent.atomic.AtomicInteger;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
@@ -43,44 +43,44 @@ public class BaseScreen extends Screen {
     }
 
     @Override
-    public void renderBackground(GuiGraphics context, int mouseX, int mouseY, float delta){
-        renderBlurredBackground(context);
+    public void extractBackground(GuiGraphicsExtractor context, int mouseX, int mouseY, float delta){
+        extractBlurredBackground(context);
         if(background != null && panelWidth > 0 && panelHeight > 0)
             context.blit(RenderPipelines.GUI_TEXTURED, background, panelX, panelY, 0, 0, panelWidth, panelHeight, bgWidth, bgHeight);
     }
 
-    public void renderForeground(GuiGraphics context, int mouseX, int mouseY, float delta){
-        super.render(context, mouseX, mouseY, delta);
+    public void extractForeground(GuiGraphicsExtractor context, int mouseX, int mouseY, float delta){
+        super.extractRenderState(context, mouseX, mouseY, delta);
     }
 
     @Override
-    public void render(GuiGraphics context, int mouseX, int mouseY, float delta){ // Adds basic background & title drawing.
-        renderForeground(context, mouseX, mouseY, delta);
+    public void extractRenderState(GuiGraphicsExtractor context, int mouseX, int mouseY, float delta){ // Adds basic background & title drawing.
+        extractForeground(context, mouseX, mouseY, delta);
         if(title != null)
             drawText(context, title, titleX, titleY, Color.TEXT_DARK);
     }
 
-    protected void drawText(GuiGraphics context, Component text, int x, int y, int color, boolean shadow){
-        context.drawString(this.font, text, x, y, color, shadow);
+    protected void drawText(GuiGraphicsExtractor context, Component text, int x, int y, int color, boolean shadow){
+        context.text(this.font, text, x, y, color, shadow);
     }
 
-    protected void drawText(GuiGraphics context, String text, int x, int y, int color, boolean shadow){
-        context.drawString(this.font, text, x, y, color, shadow);
+    protected void drawText(GuiGraphicsExtractor context, String text, int x, int y, int color, boolean shadow){
+        context.text(this.font, text, x, y, color, shadow);
     }
 
-    protected void drawText(GuiGraphics context, Component text, int x, int y, int color){
+    protected void drawText(GuiGraphicsExtractor context, Component text, int x, int y, int color){
         drawText(context, text, x, y, color, false);
     }
 
-    protected void drawText(GuiGraphics context, String text, int x, int y, int color){
+    protected void drawText(GuiGraphicsExtractor context, String text, int x, int y, int color){
         drawText(context, text, x, y, color, false);
     }
 
-    protected void drawTextWithShadow(GuiGraphics context, Component text, int x, int y, int color){
+    protected void drawTextWithShadow(GuiGraphicsExtractor context, Component text, int x, int y, int color){
         drawText(context, text, x, y, color, true);
     }
 
-    protected void drawTextWithShadow(GuiGraphics context, String text, int x, int y, int color){
+    protected void drawTextWithShadow(GuiGraphicsExtractor context, String text, int x, int y, int color){
         drawText(context, text, x, y, color, true);
     }
 

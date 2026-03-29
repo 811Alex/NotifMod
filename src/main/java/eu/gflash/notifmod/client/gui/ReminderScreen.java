@@ -10,7 +10,7 @@ import eu.gflash.notifmod.util.ReminderTimer;
 import eu.gflash.notifmod.util.TextUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import org.apache.commons.lang3.tuple.Triple;
@@ -42,8 +42,8 @@ public class ReminderScreen extends BaseScreen {
     }
 
     @Override
-    public void render(GuiGraphics context, int mouseX, int mouseY, float delta) {
-        super.render(context, mouseX, mouseY, delta);
+    public void extractRenderState(GuiGraphicsExtractor context, int mouseX, int mouseY, float delta) {
+        super.extractRenderState(context, mouseX, mouseY, delta);
         drawText(context, TEXT_TITLEFIELD, titleFieldTitleX, titleFieldTitleY, Color.TEXT_DARK);
     }
 

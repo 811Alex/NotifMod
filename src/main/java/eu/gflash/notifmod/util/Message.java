@@ -5,7 +5,7 @@ import eu.gflash.notifmod.config.ModConfig;
 import java.util.Optional;
 import java.util.function.Supplier;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.GuiMessageTag;
+import net.minecraft.client.multiplayer.chat.GuiMessageTag;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.player.LocalPlayer;
@@ -214,7 +214,7 @@ public class Message {
      * @param msg the message to show
      */
     public static void chat(Component msg){
-        getPlayer().displayClientMessage(TextUtil.buildText(CHAT_NAME, msg), false);
+        getPlayer().sendSystemMessage(TextUtil.buildText(CHAT_NAME, msg));
     }
 
     /**
@@ -222,7 +222,7 @@ public class Message {
      * @param msg the message to show
      */
     public static void actionBar(Component msg){
-        getPlayer().displayClientMessage(msg, true);
+        getPlayer().sendOverlayMessage(msg);
     }
 
     /**

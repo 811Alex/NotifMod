@@ -93,7 +93,7 @@ public class ClientPacketListenerMixin {
     @Inject(method = "handleSetTime(Lnet/minecraft/network/protocol/game/ClientboundSetTimePacket;)V", at = @At("RETURN"))
     public void onWorldTimeUpdate(ClientboundSetTimePacket packet, CallbackInfo ci){
         Minecraft mc = getClient();
-        if(mc.screen instanceof LevelLoadingScreen) return;
-        WorldTimeListener.onTimeUpdate((int) (Math.abs(packet.dayTime()) % TICKS_PER_DAY), mc.level, mc.player);  // abs() because if gamerule doDaylightCycle is false, TimeOfDay will be negative
+        if(mc.screen instanceof LevelLoadingScreen || mc.level == null) return;
+        WorldTimeListener.onTimeUpdate((int) (mc.level.getOverworldClockTime() % TICKS_PER_DAY), mc.level, mc.player);
     }
 }
